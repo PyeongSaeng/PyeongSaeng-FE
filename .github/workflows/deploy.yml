@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# 이 워크플로우가 언제 실행될지 정의
 on:
   push:
     branches: [main]
@@ -9,7 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # 깃허브 저장소 코드를 워크플로우 안으로 체크아웃(=복사)
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -28,15 +26,17 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      # 테스트 코드
       #   - name: Run Tests
       #     run: pnpm test
 
       - name: Build Project
         run: pnpm run build
 
-      # 선택: GitHub Pages 배포 예시임 -> vercel로 바꿔야함
       - name: Deploy to Vercel
         if: github.ref == 'refs/heads/main'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           npm install -g vercel
-          vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+          vercel --prod --yes --token=$VERCEL_TOKEN --cwd .
