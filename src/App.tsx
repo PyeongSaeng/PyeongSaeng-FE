@@ -1,15 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import JobRecommendationPage from './pages/Personal/JobRecommendationPage';
 
 const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/job-recommendation" element={<JobRecommendationPage />} />
-      </Routes>
-    </Router>
-  );
+  return <div className="bg-blue-400 text-5xl" >Hello world 폰트 적용 확인</div>;
 };
 
 export default App;
