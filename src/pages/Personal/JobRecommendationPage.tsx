@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  
 
 const dummyJobs = [
     {
@@ -25,6 +26,7 @@ const dummyJobs = [
 
 const JobRecommendationPage = () => {
     const [search, setSearch] = useState('');
+    const navigate = useNavigate(); 
 
     return (
         <div className="relative w-full h-full overflow-y-scroll bg-white">
@@ -57,8 +59,14 @@ const JobRecommendationPage = () => {
                 <div className="ml-[35px]">
                     <div className="mt-[24px] flex flex-col gap-[36px]">
                         {dummyJobs.map((job) => (
-                            <div key={job.id}>
-                                <p className="text-[14px] font-normal text-black mb-2">{job.name}</p>
+                            <div
+                                key={job.id}
+                                className="cursor-pointer"                        
+                                onClick={() => navigate(`/jobs/recommend/${job.id}`)}
+                            >
+                                <p className="text-[14px] font-normal text-black mb-2">
+                                    {job.name}
+                                </p>
                                 <img
                                     src={job.image}
                                     alt={job.name}
