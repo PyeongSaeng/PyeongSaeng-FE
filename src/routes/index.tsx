@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Personal/Home';
+import LoginMainPage from '../pages/Personal/user/LoginMain';
 
 const AppRoutes = () => {
   return (
@@ -9,7 +10,7 @@ const AppRoutes = () => {
       <Route path="/join/senior" element={<></>}></Route>
       <Route path="/join/guardian" element={<></>}></Route>
       <Route path="/join/company" element={<></>}></Route>
-      <Route path="/login" element={<></>}></Route>
+      <Route path="/login" element={<LoginMainPage />}></Route>
       <Route path="/jobs/recommend" element={<></>}></Route>
       <Route path="/jobs/recommend/:id" element={<></>}></Route>
       <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
