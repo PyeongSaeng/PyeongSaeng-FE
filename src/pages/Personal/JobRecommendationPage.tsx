@@ -14,7 +14,7 @@ const dummyJobs = [
     {
         id: 3,
         name: '죽전2동 행정복지센터 미화원',
-        image: '//icons/search_line.png',
+        image: '/icons/search_line.png',
     },
     {
         id: 4,
@@ -27,9 +27,9 @@ const JobRecommendationPage = () => {
     const [search, setSearch] = useState('');
 
     return (
-        <div className="relative w-full min-h-screen bg-white">
-            <div className="fixed top-0 left-0 w-full flex justify-center bg-white z-10 py-4">
-                <div className="relative w-[293px] h-[48px]">
+        <div className="relative w-full h-full overflow-y-scroll bg-white">
+            <div className="sticky top-0 left-0 w-full flex justify-center bg-white">
+                <div className="mt-[181px] relative w-[293px] h-[48px]">
                     <input
                         type="text"
                         value={search}
@@ -44,7 +44,8 @@ const JobRecommendationPage = () => {
                     />
                 </div>
             </div>
-            <div className="pt-[100px] px-[0px] pb-10">
+
+            <div className="mt-[43px] pb-10">
                 <div className="ml-[37px]">
                     <p className="text-[20px] font-semibold text-[#747474]">
                         맞춤 일자리 추천
