@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const dummyJobs = [
     {
         id: 1,
-        name: '죽전2동 행정복지센터 미화원',
+        name: '죽전1동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
     {
@@ -14,12 +14,12 @@ const dummyJobs = [
     },
     {
         id: 3,
-        name: '죽전2동 행정복지센터 미화원',
+        name: '죽전3동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
     {
         id: 4,
-        name: '죽전2동 행정복지센터 미화원',
+        name: '죽전4동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
 ];

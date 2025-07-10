@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+
 // test용 더미 추후 삭제 예정
 const dummyJobs = [
     { id: 1, name: '죽전2동 행정복지센터 미화원', image: '/icons/search_line.png', details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원' },
@@ -40,8 +41,9 @@ const JobDetailPage = () => {
                     />
                 </div>
                 <div className="w-[297px] px-[17px] mt-[22px] border-[1.3px] border-[#08D485] rounded-[13px] bg-white">
-                    <p className="text-[14px] font-semibold text-black mb-[10px]">{job.name}</p>
-                    <p className="text-[12px] font-normal text-[#444]">{job.details}</p>
+                    {/*수정 필요*/}
+                    <p className="text-[16px] font-semibold text-#414141 mb-[10px]">{job.name}</p>
+                    <p className="text-[14px] font-normal text-#414141">{job.details}</p>
                 </div>
                 <div className="w-[301px] flex gap-[13px] mt-[36px]">
                     <button
