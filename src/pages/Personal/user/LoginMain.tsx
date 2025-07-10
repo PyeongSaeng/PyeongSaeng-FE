@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import LoginLogo from '/icons/loginLogo.svg';
+import { useNavigate } from 'react-router-dom';
 import LoginPage from './Login';
 
 const LoginMainPage = () => {
   const [view, setView] = useState<'main' | 'id'>('main');
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    navigate('/join');
+  };
 
   if (view === 'id') {
     return <LoginPage />;
@@ -38,7 +44,10 @@ const LoginMainPage = () => {
       </button>
 
       {/* 회원가입 */}
-      <button className="w-[320px] text-[#6E6E6E] text-[1.6rem] underline text-right mr-[3.9rem] mt-2">
+      <button
+        className="w-[320px] text-[#6E6E6E] text-[1.6rem] underline text-right mr-[3.9rem] mt-2"
+        onClick={handleSignIn}
+      >
         회원가입
       </button>
     </div>
