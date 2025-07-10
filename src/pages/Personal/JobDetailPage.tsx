@@ -9,7 +9,14 @@ const JobDetailPage = () => {
                 <div className="w-[297px] h-[173px] mt-[22px] border-[1.3px] border-[#08D485] rounded-[13px] bg-white">
 
                 </div>
-                
+                <div className="w-[301px] flex gap-[13px] mt-[36px]">
+                    <button className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black">
+                        신청
+                    </button>
+                    <button className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium text-black">
+                        저장
+                    </button>
+                </div>
             </div>
 
 
