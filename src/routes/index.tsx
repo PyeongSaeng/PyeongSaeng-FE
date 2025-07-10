@@ -1,9 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
+import Home from '../pages/Personal/Home';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<></>}></Route>
+      <Route path="/" element={<Home />}></Route>
       <Route path="/join" element={<></>}></Route>
       <Route path="/join/senior" element={<></>}></Route>
       <Route path="/join/guardian" element={<></>}></Route>
