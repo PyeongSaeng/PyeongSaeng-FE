@@ -1,7 +1,13 @@
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
+import AppRoutes from './routes';
 
 const App = () => {
-  return <div className="bg-blue-400 text-5xl" >Hello world 폰트 적용 확인</div>;
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
 };
 
 export default App;
