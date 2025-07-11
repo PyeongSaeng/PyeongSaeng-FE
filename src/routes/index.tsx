@@ -4,6 +4,8 @@ import LoginMainPage from '../pages/Personal/user/LoginMain';
 import SignIn from '../pages/Personal/user/signIn/SignIn';
 import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
+import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
+import JobDetailPage from '../pages/Personal/JobDetailPage';
 
 const AppRoutes = () => {
   return (
@@ -14,8 +16,8 @@ const AppRoutes = () => {
       <Route path="/join/guardian" element={<CareSignIn />}></Route>
       <Route path="/join/company" element={<></>}></Route>
       <Route path="/login" element={<LoginMainPage />}></Route>
-      <Route path="/jobs/recommend" element={<></>}></Route>
-      <Route path="/jobs/recommend/:id" element={<></>}></Route>
+      <Route path="/jobs/recommend" element={<JobRecommendationPage/>}></Route>
+      <Route path="/jobs/recommend/:id" element={<JobDetailPage/>}></Route>
       <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
       <Route path="/jobs/recommend/:id/apply/question" element={<></>}></Route>
       <Route path="/jobs/saved" element={<></>}></Route>
