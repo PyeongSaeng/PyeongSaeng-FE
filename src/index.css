@@ -1,7 +1,9 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 @import 'tailwindcss';
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100vw;
   height: 100vh;
   margin: 0;
@@ -15,3 +17,4 @@ html, body, #root {
 button {
   cursor: pointer;
 }
+
