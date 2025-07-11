@@ -2,16 +2,16 @@ import TwoButtonGroup from './TwoButtonGroup';
 
 interface Props {
   onSave: () => void;
-  onSubmit: () => void;
+  onNext: () => void;
 }
 
-export default function SaveSubmitButtons({ onSave, onSubmit }: Props) {
+export default function SaveSubmitButtons({ onSave, onNext }: Props) {
   return (
     <TwoButtonGroup
       leftLabel="저장"
-      rightLabel="제출"
+      rightLabel="다음"
       onLeftClick={onSave}
-      onRightClick={onSubmit}
+      onRightClick={onNext}
     />
   );
 }
