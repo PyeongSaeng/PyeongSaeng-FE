@@ -17,8 +17,8 @@ const AppRoutes = () => {
       <Route path="/jobs/recommend/:id" element={<JobDetailPage/>}></Route>
       <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
       <Route path="/jobs/recommend/:id/apply/question" element={<></>}></Route>
-      <Route path="/my/jobs/saved" element={<JobSavedPage/>}></Route>
-      <Route path="/my/jobs/drafts" element={<></>}></Route>
+      <Route path="/jobs/saved" element={<JobSavedPage/>}></Route>
+      <Route path="/jobs/drafts" element={<></>}></Route>
       <Route path="/my" element={<></>}></Route>
       <Route path="/my/applied" element={<></>}></Route>
       <Route path="/my/applied/:id" element={<></>}></Route>
