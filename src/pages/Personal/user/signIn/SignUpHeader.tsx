@@ -1,5 +1,3 @@
-import React from 'react';
-
 type SignUpHeaderProps = {
   title: string;
   className?: string;
@@ -12,7 +10,7 @@ const SignUpHeader = ({ title, className }: SignUpHeaderProps) => (
     >
       {title}
     </h2>
-    <div className="w-[320px] border-t border-gray-300 mb-[4.6rem]" />
+    <div className="w-[320px] border-t border-gray-300 mb-[4rem]" />
   </>
 );
 
