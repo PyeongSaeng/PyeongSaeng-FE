@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Personal/Home';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
+import JobApplyPage from '../pages/Personal/JobApplyPage';
 
 const AppRoutes = () => {
   return (
@@ -12,9 +13,12 @@ const AppRoutes = () => {
       <Route path="/join/guardian" element={<></>}></Route>
       <Route path="/join/company" element={<></>}></Route>
       <Route path="/login" element={<></>}></Route>
-      <Route path="/jobs/recommend" element={<JobRecommendationPage/>}></Route>
-      <Route path="/jobs/recommend/:id" element={<JobDetailPage/>}></Route>
-      <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
+      <Route path="/jobs/recommend" element={<JobRecommendationPage />}></Route>
+      <Route path="/jobs/recommend/:id" element={<JobDetailPage />}></Route>
+      <Route
+        path="/jobs/recommend/:id/apply"
+        element={<JobApplyPage />}
+      ></Route>
       <Route path="/jobs/recommend/:id/apply/question" element={<></>}></Route>
       <Route path="/jobs/saved" element={<></>}></Route>
       <Route path="/jobs/drafts" element={<></>}></Route>
