@@ -3,12 +3,15 @@ import dummy1 from '../../shared/assets/popular-dummy1.png';
 
 const Home = () => {
   return (
-    <div className="flex flex-col h-screen text-[16px]">
+    <div className="text-[16px]">
       <Topbar>
         <div className="flex justify-center">
-          <div className="">
+          <div>
             <div className="w-[298px] h-[180px] mt-[16px] mb-[54px] flex flex-col items-center justify-center gap-[27px] rounded-[13px] border-[1px] border-[#D3D3D3]">
-              <span>나에게 맞는 정보를 확인하세요</span>
+              <div className="flex flex-col items-center">
+                <div>나에게 맞는 정보를</div>
+                <div>확인하세요</div>
+              </div>
               <button className="w-[207px] w-[45px] px-[78px] py-[12px] rounded-[8px] bg-[#08D485]">
                 로그인
               </button>
