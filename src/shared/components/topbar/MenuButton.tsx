@@ -16,7 +16,7 @@ const MenuButton = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-5px] z-40 w-[330px] h-[740px] bg-white">
+        <div className="absolute top-[-25px] left-[-5px] z-40 w-[330px] auto bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             <IoClose size={27} onClick={() => setIsOpen(false)} />
           </div>
