@@ -12,7 +12,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-12 mt-[148px]">
+    <div className="flex flex-col items-center w-full pt-12">
       <SignUpHeader title="회원가입 하기" />
 
       {/* 회원가입 선택 버튼 */}

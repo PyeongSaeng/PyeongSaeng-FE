@@ -4,12 +4,11 @@
 html, body, #root {
   width: 100vw;
   height: 100vh;
-  min-height: 740px;
-  overflow-y: auto;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-size: 62.5%;
+  overflow-y: auto;
 }
 
 button {

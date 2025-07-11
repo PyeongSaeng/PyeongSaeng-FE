@@ -20,7 +20,7 @@ const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.4rem] py-[1.3rem] mb-3 bg-white placeholder-[#BDBDBD] text-[1.6rem] font-bold';
 
 const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => (
-  <div className="flex flex-col items-center w-full pt-8 px-[3rem] mt-[148px]">
+  <div className="flex flex-col items-center w-full pt-8 px-[3rem]">
     <SignUpHeader title="회원가입 하기" />
     <div className="w-[30.6rem]">
       <p className="text-[#747474] mb-[2.3rem] text-[1.5rem] font-semibold">

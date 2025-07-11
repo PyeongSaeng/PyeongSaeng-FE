@@ -5,12 +5,12 @@ const LoginPage = () => {
   const [pw, setPw] = useState('');
 
   return (
-    <div className="flex flex-col items-center w-full pt-12 mt-[158px]">
+    <div className="flex flex-col items-center w-full pt-12">
       {/* 제목 */}
-      <h2 className="text-[2rem] text-[#747474] text-center mb-4">
+      <h2 className="text-[2rem] font-semibold text-[#747474] text-center mb-4">
         로그인하기
       </h2>
-      <div className="w-[320px] border-t border-gray-300 mb-[2.4rem]" />
+      <div className="w-[320px] border-t border-[#d9d9d9] mb-[2.4rem]" />
 
       {/* 입력 폼 */}
       <form className="flex flex-col items-center w-full">
@@ -19,14 +19,14 @@ const LoginPage = () => {
           placeholder="아이디를 입력해주세요"
           value={id}
           onChange={(e) => setId(e.target.value)}
-          className={`mb-[1.9rem] w-[270px] h-[45px] rounded-[8px] border border-[#E1E1E1] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${id ? 'text-black' : 'text-[#C2C2C2]'}`}
+          className={`mb-[1.9rem] w-[270px] h-[45px] rounded-[8px] font-medium border border-[#e1e1e1] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${id ? 'text-black' : 'text-[#C2C2C2]'}`}
         />
         <input
           type="password"
           placeholder="비밀번호를 입력해주세요"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
-          className={`mb-[3rem] w-[270px] h-[45px] rounded-[8px] border border-[#E1E1E1] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${pw ? 'text-black' : 'text-[#C2C2C2]'}`}
+          className={`mb-[3rem] w-[270px] h-[45px] font-medium rounded-[8px] border border-[#e1e1e1] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${pw ? 'text-black' : 'text-[#C2C2C2]'}`}
         />
         <button className="w-[270px] bg-[#08D485] text-black text-[16px] py-[12px] rounded-[8px] mb-[26px] shadow transition">
           로그인

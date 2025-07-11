@@ -28,7 +28,7 @@ const carrierOptions = ['SKT', 'KT', 'LGU+'];
 const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
   const [carrierOpen, setCarrierOpen] = useState(false);
   return (
-    <div className="flex flex-col items-center w-full pt-8 px-[3.3rem] mt-[148px]">
+    <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
       <SignUpHeader title="회원가입 하기" />
       <div className="w-[29.4rem] flex gap-2 mb-[2.1rem]">
         <div className="w-1/2 relative">
@@ -37,7 +37,7 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
             onClick={() => setCarrierOpen((open) => !open)}
           >
             <div
-              className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal ${state.carrier ? 'text-black' : 'text-[#BDBDBD]'}`}
+              className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal text-[#BDBDBD]`}
             >
               {state.carrier || '선택'}
             </div>

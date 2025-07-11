@@ -13,7 +13,7 @@ import NextButton from '../NextButton';
 const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#BDBDBD] text-[1.6rem] font-medium';
 const selectClass =
-  'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] bg-white text-[#BDBDBD] text-[1.6rem]';
+  'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] text-[#BDBDBD] text-[1.6rem] font-medium';
 
 const genderBtnClass =
   'flex-1 h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] text-[1.6rem] font-semibold flex items-center justify-center mb-3';
@@ -88,7 +88,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-8 px-[3.3rem] mt-[48px] pb-[8rem]">
+    <div className="flex flex-col items-center w-full pt-8 px-[3.3rem] pb-[8rem]">
       <SignUpHeader title="구직자 정보 입력" />
       <div className="w-[29.4rem] flex flex-col items-center gap-[1rem]">
         <div className="text-[#747474] text-[1.6rem] font-semibold mb-6">
@@ -120,9 +120,9 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
           value={state.phone}
           onChange={(e) => setState((s) => ({ ...s, phone: e.target.value }))}
         />
-        <div className="flex w-full gap-2 mb-3">
+        <div className="flex w-full gap-[0.5rem] mb-3">
           <input
-            className={`${inputClass} mb-0 ${state.address ? 'text-black' : 'text-[#BDBDBD]'}`}
+            className={`${selectClass} w-[18.7rem] mb-0 ${state.address ? 'text-black' : 'text-[#BDBDBD]'}`}
             placeholder="거주지를 입력해주세요"
             value={state.address}
             onChange={(e) =>
@@ -130,7 +130,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
             }
           />
           <button
-            className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-semibold h-[4.5rem]"
+            className="bg-[#08D485] w-[10rem] text-black rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem]"
             type="button"
             onClick={handleAddressSearch}
           >
@@ -148,8 +148,10 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
         <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mt-[1.4rem] mb-[1.4rem]">
           경력 사항
         </div>
-        <div className="flex items-center gap-2 w-full mb-3">
-          <div className="w-[4.5rem] text-[#747474] text-[1.6rem]">직무</div>
+        <div className="flex gap-2 w-full mb-3">
+          <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
+            직무
+          </div>
           <div className="flex-1 relative">
             <div
               className={`${dropdownBoxClass} h-[4.5rem] ${jobOpen ? '' : ''}`}
@@ -198,8 +200,10 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 w-full">
-          <div className="w-[4.5rem] text-[#747474] text-[1.6rem]">기간</div>
+        <div className="flex gap-2 w-full">
+          <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
+            기간
+          </div>
           <div className="flex-1 relative">
             <div
               className={`${dropdownBoxClass} h-[4.5rem] ${periodOpen ? '' : ''}`}

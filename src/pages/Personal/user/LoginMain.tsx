@@ -15,7 +15,7 @@ const LoginMainPage = () => {
     return <LoginPage />;
   }
   return (
-    <div className="flex flex-col items-center justify-center pt-24 mt-[158px]">
+    <div className="flex flex-col items-center justify-center pt-24">
       <img
         src={LoginLogo}
         alt="평생 로고"

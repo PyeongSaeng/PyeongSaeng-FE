@@ -20,7 +20,7 @@ const inputClass =
 const selectClass =
   'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] text-[#BDBDBD] text-[1.6rem] font-medium';
 const dropdownBoxClass =
-  'w-full bg-white border border-[#E1E1E1] rounded-[1rem] flex items-center justify-between cursor-pointer';
+  'w-full bg-white border border-[#E1E1E1] rounded-[1rem] text-[#BDBDBD] flex items-center justify-between cursor-pointer';
 const dropdownOptionClass =
   'w-full text-[#BDBDBD] text-[1.6rem] py-2 px-4 text-left hover:bg-[#F6F6F6] cursor-pointer font-medium not-italic leading-normal';
 const carrierOptions = ['SKT', 'KT', 'LGU+'];
@@ -28,7 +28,7 @@ const carrierOptions = ['SKT', 'KT', 'LGU+'];
 const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
   const [carrierOpen, setCarrierOpen] = useState(false);
   return (
-    <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
+    <div className="flex flex-col items-center w-full pt-8 px-[3.3rem] pb-[8rem]">
       <SignUpHeader title="회원가입 하기" />
       <div className="w-full text-left text-[#747474] text-[1.6rem] font-semibold mb-[1.5rem] leading-tight">
         어르신 본인인증을 진행합니다.
@@ -42,7 +42,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
             onClick={() => setCarrierOpen((open) => !open)}
           >
             <div
-              className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal ${state.carrier ? 'text-black' : 'text-[#BDBDBD]'}`}
+              className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal text-[#BDBDBD]`}
             >
               {state.carrier || '선택'}
             </div>
@@ -115,7 +115,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
           인증번호 전송
         </button>
       </div>
-      <div className="w-[29.4rem] text-left text-[#08D485] text-[1.4rem] mt-[1.5rem] mb-6">
+      <div className="w-[29.4rem] text-left text-[#01AA42] text-[1.4rem] mt-[1.5rem] mb-6 font-medium">
         어르신께 문자로 온 인증번호를 입력해주세요
       </div>
       <NextButton onClick={onSubmit}>회원가입 완료</NextButton>
