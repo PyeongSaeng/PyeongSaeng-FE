@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CareStep1 from './CareStep1';
 import CareStep2 from './CareStep2';
+import CareStep3 from './CareStep3';
 
 const CareSignIn = () => {
   const [step, setStep] = useState(1);
@@ -11,6 +12,13 @@ const CareSignIn = () => {
     smsCode: '',
   });
   const [step2State, setStep2State] = useState({
+    id: '',
+    idCheck: '',
+    isIdAvailable: false,
+    password: '',
+    passwordConfirm: '',
+  });
+  const [step3State, setStep3State] = useState({
     id: '',
     idCheck: '',
     isIdAvailable: false,
@@ -34,7 +42,13 @@ const CareSignIn = () => {
           onNext={() => setStep(3)}
         />
       )}
-      {/* step === 3이면 다음 단계 컴포넌트 추가 가능 */}
+      {step === 3 && (
+        <CareStep3
+          state={step3State}
+          setState={setStep3State}
+          onNext={() => setStep(4)}
+        />
+      )}
     </>
   );
 };
