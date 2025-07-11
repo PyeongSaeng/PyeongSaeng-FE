@@ -1,7 +1,10 @@
+import Topbar from "../../shared/components/topbar/Topbar"
+
 const JobSavedPage = () => {
   return (
-    <div>
-        저장 페이지
+    <div className="w-full h-full bg-white">
+      <Topbar />
+        
     </div>
   )
 }
