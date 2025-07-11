@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import Topbar from '../../shared/components/topbar/Topbar';
 
 // test용 더미 추후 삭제 예정
 const dummyJobs = [
@@ -28,36 +29,39 @@ const JobDetailPage = () => {
     //};
 
     return (
-        <div className="w-full h-full bg-white">
-            <div className="mt-[176px] flex flex-col items-center">
-                <p className="text-[20px] font-semibold text-[#747474]">
-                    맟춤 일자리 추천
-                </p>
-                <div className="w-[297px] h-[168px] mt-[17px] border-[1.3px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
-                    <img
-                        src={job.image}
-                        alt={job.name}
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="w-[297px] px-[17px] mt-[22px] border-[1.3px] border-[#08D485] rounded-[13px] bg-white">
-                    {/*수정 필요*/}
-                    <p className="text-[16px] font-semibold text-#414141 mb-[10px]">{job.name}</p>
-                    <p className="text-[14px] font-normal text-#414141">{job.details}</p>
-                </div>
-                <div className="w-[301px] flex gap-[13px] mt-[36px]">
-                    <button
-                        onClick={() => navigate(`/jobs/recommend/${job.id}/apply`)}
-                        className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black"
-                    >
-                        신청
-                    </button>
-                    <button
-                        //onClick={handleSave}
-                        className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium text-white"
-                    >
-                        저장
-                    </button>
+        <div>
+            <div className="w-full h-full bg-white">
+                <Topbar />
+                <div className="mt-[21px] flex flex-col items-center">
+                    <p className="text-[20px] font-semibold text-[#747474]">
+                        맟춤 일자리 추천
+                    </p>
+                    <div className="w-[297px] h-[168px] mt-[17px] border-[1.3px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
+                        <img
+                            src={job.image}
+                            alt={job.name}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="w-[297px] px-[17px] mt-[22px] border-[1.3px] border-[#08D485] rounded-[13px] bg-white">
+                        {/*수정 필요*/}
+                        <p className="text-[16px] font-semibold text-#414141 mb-[10px]">{job.name}</p>
+                        <p className="text-[14px] font-normal text-#414141">{job.details}</p>
+                    </div>
+                    <div className="w-[301px] flex gap-[13px] mt-[36px]">
+                        <button
+                            onClick={() => navigate(`/jobs/recommend/${job.id}/apply`)}
+                            className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black"
+                        >
+                            신청
+                        </button>
+                        <button
+                            //onClick={handleSave}
+                            className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium text-white"
+                        >
+                            저장
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
