@@ -2,8 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Personal/Home';
 import LoginMainPage from '../pages/Personal/user/LoginMain';
 import SignIn from '../pages/Personal/user/signIn/SignIn';
-import SeniorSignIn from '../pages/Personal/user/signIn/SeniorSignIn';
-import CareSignIn from '../pages/Personal/user/signIn/CareSignIn';
+import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
+import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 
 const AppRoutes = () => {
   return (

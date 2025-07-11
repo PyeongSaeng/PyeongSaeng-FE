@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import SignUpHeader from './SignUpHeader';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -12,11 +13,7 @@ const SignIn = () => {
 
   return (
     <div className="flex flex-col items-center w-full pt-12 mt-[148px]">
-      {/* 제목 */}
-      <h2 className="text-[2rem] text-[#747474] text-center mb-4">
-        회원가입 하기
-      </h2>
-      <div className="w-[320px] border-t border-gray-300 mb-[4.6rem]" />
+      <SignUpHeader title="회원가입 하기" />
 
       {/* 회원가입 선택 버튼 */}
       <div className="flex flex-col gap-[1.5rem] w-full items-center mb-8">
