@@ -10,7 +10,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
       <div className="text-[24px] underline decoration-2 pt-[33px] pb-[25px]">
         {'로그인 하세요 >'}
       </div>
-      <div className="flex flex-col items-start gap-5 text-lg">
+      <div className="flex flex-col items-start gap-[23px] text-[16px]">
         <MenuNavButton url="/jobs/recommend">일자리 추천</MenuNavButton>
         <MenuNavButton url="/jobs/saved">일자리 저장함</MenuNavButton>
         <MenuNavButton url="/jobs/drafts">일자리 신청함</MenuNavButton>
