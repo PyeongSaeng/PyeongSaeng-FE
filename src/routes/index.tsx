@@ -1,5 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Personal/Home';
+import LoginMainPage from '../pages/Personal/user/LoginMain';
+import SignIn from '../pages/Personal/user/signIn/SignIn';
+import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
+import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
 
@@ -7,11 +11,11 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />}></Route>
-      <Route path="/join" element={<></>}></Route>
-      <Route path="/join/senior" element={<></>}></Route>
-      <Route path="/join/guardian" element={<></>}></Route>
+      <Route path="/join" element={<SignIn />}></Route>
+      <Route path="/join/senior" element={<SeniorSignIn />}></Route>
+      <Route path="/join/guardian" element={<CareSignIn />}></Route>
       <Route path="/join/company" element={<></>}></Route>
-      <Route path="/login" element={<></>}></Route>
+      <Route path="/login" element={<LoginMainPage />}></Route>
       <Route path="/jobs/recommend" element={<JobRecommendationPage/>}></Route>
       <Route path="/jobs/recommend/:id" element={<JobDetailPage/>}></Route>
       <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
