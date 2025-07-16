@@ -8,6 +8,7 @@ import HomePage from '../pages/Personal/HomePage';
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* 메인메뉴 */}
       <Route path="/" element={<HomePage />}></Route>
       <Route path="/join" element={<></>}></Route>
       <Route path="/join/senior" element={<></>}></Route>
@@ -21,10 +22,13 @@ const AppRoutes = () => {
         path="/jobs/recommend/:id/apply/additional"
         element={<></>}
       ></Route>
+
       {/* <Route
         path="/jobs/recommend/:id/apply/question/detail"
         element={<QuestionDetail />}
       ></Route> */}
+
+      {/* 세부메뉴 */}
       <Route path="/jobs/saved" element={<></>}></Route>
       <Route path="/jobs/drafts" element={<></>}></Route>
       <Route path="/my/applied" element={<></>}></Route>
@@ -32,6 +36,8 @@ const AppRoutes = () => {
       <Route path="/my/applied/results" element={<></>}></Route>
       <Route path="/my/info" element={<></>}></Route>
       <Route path="/my/delete-account" element={<></>}></Route>
+
+      <Route path="/my/seniors" element={<></>}></Route>
     </Routes>
   );
 };

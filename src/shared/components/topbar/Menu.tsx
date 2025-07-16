@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { IoClose, IoMenu } from 'react-icons/io5';
 import MainMenu from './menu/MainMenu';
-import MyMenu from './menu/MyMenu';
+import SeniorMyMenu from './menu/SeniorMyMenu';
+import GuardianMyMenu from './menu/GuardianMyMenu';
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +29,8 @@ const Menu = () => {
           {currentMenu === 'main' ? (
             <MainMenu handleMenu={goToMyMenu} />
           ) : (
-            <MyMenu />
+            // <SeniorMyMenu />
+            <GuardianMyMenu />
           )}
         </div>
       )}
