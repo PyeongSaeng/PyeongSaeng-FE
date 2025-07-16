@@ -6,6 +6,7 @@ import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
+import JobApplyPage from '../pages/Personal/JobApplyPage';
 
 const AppRoutes = () => {
   return (
@@ -18,7 +19,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<LoginMainPage />}></Route>
       <Route path="/jobs/recommend" element={<JobRecommendationPage/>}></Route>
       <Route path="/jobs/recommend/:id" element={<JobDetailPage/>}></Route>
-      <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
+      <Route path="/jobs/recommend/:id/apply" element={<JobApplyPage />}></Route>
       <Route path="/jobs/recommend/:id/apply/question" element={<></>}></Route>
       <Route path="/jobs/saved" element={<></>}></Route>
       <Route path="/jobs/drafts" element={<></>}></Route>
