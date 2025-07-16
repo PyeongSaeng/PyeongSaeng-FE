@@ -32,7 +32,14 @@ const ExtraQuestions = () => {
   }>({});
 
   const handleOptionClick = (questionId: number, option: string) => {
-    setISelectedOptions((prev) => ({ ...prev, [questionId]: option }));
+    setISelectedOptions((prev) => {
+      if (prev[questionId] === option) {
+        const updated = { ...prev };
+        delete updated[questionId];
+        return updated;
+      }
+      return { ...prev, [questionId]: option };
+    });
   };
 
   return (
@@ -40,13 +47,13 @@ const ExtraQuestions = () => {
       <Topbar>
         <div className="flex flex-col items-center justify-center pt-[25px] text-[#747474] gap-[26px]">
           <span className="text-[20px] font-semibold">질문 답변</span>
-          <div className="text-[16px]">
+          <div className="flex flex-col text-[16px] font-semibold">
             <span>부모님에 대한 정보를 입력해주세요</span>
             <span>정확한 일자리 추천과 신청서 작성에 도움을 줍니다</span>
           </div>
           <div className="h-[370px] overflow-y-scroll scrollbar-hide">
             {questions.map((q) => (
-              <div>
+              <div className="pb-[30px]">
                 <div className="flex justify-center pb-[22px] font-semibold">
                   Q{q.id}. {q.question}
                 </div>
