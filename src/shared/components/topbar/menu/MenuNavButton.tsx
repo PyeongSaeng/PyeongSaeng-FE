@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 interface MenuButtonProps {
   children: ReactNode;
   url?: string;
-  drillDownMenu?: boolean;
+  handleMenu?: () => void;
 }
 
-const MenuNavButton = ({ children, url, drillDownMenu }: MenuButtonProps) => {
+const MenuNavButton = ({ children, url, handleMenu }: MenuButtonProps) => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    if (drillDownMenu) {
-      //
+    if (handleMenu) {
+      handleMenu();
     }
     if (url) {
       navigate(url);

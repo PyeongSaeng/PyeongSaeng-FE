@@ -7,6 +7,9 @@ const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState<'main' | 'my'>('main');
 
+  const goToMainMenu = () => setCurrentMenu('main');
+  const goToMyMenu = () => setCurrentMenu('my');
+
   return (
     <>
       <button
@@ -22,7 +25,11 @@ const Menu = () => {
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             <IoClose size={27} onClick={() => setIsOpen(false)} />
           </div>
-          {currentMenu === 'main' ? <MainMenu /> : <MyMenu />}
+          {currentMenu === 'main' ? (
+            <MainMenu handleMenu={goToMyMenu} />
+          ) : (
+            <MyMenu />
+          )}
         </div>
       )}
     </>
