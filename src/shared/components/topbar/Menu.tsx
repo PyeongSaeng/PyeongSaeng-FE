@@ -7,7 +7,7 @@ const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState<'main' | 'my'>('main');
 
-  const goToMainMenu = () => setCurrentMenu('main');
+  // const goToMainMenu = () => setCurrentMenu('main');
   const goToMyMenu = () => setCurrentMenu('my');
 
   return (
@@ -21,7 +21,7 @@ const Menu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-5px] z-40 w-[330px] h-[701px] bg-white">
+        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             <IoClose size={27} onClick={() => setIsOpen(false)} />
           </div>
