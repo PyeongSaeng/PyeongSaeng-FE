@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Personal/Home';
+import Home from '../pages/Personal/HomePage';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
-import ExtraQuestions from '../pages/Personal/ExtraQuestions';
+import ExtraQuestions from '../pages/Personal/ExtraQuestionDetailPage';
 
 const AppRoutes = () => {
   return (
@@ -18,6 +18,10 @@ const AppRoutes = () => {
       <Route path="/jobs/recommend/:id/apply" element={<></>}></Route>
       <Route
         path="/jobs/recommend/:id/apply/question"
+        element={<ExtraQuestions />}
+      ></Route>
+      <Route
+        path="/jobs/recommend/:id/apply/question/detail"
         element={<ExtraQuestions />}
       ></Route>
       <Route path="/jobs/saved" element={<></>}></Route>
