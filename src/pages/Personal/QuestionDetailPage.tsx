@@ -36,7 +36,7 @@ const questions = [
   },
 ];
 
-const ExtraQuestions = () => {
+const QuestionDetail = () => {
   const [selectedOptions, setISelectedOptions] = useState<{
     [key: number]: string;
   }>({});
@@ -64,11 +64,6 @@ const ExtraQuestions = () => {
           className="flex flex-col items-center justify-center pt-[25px] text-[#747474] gap-[26px]"
           onSubmit={handleSubmit}
         >
-          <span className="text-[20px] font-semibold">질문 답변</span>
-          <div className="flex flex-col text-[16px] font-semibold">
-            <span>부모님에 대한 정보를 입력해주세요</span>
-            <span>정확한 일자리 추천과 신청서 작성에 도움을 줍니다</span>
-          </div>
           <div className="h-[370px] overflow-y-scroll scrollbar-hide">
             {questions.map((q) => (
               <div className="pb-[30px]">
@@ -97,4 +92,4 @@ const ExtraQuestions = () => {
   );
 };
 
-export default ExtraQuestions;
+export default QuestionDetail;
