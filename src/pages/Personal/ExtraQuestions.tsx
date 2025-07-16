@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import OptionButton from '../../shared/components/option-button/OptionButton';
+import OptionButton from '../../shared/components/buttons/OptionButton';
 import Topbar from '../../shared/components/topbar/Topbar';
+import GreenButton from '../../shared/components/buttons/GreenButton';
 
 const questions = [
   {
@@ -43,7 +44,7 @@ const ExtraQuestions = () => {
             <span>부모님에 대한 정보를 입력해주세요</span>
             <span>정확한 일자리 추천과 신청서 작성에 도움을 줍니다</span>
           </div>
-          <div className="h-[465px] overflow-y-scroll scrollbar-hide">
+          <div className="h-[370px] overflow-y-scroll scrollbar-hide">
             {questions.map((q) => (
               <div>
                 <div className="flex justify-center pb-[22px] font-semibold">
@@ -64,6 +65,7 @@ const ExtraQuestions = () => {
               </div>
             ))}
           </div>
+          <GreenButton>제출하기</GreenButton>
         </div>
       </Topbar>
     </div>
