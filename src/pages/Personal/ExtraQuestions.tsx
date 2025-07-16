@@ -24,6 +24,16 @@ const questions = [
       '2시간 이상',
     ],
   },
+  {
+    id: 4,
+    question: '야간 작업이 가능한가요?',
+    options: ['YES', 'NO'],
+  },
+  {
+    id: 5,
+    question: '특별하게 원하는 파트가 있나요?',
+    options: ['A', 'B', 'C', 'D'],
+  },
 ];
 
 const ExtraQuestions = () => {
@@ -42,10 +52,18 @@ const ExtraQuestions = () => {
     });
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('제출 완료: ', selectedOptions);
+  };
+
   return (
     <div>
       <Topbar>
-        <div className="flex flex-col items-center justify-center pt-[25px] text-[#747474] gap-[26px]">
+        <form
+          className="flex flex-col items-center justify-center pt-[25px] text-[#747474] gap-[26px]"
+          onSubmit={handleSubmit}
+        >
           <span className="text-[20px] font-semibold">질문 답변</span>
           <div className="flex flex-col text-[16px] font-semibold">
             <span>부모님에 대한 정보를 입력해주세요</span>
@@ -59,7 +77,7 @@ const ExtraQuestions = () => {
                 </div>
                 <ul className="flex flex-col items-center">
                   {q.options.map((option) => (
-                    <li className="mb-[17px]">
+                    <li className="mb-[17px]" key={q.id}>
                       <OptionButton
                         clicked={selectedOptions[q.id] === option}
                         onClick={() => handleOptionClick(q.id, option)}
@@ -73,7 +91,7 @@ const ExtraQuestions = () => {
             ))}
           </div>
           <GreenButton>제출하기</GreenButton>
-        </div>
+        </form>
       </Topbar>
     </div>
   );
