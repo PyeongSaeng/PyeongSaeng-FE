@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import Logo from './Logo';
 import ToggleButton from './ToggleButton';
 import QuestionButton from './QuestionButton';
-import MenuButton from './MenuButton';
+import Menu from './Menu';
 
 interface TopbarProps {
   children?: ReactNode;
@@ -16,7 +16,7 @@ const Topbar = ({ children }: TopbarProps) => {
         <div className="flex justify-center">
           <div className="w-[318px] flex justify-between items-centers bt-[2px] border-b-[1.3px] border-[#707070] p-[4px]">
             <div className="relative flex justify-around items-start gap-[21px]">
-              <MenuButton />
+              <Menu />
               <QuestionButton />
             </div>
             <div>

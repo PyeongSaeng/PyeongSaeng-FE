@@ -1,14 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Personal/HomePage';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
-import QuestionDetail from '../pages/Personal/QuestionDetailPage';
-import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
+import HomePage from '../pages/Personal/HomePage';
+// import QuestionDetail from '../pages/Personal/QuestionDetailPage';
+// import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<HomePage />}></Route>
       <Route path="/join" element={<></>}></Route>
       <Route path="/join/senior" element={<></>}></Route>
       <Route path="/join/guardian" element={<></>}></Route>
@@ -27,7 +27,6 @@ const AppRoutes = () => {
       ></Route> */}
       <Route path="/jobs/saved" element={<></>}></Route>
       <Route path="/jobs/drafts" element={<></>}></Route>
-      <Route path="/my" element={<></>}></Route>
       <Route path="/my/applied" element={<></>}></Route>
       <Route path="/my/applied/:id" element={<></>}></Route>
       <Route path="/my/applied/results" element={<></>}></Route>
