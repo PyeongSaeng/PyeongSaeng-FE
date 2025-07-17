@@ -25,7 +25,7 @@ const MenuButton = () => {
               {'로그인 하세요 >'}
             </div>
             <div className="flex flex-col items-start gap-5 text-lg">
-              <a href="/jobs">일자리 추천</a>
+              <a href="/jobs/recommend">일자리 추천</a>
               <a href="/jobs/saved">일자리 저장함</a>
               <a href="/jobs/drafts">일자리 신청함</a>
               <a href="/questions">질문답변</a>
