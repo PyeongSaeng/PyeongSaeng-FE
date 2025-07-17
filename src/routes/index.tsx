@@ -14,7 +14,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* 개인 버전 */}
-      <Route path="/personal/home" element={<HomePage />}></Route>
+      <Route path="/personal" element={<HomePage />}></Route>
       <Route path="/personal/join" element={<SignIn />}></Route>
       <Route path="/personal/join/senior" element={<SeniorSignIn />}></Route>
       <Route path="/personal/join/guardian" element={<CareSignIn />}></Route>
@@ -49,8 +49,9 @@ const AppRoutes = () => {
       <Route path="/personal/my/seniors" element={<></>}></Route>
 
       {/* 기업버전 */}
-      <Route path="/company/home" element={<></>}></Route>
+      <Route path="/company" element={<></>}></Route>
       <Route path="/company/join" element={<></>}></Route>
+      <Route path="/company/login" element={<></>}></Route>
       <Route path="/company/jobs/create-form" element={<></>}></Route>
       <Route path="/company/jobs/applications" element={<></>}></Route>
       <Route
