@@ -3,16 +3,16 @@ import Topbar from '../../shared/components/topbar/Topbar';
 
 // test용 더미 추후 삭제 예정
 const dummyJobs = [
-    { id: 1, name: '죽전2동 행정복지센터 미화원', image: '/icons/search_line.png', details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원' },
-    { id: 2, name: '...', image: '/icons/search_line.png', details: '...' },
-    { id: 3, name: '...', image: '/icons/search_line.png', details: '...' },
-    { id: 4, name: '...', image: '/icons/search_line.png', details: '...' },
+    { jobId: 1, name: '죽전2동 행정복지센터 미화원', image: '/icons/search_line.png', details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원' },
+    { jobId: 2, name: '...', image: '/icons/search_line.png', details: '...' },
+    { jobId: 3, name: '...', image: '/icons/search_line.png', details: '...' },
+    { jobId: 4, name: '...', image: '/icons/search_line.png', details: '...' },
 ];
 //다 다르게 이동됨
 const JobDetailPage = () => {
-    const { id } = useParams();
+    const { jobId } = useParams();
     const navigate = useNavigate();
-    const job = dummyJobs.find(job => job.id === Number(id));
+    const job = dummyJobs.find(job => job.jobId === Number(jobId));
 
     // 유효하지 않은 id 처리
     if (!job) {
@@ -50,7 +50,7 @@ const JobDetailPage = () => {
                     </div>
                     <div className="w-[301px] flex gap-[13px] mt-[36px]">
                         <button
-                            onClick={() => navigate(`/jobs/recommend/${job.id}/apply`)}
+                            onClick={() => navigate(`/personal/jobs/recommend/${job.jobId}/apply`)}
                             className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black">
                             신청
                         </button>

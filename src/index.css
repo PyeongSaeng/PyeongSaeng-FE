@@ -9,12 +9,18 @@ body,
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 62.5%;
+  overflow-y: auto;
 }
 
 button {
   cursor: pointer;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

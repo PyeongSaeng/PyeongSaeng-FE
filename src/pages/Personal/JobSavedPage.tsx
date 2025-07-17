@@ -12,7 +12,7 @@ const JobSavedPage = () => {
 
         <div className="w-[301px] flex gap-[13px] mt-[36px]">
           <button
-            //onClick={() => navigate(`/jobs/recommend/${job.id}/apply`)}
+            //onClick={() => navigate(`personal/jobs/recommend/${job.jobId}/apply`)}
             className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black"
           >
             직접 신청

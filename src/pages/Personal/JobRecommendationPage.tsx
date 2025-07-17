@@ -4,22 +4,22 @@ import Topbar from '../../shared/components/topbar/Topbar';
 
 const dummyJobs = [
     {
-        id: 1,
+        jobId: 1,
         name: '죽전1동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
     {
-        id: 2,
+        jobId: 2,
         name: '죽전2동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
     {
-        id: 3,
+        jobId: 3,
         name: '죽전3동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
     {
-        id: 4,
+        jobId: 4,
         name: '죽전4동 행정복지센터 미화원',
         image: '/icons/search_line.png',
     },
@@ -63,9 +63,9 @@ const JobRecommendationPage = () => {
           <div className="flex flex-col gap-[41px]">
             {dummyJobs.map((job) => (
               <div
-                key={job.id}
+                key={job.jobId}
                 className="cursor-pointer"
-                onClick={() => navigate(`/jobs/recommend/${job.id}`)}
+                onClick={() => navigate(`/personal/jobs/recommend/${job.jobId}`)}
               >
                 <p className="text-[14px] font-normal text-black text-center">
                   {job.name}
