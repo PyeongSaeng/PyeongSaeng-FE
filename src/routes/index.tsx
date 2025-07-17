@@ -13,31 +13,53 @@ import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />}></Route>
-      <Route path="/join" element={<SignIn />}></Route>
-      <Route path="/join/senior" element={<SeniorSignIn />}></Route>
-      <Route path="/join/guardian" element={<CareSignIn />}></Route>
-      <Route path="/join/company" element={<></>}></Route>
-      <Route path="/login" element={<LoginMainPage />}></Route>
-      <Route path="/jobs/recommend" element={<JobRecommendationPage />}></Route>
-      <Route path="/jobs/recommend/:id" element={<JobDetailPage />}></Route>
+      {/* 개인 버전 */}
+      <Route path="/personal/home" element={<HomePage />}></Route>
+      <Route path="/personal/join" element={<SignIn />}></Route>
+      <Route path="/personal/join/senior" element={<SeniorSignIn />}></Route>
+      <Route path="/personal/join/guardian" element={<CareSignIn />}></Route>
+      <Route path="/personal/login" element={<LoginMainPage />}></Route>
       <Route
-        path="/jobs/recommend/:id/apply"
+        path="/personal/jobs/recommend"
+        element={<JobRecommendationPage />}
+      ></Route>
+      <Route
+        path="/personal/jobs/recommend/:jobId"
+        element={<JobDetailPage />}
+      ></Route>
+      <Route
+        path="/personal/jobs/recommend/:jobId/apply"
         element={<JobApplyPage />}
       ></Route>
-      <Route path="/jobs/recommend/:id/apply/question" element={<></>}></Route>
       <Route
-        path="/jobs/recommend/:id/apply/question/detail"
+        path="/personal/jobs/recommend/:jobId/apply/question"
+        element={<></>}
+      ></Route>
+      <Route
+        path="/personal/jobs/recommend/:jobId/apply/question/detail"
         element={<QuestionDetail />}
       ></Route>
-      <Route path="/jobs/saved" element={<></>}></Route>
-      <Route path="/jobs/drafts" element={<></>}></Route>
-      <Route path="/my/applied" element={<></>}></Route>
-      <Route path="/my/applied/:id" element={<></>}></Route>
-      <Route path="/my/applied/results" element={<></>}></Route>
-      <Route path="/my/info" element={<></>}></Route>
-      <Route path="/my/delete-account" element={<></>}></Route>
-      <Route path="/my/seniors" element={<></>}></Route>
+      <Route path="/personal/jobs/saved" element={<></>}></Route>
+      <Route path="/personal/jobs/drafts" element={<></>}></Route>
+      <Route path="/personal/my/applied" element={<></>}></Route>
+      <Route path="/personal/my/applied/:appliedId" element={<></>}></Route>
+      <Route path="/personal/my/applied/results" element={<></>}></Route>
+      <Route path="/personal/my/info" element={<></>}></Route>
+      <Route path="/personal/my/delete-account" element={<></>}></Route>
+      <Route path="/personal/my/seniors" element={<></>}></Route>
+
+      {/* 기업버전 */}
+      <Route path="/company/home" element={<></>}></Route>
+      <Route path="/company/join" element={<></>}></Route>
+      <Route path="/company/jobs/create-form" element={<></>}></Route>
+      <Route path="/company/jobs/applications" element={<></>}></Route>
+      <Route
+        path="/company/jobs/applications/:applicationId"
+        element={<></>}
+      ></Route>
+      <Route path="/company/jobs/applications/result" element={<></>}></Route>
+      <Route path="/company/my" element={<></>}></Route>
+      <Route path="/company/my/delete-account" element={<></>}></Route>
     </Routes>
   );
 };

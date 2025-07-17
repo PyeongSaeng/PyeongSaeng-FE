@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import Logo from './Logo';
 import ToggleButton from './ToggleButton';
 import QuestionButton from './QuestionButton';
-import Menu from './Menu';
+import Menu from './menu/Menu';
 
 interface TopbarProps {
   children?: ReactNode;

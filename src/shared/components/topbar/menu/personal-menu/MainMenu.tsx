@@ -1,15 +1,23 @@
-import MenuNavButton from './MenuNavButton';
+import { IoChevronForward } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import MenuNavButton from '../MenuNavButton';
 
 interface MainMenuProps {
   handleMenu: () => void;
 }
 
 const MainMenu = ({ handleMenu }: MainMenuProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="px-[8px]">
-      <div className="text-[24px] underline decoration-2 pt-[33px] pb-[25px]">
-        {'로그인 하세요 >'}
-      </div>
+      <button
+        className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]"
+        onClick={() => navigate('/personal/login')}
+      >
+        {'로그인 하세요'}
+        <IoChevronForward className="size-[30px]" />
+      </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
         <MenuNavButton url="/jobs/recommend">일자리 추천</MenuNavButton>
         <MenuNavButton url="/jobs/saved">일자리 저장함</MenuNavButton>

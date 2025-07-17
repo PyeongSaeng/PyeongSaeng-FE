@@ -1,4 +1,4 @@
-import MenuNavButton from './MenuNavButton';
+import MenuNavButton from '../MenuNavButton';
 
 const GuardianMyMenu = () => {
   return (

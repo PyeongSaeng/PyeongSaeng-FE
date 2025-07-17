@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { IoClose, IoMenu } from 'react-icons/io5';
-import MainMenu from './menu/MainMenu';
-import SeniorMyMenu from './menu/SeniorMyMenu';
-import GuardianMyMenu from './menu/GuardianMyMenu';
+import MainMenu from './personal-menu/MainMenu';
+import SeniorMyMenu from './personal-menu/SeniorMyMenu';
+import GuardianMyMenu from './personal-menu/GuardianMyMenu';
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
