@@ -1,7 +1,7 @@
 import Topbar from '../../shared/components/topbar/Topbar';
 import dummy1 from '../../shared/assets/popular-dummy1.png';
 
-const Home = () => {
+const HomePage = () => {
   return (
     <div className="text-[16px]">
       <Topbar>
@@ -38,4 +38,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
