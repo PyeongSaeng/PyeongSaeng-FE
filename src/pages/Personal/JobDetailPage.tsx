@@ -19,14 +19,17 @@ const JobDetailPage = () => {
         return <div className="p-4">존재하지 않는 일자리입니다.</div>;
     }
 
-    // 저장 버튼 로직 (어떤 스토리지로 저장할지 정해야함)
-    //const handleSave = () => {
-    //    const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-    //    if (!saved.includes(job.id)) {
-    //       saved.push(job.id);
-    //        localStorage.setItem('savedJobs', JSON.stringify(saved));
-    //    }
-    //};
+    const handleSave = () => {
+        // 1) 기존에 저장된 ID 배열 가져오기
+        const saved: number[] = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+        // 2) 중복 없을 때만 추가
+        if (!saved.includes(job.jobId)) {
+            saved.push(job.jobId);
+            localStorage.setItem('savedJobs', JSON.stringify(saved));
+        }
+        // 3) 저장함 페이지로 이동 (선택)
+        navigate('/personal/jobs/saved');
+    };
 
     return (
         <div>
@@ -55,7 +58,7 @@ const JobDetailPage = () => {
                             신청
                         </button>
                         <button
-                            //onClick={handleSave}
+                            onClick={handleSave}
                             className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium text-black">
                             저장
                         </button>
