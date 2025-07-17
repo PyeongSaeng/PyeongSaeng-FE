@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -6,23 +6,29 @@ const ToggleButton = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const initialVersion: 'personal' | 'company' = location.pathname.startsWith(
-    '/company'
-  )
-    ? 'company'
-    : 'personal';
-
   const [toggleVersion, setToggleVersion] = useState<'personal' | 'company'>(
-    initialVersion
+    location.pathname.startsWith('/company') ? 'company' : 'personal'
   );
 
+  useEffect(() => {
+    if (location.pathname.startsWith('/company')) {
+      setToggleVersion('company');
+    } else {
+      setToggleVersion('personal');
+    }
+  }, [location.pathname]);
+
   const goToPersonalVersion = () => {
-    setToggleVersion('personal');
-    setTimeout(() => navigate('/personal'), 400);
+    if (toggleVersion !== 'personal') {
+      setToggleVersion('personal');
+      setTimeout(() => navigate('/personal'), 300);
+    }
   };
   const goToCompanyVersion = () => {
-    setToggleVersion('company');
-    setTimeout(() => navigate('/company'), 400);
+    if (toggleVersion !== 'company') {
+      setToggleVersion('company');
+      setTimeout(() => navigate('/company'), 300);
+    }
   };
 
   return (
