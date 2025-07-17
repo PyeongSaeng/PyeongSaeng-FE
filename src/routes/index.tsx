@@ -8,7 +8,9 @@ import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
+import JobSavedPage from '../pages/Personal/JobSavedPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
+
 
 const AppRoutes = () => {
   return (
@@ -39,7 +41,7 @@ const AppRoutes = () => {
         path="/personal/jobs/recommend/:jobId/apply/question/detail"
         element={<QuestionDetail />}
       ></Route>
-      <Route path="/personal/jobs/saved" element={<></>}></Route>
+      <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
       <Route path="/personal/jobs/drafts" element={<></>}></Route>
       <Route path="/personal/my/applied" element={<></>}></Route>
       <Route path="/personal/my/applied/:appliedId" element={<></>}></Route>
