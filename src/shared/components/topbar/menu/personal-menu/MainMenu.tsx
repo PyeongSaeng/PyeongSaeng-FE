@@ -19,10 +19,10 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="/jobs/recommend">일자리 추천</MenuNavButton>
-        <MenuNavButton url="/jobs/saved">일자리 저장함</MenuNavButton>
-        <MenuNavButton url="/jobs/drafts">일자리 신청함</MenuNavButton>
-        <MenuNavButton url="/jobs/recommend/:id/apply/additional">
+        <MenuNavButton url="/personal/jobs/recommend">일자리 추천</MenuNavButton>
+        <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
+        <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
+        <MenuNavButton url="/personal/jobs/recommend/:id/apply/additional">
           질문답변
         </MenuNavButton>
         <MenuNavButton handleMenu={handleMenu}>내 정보</MenuNavButton>

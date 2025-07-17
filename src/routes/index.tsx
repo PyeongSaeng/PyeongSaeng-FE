@@ -9,6 +9,7 @@ import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
+import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 
@@ -42,7 +43,7 @@ const AppRoutes = () => {
         element={<QuestionDetail />}
       ></Route>
       <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
-      <Route path="/personal/jobs/drafts" element={<></>}></Route>
+      <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
       <Route path="/personal/my/applied" element={<></>}></Route>
       <Route path="/personal/my/applied/:appliedId" element={<></>}></Route>
       <Route path="/personal/my/applied/results" element={<></>}></Route>

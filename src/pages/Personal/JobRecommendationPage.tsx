@@ -2,26 +2,31 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  
 import Topbar from '../../shared/components/topbar/Topbar';
 
+// test용 더미 추후 삭제 예정
 const dummyJobs = [
     {
         jobId: 1,
         name: '죽전1동 행정복지센터 미화원',
-        image: '/icons/search_line.png',
+        image: '/icons/popular-dummy1.png',
+        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
     },
     {
         jobId: 2,
         name: '죽전2동 행정복지센터 미화원',
-        image: '/icons/search_line.png',
+        image: '/icons/popular-dummy1.png',
+        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
     },
     {
         jobId: 3,
         name: '죽전3동 행정복지센터 미화원',
-        image: '/icons/search_line.png',
+        image: '/icons/popular-dummy1.png',
+        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
     },
     {
         jobId: 4,
         name: '죽전4동 행정복지센터 미화원',
-        image: '/icons/search_line.png',
+        image: '/icons/popular-dummy1.png',
+        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
     },
 ];
 
@@ -30,9 +35,10 @@ const JobRecommendationPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-white">
+    <div className="flex flex-col h-full ">
+      {/*overflow-hidden */}
       <Topbar />
-      <div className="sticky top-0 z-10 flex justify-center bg-white pt-6 pb-4">
+      <div className="flex justify-center mt-6">
         <div className="relative w-[293px] h-[48px]">
           <input
             type="text"
@@ -50,7 +56,7 @@ const JobRecommendationPage = () => {
           />
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto px-4 pb-10">
+      <div className="flex-1 flex flex-col">
         <div className="mt-[49px] flex flex-col items-center">
           <p className="text-[20px] font-semibold text-[#747474]">
             맞춤 일자리 추천
@@ -59,7 +65,7 @@ const JobRecommendationPage = () => {
             입력하신 정보를 바탕으로 일자리를 추천해드려요
           </p>
         </div>
-        <div className="mt-[17px] flex flex-col items-center">
+        <div className="mt-[17px] flex-1 overflow-y-scroll scrollbar-hide flex flex-col items-center">
           <div className="flex flex-col gap-[41px]">
             {dummyJobs.map((job) => (
               <div
