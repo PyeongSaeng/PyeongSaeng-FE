@@ -58,7 +58,7 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:applicationId"
         element={<></>}
       ></Route>
-      <Route path="/company/jobs/applications/result" element={<></>}></Route>
+      <Route path="/company/jobs/applications/results" element={<></>}></Route>
       <Route path="/company/my" element={<></>}></Route>
       <Route path="/company/my/delete-account" element={<></>}></Route>
     </Routes>
