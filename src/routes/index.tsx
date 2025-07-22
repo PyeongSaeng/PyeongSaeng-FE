@@ -11,6 +11,7 @@ import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
+import CompanyCreateFormPage from '../pages/Company/CompanyCreateFormPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 
@@ -56,7 +57,7 @@ const AppRoutes = () => {
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
-      <Route path="/company/jobs/create-form" element={<></>}></Route>
+      <Route path="/company/jobs/create-form" element={< CompanyCreateFormPage/>}></Route>
       <Route path="/company/jobs/applications" element={<></>}></Route>
       <Route
         path="/company/jobs/applications/:applicationId"
