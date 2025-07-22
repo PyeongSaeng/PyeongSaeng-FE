@@ -71,7 +71,7 @@ const JobDraftsPage = () => {
                 {/* 스크롤 영역 */}
                 <div className="flex-1 w-full flex justify-center" style={{ minHeight: 0 }}>
                     <div
-                        className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
+                        className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-9 scrollbar-hide"
                         style={{ maxHeight: "400px" }}
                     >
                         {dummyJobs.map((job) => {
