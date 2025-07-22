@@ -36,8 +36,7 @@ const JobRecommendationPage = () => {
 
   return (
     <Topbar>
-      <div className="flex flex-col h-full ">
-        {/*overflow-hidden */}
+      <div className="w-full h-full flex flex-col">
         <div className="flex justify-center mt-6">
           <div className="relative w-[293px] h-[48px]">
             <input
@@ -65,8 +64,10 @@ const JobRecommendationPage = () => {
               입력하신 정보를 바탕으로 일자리를 추천해드려요
             </p>
           </div>
-          <div className="mt-[17px] flex-1 overflow-y-auto scrollbar-hide flex flex-col items-center">
-            <div className="flex flex-col gap-[41px]">
+          {/* 스크롤 영역 */}
+          <div className="mt-[17px] flex-1 w-full flex justify-center" style={{ minHeight: 0 }}>
+            <div className="flex flex-col items-center overflow-y-auto gap-[41px] scrollbar-hide"
+                        style={{ maxHeight: "400px" }}>
               {dummyJobs.map((job) => (
                 <div
                   key={job.jobId}

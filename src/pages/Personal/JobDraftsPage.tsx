@@ -71,7 +71,7 @@ const JobDraftsPage = () => {
                 {/* 스크롤 영역 */}
                 <div className="flex-1 w-full flex justify-center" style={{ minHeight: 0 }}>
                     <div
-                        className="w-[291] flex flex-col overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
+                        className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-9 scrollbar-hide"
                         style={{ maxHeight: "400px" }}
                     >
                         {dummyJobs.map((job) => {
@@ -98,7 +98,7 @@ const JobDraftsPage = () => {
                                     <div
                                         className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
                                         ${isSelected ? "border-[#08D485] bg-[#ECF6F2]" : "border-[#A4A4A4] bg-white"}
-                                        `}  
+                                        `}
                                         onClick={() => setSelectedJobId(isSelected ? null : job.jobId)}
                                     >
                                         <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
@@ -120,8 +120,8 @@ const JobDraftsPage = () => {
                 <div className="w-full flex justify-center mt-[24px]">
                     <button
                         className={`w-[294px] h-[45px] rounded-[8px] text-[16px] font-semibold
-              ${selected === 0 ? "bg-[#08D485] text-black" : "bg-[#08D485] text-black"}
-            `}
+                                    ${selected === 0 ? "bg-[#08D485] text-black" : "bg-[#08D485] text-black"}
+                                `}
                         disabled={selectedJobId === null}
                     >
                         {selected === 0 ? "신청서 작성하기" : "신청서 이어서 작성하기"}
