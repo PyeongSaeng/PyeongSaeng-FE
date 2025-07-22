@@ -1,22 +1,19 @@
-// src/pages/Personal/JobApplyPage.tsx
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
-import SaveSubmitButtons from '../../shared/components/SaveSubmitButtons';
 import MotivationChoiceSection from '../../shared/components/MotivationChoiceSection';
-import SaveNextButtons from '../../shared/components/SaveNextButtons';
-import AIWriteButtons from '../../shared/components/AIWriteButtons';
 import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormSection';
 import EvidenceSection from '../../shared/components/EvidenceSection';
+import NextButton from '../../shared/components/NextButton';
+import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
 
 export default function JobApplyPage() {
   const navigate = useNavigate();
 
-  const hasExtraQuestions = true; // ← 기업 데이터에서 받기!
+  const hasExtraQuestions = true;
 
   const [step, setStep] = useState<
     | 'basic'
@@ -30,7 +27,6 @@ export default function JobApplyPage() {
 
   const [selected, setSelected] = useState('');
   const [formInput, setFormInput] = useState('');
-  const [fileName, setFileName] = useState<string | null>(null);
 
   const handleGoHome = () => navigate('/');
 
@@ -44,12 +40,11 @@ export default function JobApplyPage() {
   };
 
   return (
-    <div className="pt-[20px]">
+    <div className="pt-[10px]">
       <Topbar />
 
       <div className="flex justify-center">
         <div className="w-full max-w-[320px] flex flex-col items-center justify-start bg-white px-4 py-10">
-          {/* === 공통 타이틀 === */}
           <FormTitleSection
             title="신청서 작성"
             description={
@@ -69,34 +64,27 @@ export default function JobApplyPage() {
             }
           />
 
-          {/* === STEP === */}
-
-          {/* 29 - 기본 신청서 */}
           {step === 'basic' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
-              <SaveSubmitButtons
-                onSave={() => console.log('저장!')}
-                onSubmit={() => setStep('complete')}
+              <TwoButtonGroup
+                leftLabel="저장"
+                rightLabel="제출"
+                onLeftClick={() => console.log('저장!')}
+                onRightClick={() => setStep('complete')}
               />
             </>
           )}
 
-          {/* 30 - 신청완료 */}
           {step === 'complete' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
-              <button
-                onClick={handleGoHome}
-                className="w-full h-12 bg-[#08D485] rounded-[8px] text-black text-[16px] font-semibold"
-              >
-                홈으로 이동
-              </button>
+              <NextButton onClick={handleGoHome}>홈으로 이동</NextButton>
             </>
           )}
-          {/* 31 - 추가 질문 선택 */}
+
           {step === 'choice' && (
-            <div className="w-full flex flex-col gap-6">
+            <div className="w-full flex flex-col gap-4">
               <MotivationChoiceSection
                 question="Q1. 지원 동기가 무엇인가요?"
                 choices={[
@@ -107,21 +95,15 @@ export default function JobApplyPage() {
                 selected={selected}
                 onSelect={setSelected}
               />
-              <button
-                disabled={!selected}
+              <NextButton
                 onClick={() => setStep('option')}
-                className={`w-full h-12 rounded-[8px] text-[16px] font-semibold ${
-                  selected
-                    ? 'bg-[#08D485] text-white'
-                    : 'bg-gray-300 text-white'
-                }`}
+                disabled={!selected}
               >
                 제출하기
-              </button>
+              </NextButton>
             </div>
           )}
 
-          {/* 32 - 옵션 선택 */}
           {step === 'option' && (
             <>
               <QuestionWriteFormSection
@@ -130,15 +112,15 @@ export default function JobApplyPage() {
                 onSave={() => console.log('저장')}
                 onSubmit={() => console.log('임시')}
               />
-
-              <AIWriteButtons
-                onWrite={() => setStep('form')}
-                onAIWrite={() => setStep('ai-review')}
+              <TwoButtonGroup
+                leftLabel="직접 작성"
+                rightLabel="AI 자동작성"
+                onLeftClick={() => setStep('form')}
+                onRightClick={() => setStep('ai-review')}
               />
             </>
           )}
 
-          {/* 33 - 직접 작성 */}
           {step === 'form' && (
             <>
               <QuestionWriteFormSection
@@ -147,14 +129,15 @@ export default function JobApplyPage() {
                 onSave={() => console.log('작성 저장')}
                 onSubmit={() => setStep('complete')}
               />
-              <SaveSubmitButtons
-                onSave={() => console.log('저장')}
-                onSubmit={() => setStep('complete')}
+              <TwoButtonGroup
+                leftLabel="저장"
+                rightLabel="제출"
+                onLeftClick={() => console.log('저장')}
+                onRightClick={() => setStep('complete')}
               />
             </>
           )}
 
-          {/* 34 - AI 리뷰 */}
           {step === 'ai-review' && (
             <>
               <QuestionWriteFormSection
@@ -163,14 +146,15 @@ export default function JobApplyPage() {
                 onSave={() => console.log('저장')}
                 onSubmit={() => setStep('evidence')}
               />
-              <SaveNextButtons
-                onSave={() => console.log('저장')}
-                onNext={() => setStep('evidence')}
+              <TwoButtonGroup
+                leftLabel="저장"
+                rightLabel="다음"
+                onLeftClick={() => console.log('저장')}
+                onRightClick={() => setStep('evidence')}
               />
             </>
           )}
 
-          {/* 35 - 증빙자료 */}
           {step === 'evidence' && (
             <EvidenceSection
               onSave={() => console.log('저장')}

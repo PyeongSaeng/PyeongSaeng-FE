@@ -7,6 +7,14 @@ import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
+<<<<<<< Updated upstream
+=======
+import QuestionDetail from '../pages/Personal/QuestionDetailPage';
+import CompanyHomePage from '../pages/Company/CompanyHomePage';
+import JobSavedPage from '../pages/Personal/JobSavedPage';
+import JobDraftsPage from '../pages/Personal/JobDraftsPage';
+// import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
+>>>>>>> Stashed changes
 
 const AppRoutes = () => {
   return (
