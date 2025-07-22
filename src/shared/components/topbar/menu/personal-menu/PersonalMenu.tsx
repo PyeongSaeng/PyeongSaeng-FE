@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { IoClose, IoMenu } from 'react-icons/io5';
-import MainMenu from './personal-menu/MainMenu';
-import SeniorMyMenu from './personal-menu/SeniorMyMenu';
-import GuardianMyMenu from './personal-menu/GuardianMyMenu';
+import MainMenu from './MainMenu';
+import SeniorMyMenu from './SeniorMyMenu';
+import GuardianMyMenu from './GuardianMyMenu';
 
-const Menu = () => {
+const PersonalMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState<'main' | 'my'>('main');
 
@@ -43,4 +43,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default PersonalMenu;
