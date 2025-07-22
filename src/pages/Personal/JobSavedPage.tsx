@@ -52,20 +52,22 @@ const JobSavedPage = () => {
 
   return (
     <Topbar>
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="w-full h-full flex flex-col">
         <div className="mt-[17px] flex flex-col items-center">
           <p className="text-[20px] font-semibold text-[#747474]">일자리 저장함</p>
         </div>
-
-        <div className="mt-[17px] flex-1 overflow-y-auto scrollbar-hide flex flex-col items-center space-y-14 px-4">
+        {/* 스크롤 영역 */}
+        <div className="flex-1 w-full flex justify-center" style={{ minHeight: 0 }}></div>
+        <div className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
+          style={{ maxHeight: "450px" }}>
           {savedJobs.length === 0 ? (
             <p className="text-gray-500">저장된 일자리가 없습니다.</p>
           ) : (
             savedJobs.map((job) => {
               const isSelected = selectedJobId === job.jobId;
               return (
-                <div key={job.jobId} className="w-full flex flex-col ">
-                  <div className="flex items-center gap-2 mb-2">
+                <div key={job.jobId} className="flex flex-col ">
+                  <div className="flex items-center gap-2">
                     {/* 동그라미 */}
                     <div
                       className="w-[27px] h-[27px] rounded-full border-2 border-[#08D485] bg-white flex items-center justify-center cursor-pointer"
@@ -122,12 +124,12 @@ const JobSavedPage = () => {
             })
           )}
         </div>
-
-        <div className="w-[301px] flex gap-[13px] py-[16px] justify-center">
-          <button className="flex-1 h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black">
+        {/* 하단 버튼 */}
+        <div className="w-[301px] mt-[18px] flex gap-[13px] items-center mx-auto">
+          <button className="flex-1 w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black">
             직접 신청
           </button>
-          <button className="flex-1 h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium">
+          <button className="flex-1 w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium">
             보호자 신청
           </button>
         </div>
