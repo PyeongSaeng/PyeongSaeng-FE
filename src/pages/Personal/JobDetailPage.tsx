@@ -68,6 +68,7 @@ const JobDetailPage = () => {
                         <p className="text-[16px] font-semibold text-#414141 mb-[10px]">{job.name}</p>
                         <p className="text-[14px] font-normal text-#414141">{job.details}</p>
                     </div>
+                    {/* 하단 버튼 */}
                     <div className="w-[301px] flex gap-[13px] mt-[36px]">
                         <button
                             onClick={() => navigate(`/personal/jobs/recommend/${job.jobId}/apply`)}

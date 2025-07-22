@@ -52,7 +52,7 @@ const JobSavedPage = () => {
 
   return (
     <Topbar>
-      <div className="w-full h-full flex flex-col">
+      <div className="w-full h-full flex flex-col items-center">
         <div className="mt-[17px] flex flex-col items-center">
           <p className="text-[20px] font-semibold text-[#747474]">일자리 저장함</p>
         </div>
@@ -125,11 +125,11 @@ const JobSavedPage = () => {
           )}
         </div>
         {/* 하단 버튼 */}
-        <div className="w-[301px] mt-[18px] flex gap-[13px] items-center mx-auto">
-          <button className="flex-1 w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black">
+        <div className="w-[301px] mt-[18px] flex gap-[13px]">
+          <button className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black">
             직접 신청
           </button>
-          <button className="flex-1 w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium">
+          <button className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium">
             보호자 신청
           </button>
         </div>
