@@ -11,6 +11,9 @@ import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
+import ApplicationsPage from '../pages/Company/ApplicationsPage';
+import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
+import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -56,12 +59,18 @@ const AppRoutes = () => {
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
       <Route path="/company/jobs/create-form" element={<></>}></Route>
-      <Route path="/company/jobs/applications" element={<></>}></Route>
+      <Route
+        path="/company/jobs/applications"
+        element={<ApplicationsPage />}
+      ></Route>
       <Route
         path="/company/jobs/applications/:applicationId"
-        element={<></>}
+        element={<ApplicationDetailPage />}
       ></Route>
-      <Route path="/company/jobs/applications/results" element={<></>}></Route>
+      <Route
+        path="/company/jobs/applications/results"
+        element={<ApplicationResultsPage />}
+      ></Route>
       <Route path="/company/my" element={<></>}></Route>
       <Route path="/company/my/delete-account" element={<></>}></Route>
     </Routes>
