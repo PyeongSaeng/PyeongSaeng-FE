@@ -1,5 +1,10 @@
-const ApplicationResultsPage = () => {
-  return <div>결과 입력 페이지</div>;
-};
+import Topbar from '../../shared/components/topbar/Topbar';
 
+const ApplicationResultsPage = () => {
+  return (
+    <div>
+      <Topbar></Topbar>
+    </div>
+  );
+};
 export default ApplicationResultsPage;
