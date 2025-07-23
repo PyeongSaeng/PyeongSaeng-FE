@@ -97,7 +97,7 @@ export default function JobApplyPage() {
                     </label>
 
                     <div className="flex w-full h-[4.5rem] items-center">
-                      {/* 파일 이름 + 삭제 버튼 */}
+                      {/* 파일 이름, 삭제 버튼 */}
                       <div className="flex items-center flex-1 border border-[#08D485] rounded-lg pl-4 pr-2 bg-white overflow-hidden h-full">
                         <span
                           className="flex-1 text-[14px] text-[#333] font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
