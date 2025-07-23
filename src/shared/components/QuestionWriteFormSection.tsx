@@ -5,13 +5,15 @@ interface Props {
   onChange: (v: string) => void;
   onSave: () => void;
   onSubmit: () => void;
-  className?: string; // 확장용
+  className?: string;
+  readOnly?: boolean;
 }
 
 export default function QuestionWriteFormSection({
   inputValue,
   onChange,
   className,
+  readOnly = false,
 }: Props) {
   return (
     <div className={clsx('w-full flex flex-col items-start', className)}>
@@ -29,7 +31,11 @@ export default function QuestionWriteFormSection({
         value={inputValue}
         onChange={(e) => onChange(e.target.value)}
         placeholder="여기에 입력해주세요"
-        className="w-full max-w-[320px] h-64 mb-10 resize-none rounded-[8px] border border-[#08D485] p-4 text-[14px] font-medium text-[#222] placeholder:text-[#A3A3A3]"
+        readOnly={readOnly}
+        className={clsx(
+          'w-full max-w-[320px] h-64 mb-10 resize-none rounded-[8px] border border-[#08D485] p-4 text-[14px] font-medium placeholder:text-[#A3A3A3]',
+          readOnly ? 'bg-gray-100 text-[#555]' : 'text-[#222]'
+        )}
       />
     </div>
   );
