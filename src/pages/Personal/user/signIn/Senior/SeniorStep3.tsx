@@ -41,7 +41,7 @@ const periodOptions = [
   '10년 이상',
 ];
 
-type Step4State = {
+type Step3State = {
   type: string;
   age: string;
   gender: string;
@@ -52,13 +52,13 @@ type Step4State = {
   period: string;
 };
 
-type CareStep4Props = {
-  state: Step4State;
-  setState: React.Dispatch<React.SetStateAction<Step4State>>;
-  onNext: () => void;
+type SeniorStep3Props = {
+  state: Step3State;
+  setState: React.Dispatch<React.SetStateAction<Step3State>>;
+  onSubmit: () => void;
 };
 
-const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
+const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
   const [jobOpen, setJobOpen] = useState(false);
   const [periodOpen, setPeriodOpen] = useState(false);
 
@@ -254,7 +254,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
             )}
           </div>
         </div>
-        <NextButton className="!mt-[1.4rem] mt-[1.4rem]" onClick={onNext}>
+        <NextButton className="!mt-[1.4rem] mt-[1.4rem]" onClick={onSubmit}>
           다음
         </NextButton>
       </div>
@@ -262,4 +262,4 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
   );
 };
 
-export default CareStep4;
+export default SeniorStep3;

@@ -9,7 +9,7 @@ type Step1State = {
   smsCode: string;
 };
 
-type CareStep1Props = {
+type SeniorStep1Props = {
   state: Step1State;
   setState: React.Dispatch<React.SetStateAction<Step1State>>;
   onNext: () => void;
@@ -20,11 +20,10 @@ const inputClass =
 const selectClass =
   'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] bg-white text-[#BDBDBD] text-[1.6rem]';
 
-const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
+const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
   return (
     <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
       <SignUpHeader title="회원가입 하기" />
-
       <input
         className={`${inputClass} w-[29.4rem] mb-[2.1rem] ${state.name ? 'text-black' : 'text-[#BDBDBD]'}`}
         placeholder="이름을 입력하세요"
@@ -56,4 +55,4 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
   );
 };
 
-export default CareStep1;
+export default SeniorStep1;

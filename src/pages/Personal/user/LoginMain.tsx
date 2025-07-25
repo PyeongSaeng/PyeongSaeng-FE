@@ -8,7 +8,7 @@ const LoginMainPage = () => {
   const navigate = useNavigate();
 
   const handleSignIn = () => {
-    navigate('/join');
+    navigate('/personal/join');
   };
 
   if (view === 'id') {
