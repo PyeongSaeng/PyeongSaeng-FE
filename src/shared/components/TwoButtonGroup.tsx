@@ -1,4 +1,3 @@
-// src/shared/components/TwoButtonGroup.tsx
 import Button from './Button';
 
 interface TwoButtonGroupProps {

@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
+import { FiChevronRight } from 'react-icons/fi';
 import Topbar from '../../shared/components/topbar/Topbar';
+import PageHeader from '../../shared/components/PageHeader';
 
 interface ApplicationSummary {
   id: number;
@@ -25,19 +27,25 @@ export default function ApplicationsPage() {
       <Topbar />
       <div className="flex justify-center overflow-y-auto flex-1 pb-6">
         <div className="w-full max-w-[320px] flex flex-col items-center justify-start bg-white px-4 py-10">
-          <h2 className="text-[16px] font-bold border-b w-full pb-2 mb-4">
-            받은 신청서
-          </h2>
+          {/* 제목 */}
+          <PageHeader title="받은 신청서" />
 
-          <ul className="w-full space-y-4">
+          {/* 신청서 리스트 */}
+          <ul className="w-full space-y-6">
             {mockApplications.map((item) => (
               <li
                 key={item.id}
-                className="flex justify-between items-center border border-[#E0E0E0] rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50"
-                onClick={() => navigate(`/company/applications/${item.id}`)}
+                className="w-full cursor-pointer"
+                onClick={() =>
+                  navigate(`/company/jobs/applications/${item.id}`)
+                }
               >
-                <span className="text-[15px] text-[#333]">{item.title}</span>
-                <span className="text-[20px] text-[#333]">{'>'}</span>
+                <div className="flex items-center">
+                  <span className="text-[16px] text-black font-normal">
+                    {item.title}
+                  </span>
+                  <FiChevronRight className="text-[20px] text-black ml-[12px]" />
+                </div>
               </li>
             ))}
           </ul>
