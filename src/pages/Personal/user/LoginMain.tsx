@@ -19,7 +19,7 @@ const LoginMainPage = () => {
       <img
         src={LoginLogo}
         alt="평생 로고"
-        className="w-[212px] h-[117px] mr-4 mb-[7.2rem]"
+        className="w-[212px] h-[117px] mb-[7.2rem]"
       />
 
       {/* 아이디로 로그인 버튼 */}
