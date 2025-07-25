@@ -254,7 +254,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
             )}
           </div>
         </div>
-        <NextButton className="!mt-[1.4rem] mt-[1.4rem]" onClick={onNext}>
+        <NextButton className="!mt-[1.4rem]" onClick={onNext}>
           다음
         </NextButton>
       </div>

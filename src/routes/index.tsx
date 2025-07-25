@@ -12,6 +12,7 @@ import CompanyHomePage from '../pages/Company/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import CompanyLoginPage from '../pages/Company/user/CompanyLogin';
+import CompanySignin from '../pages/Company/user/CompanySignin';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -54,7 +55,7 @@ const AppRoutes = () => {
 
       {/* 기업버전 */}
       <Route path="/company" element={<CompanyHomePage />}></Route>
-      <Route path="/company/join" element={<></>}></Route>
+      <Route path="/company/join" element={<CompanySignin />}></Route>
       <Route path="/company/login" element={<CompanyLoginPage />}></Route>
       <Route path="/company/jobs/create-form" element={<></>}></Route>
       <Route path="/company/jobs/applications" element={<></>}></Route>

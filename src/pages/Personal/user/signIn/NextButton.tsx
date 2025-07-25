@@ -23,7 +23,7 @@ const NextButton = ({
       py-[1.2rem] px-[7.8rem]
       rounded-[0.8rem]
       bg-[#08D485]
-      text-black text-[1.6rem] font-semibold
+      text-black text-[1.6rem] font-medium
       transition mt-[3.7rem]
       disabled:bg-[#DAF4EA] disabled:text-[#222] disabled:cursor-not-allowed
       ${className ?? ''}

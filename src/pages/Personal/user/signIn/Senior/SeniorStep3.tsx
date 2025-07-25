@@ -254,8 +254,8 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
             )}
           </div>
         </div>
-        <NextButton className="!mt-[1.4rem] mt-[1.4rem]" onClick={onSubmit}>
-          다음
+        <NextButton className="!mt-[1.4rem]" onClick={onSubmit}>
+          회원가입 완료
         </NextButton>
       </div>
     </div>
