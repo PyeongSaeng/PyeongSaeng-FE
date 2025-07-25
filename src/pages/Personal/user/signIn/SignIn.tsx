@@ -5,10 +5,10 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const goToSeniorSignIn = () => {
-    navigate('/join/senior');
+    navigate('/personal/join/senior');
   };
   const goToCareSignIn = () => {
-    navigate('/join/guardian');
+    navigate('/personal/join/guardian');
   };
 
   return (
