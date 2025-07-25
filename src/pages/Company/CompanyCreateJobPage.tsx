@@ -35,7 +35,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     <input
                         type="text"
                         placeholder="여기에 입력하세요."
-                        className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] px-[55px] text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px] placeholder:font-medium"
+                        className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] px-[55px] text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                     />
                 </div>
             ))}
