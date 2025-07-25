@@ -49,7 +49,7 @@ const JobRecommendationPage = () => {
                        bg-white text-[16px] focus:outline-none"
             />
             <img
-              src="/icons/search_line.png"
+              src="/icons/magnifier_icon.png"
               alt="search"
               className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[23px] h-[23px]"
             />
