@@ -1,6 +1,5 @@
 // src/shared/components/Button.tsx
 import { clsx } from 'clsx';
-import React from 'react';
 
 interface ButtonProps {
   onClick?: () => void;

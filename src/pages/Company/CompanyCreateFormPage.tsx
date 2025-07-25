@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-export default function CompanyCreateFormPage() {
+interface Props {
+    onBack: () => void;
+}
+
+export default function CompanyCreateFormPage({ onBack }: Props) {
   const [fields, setFields] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(false);
@@ -39,7 +43,6 @@ export default function CompanyCreateFormPage() {
             </button>
           </div>
         ))}
-
         {/* 글자 답변 항목 입력창 (조건부 렌더링) */}
         {isInputVisible && (
           <div className="flex flex-col gap-[6px] mt-[12px]">
@@ -78,7 +81,9 @@ export default function CompanyCreateFormPage() {
           사진 답변 항목 추가
         </button>
       </div>
-      <button className="w-[294px] h-[45px] mt-[47px] mx-auto bg-[#0D29B7] text-[16px] text-white rounded-[8px] font-medium">
+      <button 
+      onClick={onBack}
+      className="w-[294px] h-[45px] mt-[47px] mx-auto bg-[#0D29B7] text-[16px] text-white rounded-[8px] font-medium">
         신청서 올리기
       </button>
     </div>

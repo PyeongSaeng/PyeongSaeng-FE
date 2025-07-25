@@ -34,16 +34,27 @@ const CompanyJobListPage = () => {
                                 </button>
                                 <div className="w-[323px] border-[1.3px] border-[#cccccc] mt-[10px]" />
                                 {/* 스트롤 영역 */}
+                                
+                                {/* 버튼 */}
                                 <div>
-                                    리스트 영역
+                                    <div className="w-[301px] flex gap-[13px] mt-[20px]">
+                                        <button
+                                            className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-white text-[16px] font-medium text-black">
+                                            삭제
+                                        </button>
+                                        <button
+                                            className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-[#0D29B7] text-[16px] font-medium text-white">
+                                            수정
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}
                         {/* step === 1 : 기본 정보 입력 */}
-                        {step === 1 && <CompanyCreateJobPage onNext={() => setStep(2)} onBack={() => setStep(0)} />}
+                        {step === 1 && <CompanyCreateJobPage onNext={() => setStep(2)} />}
 
                         {/* step === 2 : 추가 문항 입력 */}
-                        {step === 2 && <CompanyCreateFormPage onBack={() => setStep(1)} />}
+                        {step === 2 && <CompanyCreateFormPage onBack={() => setStep(0)} />}
                     </div>
                 </div>
             </Topbar>
