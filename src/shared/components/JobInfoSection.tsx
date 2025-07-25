@@ -15,7 +15,7 @@ const JobInfoSection = ({ jobName, info }: JobInfoSectionProps) => {
     <>
       {/* 선택한 일자리 */}
       <div className="w-full max-w-[320px] mb-6">
-        <button className="w-full h-12 border border-[#08D485] text-[#414141] rounded-md text-[16px] font-medium">
+        <button className="w-full h-[4.5rem] border border-[#08D485] text-[#414141] rounded-md text-[16px] font-medium">
           {jobName}
         </button>
       </div>

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Topbar from "../../shared/components/topbar/Topbar";
 
@@ -130,6 +131,7 @@ const JobDraftsPage = () => {
             </div>
         </Topbar>
     );
+
 };
 
 export default JobDraftsPage;
