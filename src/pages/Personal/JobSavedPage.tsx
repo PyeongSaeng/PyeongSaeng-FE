@@ -61,12 +61,12 @@ const JobSavedPage = () => {
         <div className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
           style={{ maxHeight: "450px" }}>
           {savedJobs.length === 0 ? (
-            <p className="text-gray-500">저장된 일자리가 없습니다.</p>
+            <p className="text-[#747474] text-[16px]">저장된 일자리가 없습니다.</p>
           ) : (
             savedJobs.map((job) => {
               const isSelected = selectedJobId === job.jobId;
               return (
-                <div key={job.jobId} className="flex flex-col ">
+                <div key={job.jobId} className="flex flex-col relative">
                   <div className="flex items-center gap-2">
                     {/* 동그라미 */}
                     <div
@@ -88,6 +88,16 @@ const JobSavedPage = () => {
                     >
                       선택하기
                     </div>
+                    {/* 취소하기 */}
+                    <img
+                      src="/icons/close_icon.svg"
+                      alt="취소"
+                      className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
+                      onClick={() => {
+                        setSelectedJobId(null);
+                        setSavedJobs((prev) => prev.filter((j) => j.jobId !== job.jobId));
+                      }}
+                    />
                   </div>
 
 

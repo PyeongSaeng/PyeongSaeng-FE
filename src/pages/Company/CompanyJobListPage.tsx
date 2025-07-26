@@ -28,7 +28,7 @@ const CompanyJobListPage = () => {
                                     <img
                                         src="/icons/plus_icon.svg"
                                         alt="추가"
-                                        className="w-[24px] h-[24px]"
+                                        className="w-[24px] h-[24px] cursor-pointer"
                                     />
                                     새 신청서 추가
                                 </button>
