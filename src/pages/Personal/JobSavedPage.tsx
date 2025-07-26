@@ -3,6 +3,12 @@ import { useEffect, useState } from "react";
 import Topbar from "../../shared/components/topbar/Topbar";
 import { dummyJobs, JobType } from '../../shared/constants/dummyJobs';
 
+const getSavedJobIds = (): number[] =>
+  JSON.parse(localStorage.getItem('savedJobs') || '[]');
+
+const setSavedJobIds = (ids: number[]) =>
+  localStorage.setItem('savedJobs', JSON.stringify(ids));
+
 const JobSavedPage = () => {
   const [savedJobs, setSavedJobs] = useState<JobType[]>([]);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
@@ -13,6 +19,13 @@ const JobSavedPage = () => {
     setSavedJobs(jobs);
   }, []);
 
+  const handleRemove = (jobId: number) => {
+    setSelectedJobId(null);
+    setSavedJobs((prev) => prev.filter((j) => j.jobId !== jobId));
+    const newIds = getSavedJobIds().filter((id) => id !== jobId);
+    setSavedJobIds(newIds);
+  };
+
   return (
     <Topbar>
       <div className="w-full h-full flex flex-col items-center">
@@ -20,8 +33,7 @@ const JobSavedPage = () => {
           <p className="text-[20px] font-semibold text-[#747474]">일자리 저장함</p>
         </div>
         {/* 스크롤 영역 */}
-        <div className="flex-1 w-full flex justify-center" style={{ minHeight: 0 }}></div>
-        <div className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
+        <div className="flex-1 w-full flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
           style={{ maxHeight: "450px" }}>
           {savedJobs.length === 0 ? (
             <p className="text-[#747474] text-[16px]">저장된 일자리가 없습니다.</p>
@@ -56,17 +68,9 @@ const JobSavedPage = () => {
                       src="/icons/close_icon.svg"
                       alt="취소"
                       className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
-                      onClick={() => {
-                        setSelectedJobId(null);
-                        setSavedJobs((prev) => prev.filter((j) => j.jobId !== job.jobId));
-                        const savedIds: number[] = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-                        const newIds = savedIds.filter((id) => id !== job.jobId);
-                        localStorage.setItem('savedJobs', JSON.stringify(newIds));
-                      }}
+                      onClick={() => handleRemove(job.jobId)}
                     />
                   </div>
-
-
                   <div
                     className={`
                       w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden
