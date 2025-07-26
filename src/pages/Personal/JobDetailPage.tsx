@@ -1,38 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
+import { dummyJobs } from '../../shared/constants/dummyJobs';
 
-// test용 더미 추후 삭제 예정
-const dummyJobs = [
-    {
-        jobId: 1,
-        name: '죽전1동 행정복지센터 미화원',
-        image: '/icons/popular-dummy1.png',
-        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-    },
-    {
-        jobId: 2,
-        name: '죽전2동 행정복지센터 미화원',
-        image: '/icons/popular-dummy1.png',
-        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-    },
-    {
-        jobId: 3,
-        name: '죽전3동 행정복지센터 미화원',
-        image: '/icons/popular-dummy1.png',
-        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-    },
-    {
-        jobId: 4,
-        name: '죽전4동 행정복지센터 미화원',
-        image: '/icons/popular-dummy1.png',
-        details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-    },
-];
 //다 다르게 이동됨
 const JobDetailPage = () => {
     const { jobId } = useParams();
     const navigate = useNavigate();
     const job = dummyJobs.find(job => job.jobId === Number(jobId));
+    const saved: number[] = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+    const isSaved = job ? saved.includes(job.jobId) : false;
 
     // 유효하지 않은 id 처리
     if (!job) {
@@ -77,8 +53,9 @@ const JobDetailPage = () => {
                         </button>
                         <button
                             onClick={handleSave}
+                            disabled={isSaved}
                             className="w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium text-black">
-                            저장
+                            {isSaved ? "저장됨" : "저장"}
                         </button>
                     </div>
                 </div>
