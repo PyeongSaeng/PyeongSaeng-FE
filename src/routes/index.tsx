@@ -8,12 +8,14 @@ import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
-import CompanyHomePage from '../pages/Company/CompanyHomePage';
+import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
+
+import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -58,7 +60,10 @@ const AppRoutes = () => {
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
-      <Route path="/company/jobs/create-form" element={<></>}></Route>
+
+      <Route path="/company/jobs/create-form" element={< CompanyJobListPage/>}></Route>
+      <Route path="/company/jobs/applications" element={<></>}></Route>
+
       <Route
         path="/company/jobs/applications"
         element={<ApplicationsPage />}

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
