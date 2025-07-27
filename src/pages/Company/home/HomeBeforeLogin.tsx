@@ -1,7 +1,7 @@
-import Topbar from '../../shared/components/topbar/Topbar';
-import dummy1 from '../../shared/assets/popular-dummy1.png';
+import Topbar from '../../../shared/components/topbar/Topbar';
+import dummy1 from '../../../shared/assets/popular-dummy1.png';
 
-const PersonalHomePage = () => {
+const HomeBeforeLogin = () => {
   return (
     <div className="text-[16px]">
       <Topbar>
@@ -9,10 +9,10 @@ const PersonalHomePage = () => {
           <div>
             <div className="w-[298px] h-[180px] mt-[16px] mb-[54px] flex flex-col items-center justify-center gap-[27px] rounded-[13px] border-[1px] border-[#D3D3D3]">
               <div className="flex flex-col items-center">
-                <div>나에게 맞는 정보를</div>
-                <div>확인하세요</div>
+                <div>간편하게 공고를 올리고</div>
+                <div>합불 결과까지 한 번에 관리해보세요</div>
               </div>
-              <button className="w-[207px] w-[45px] px-[78px] py-[12px] rounded-[8px] bg-[#08D485]">
+              <button className="w-[207px] w-[45px] px-[78px] py-[12px] rounded-[8px] bg-[#0D29B7] text-white">
                 로그인
               </button>
             </div>
@@ -42,4 +42,4 @@ const PersonalHomePage = () => {
   );
 };
 
-export default PersonalHomePage;
+export default HomeBeforeLogin;

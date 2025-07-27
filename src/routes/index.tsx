@@ -8,10 +8,9 @@ import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
-import CompanyHomePage from '../pages/Company/CompanyHomePage';
+import CompanyHomePage from '../pages/Company/home/HomeBeforeLogin';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
-
 
 const AppRoutes = () => {
   return (
