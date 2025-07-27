@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import SignUpHeader from './SignUpHeader';
+import SignUpHeader from './components/user/signIn/SignUpHeader';
 
 const SignIn = () => {
   const navigate = useNavigate();

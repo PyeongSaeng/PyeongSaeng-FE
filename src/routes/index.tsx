@@ -2,10 +2,10 @@ import { Routes, Route } from 'react-router-dom';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
 import PersonalHomePage from '../pages/Personal/PersonalHomePage';
-import LoginMainPage from '../pages/Personal/user/LoginMain';
-import SignIn from '../pages/Personal/user/signIn/SignIn';
-import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
-import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
+import LoginMainPage from '../pages/Personal/LoginMain';
+import SignIn from '../pages/Personal/SignIn';
+import SeniorSignIn from '../pages/Personal/components/user/signIn/Senior/SeniorSignIn';
+import CareSignIn from '../pages/Personal/components/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/CompanyHomePage';
@@ -13,7 +13,7 @@ import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import CompanyLoginPage from '../pages/Company/user/CompanyLogin';
 import CompanySignin from '../pages/Company/user/CompanySignin';
-import FindAccount from '../pages/Personal/user/FindAccount/FindAccount';
+import FindAccount from '../pages/Personal/components/user/FindAccount/FindAccount';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {

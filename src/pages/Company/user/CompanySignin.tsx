@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NextButton from '../../Personal/user/signIn/NextButton';
+import NextButton from '../../Personal/components/user/signIn/NextButton';
 
 type CompanySigninState = {
   companyName: string;

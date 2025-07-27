@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NextButton from '../signIn/NextButton';
-import { IdFindResult } from '../../types/user';
+import { IdFindResult } from '../../../types/user';
 
 const IdFind = () => {
   const navigate = useNavigate();
