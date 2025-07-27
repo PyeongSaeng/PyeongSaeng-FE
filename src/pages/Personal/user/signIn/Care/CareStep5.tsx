@@ -19,14 +19,8 @@ const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 placeholder-[#BDBDBD] text-[1.6rem] font-medium';
 const selectClass =
   'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] text-[#BDBDBD] text-[1.6rem] font-medium';
-const dropdownBoxClass =
-  'w-full bg-white border border-[#E1E1E1] rounded-[1rem] text-[#BDBDBD] flex items-center justify-between cursor-pointer';
-const dropdownOptionClass =
-  'w-full text-[#BDBDBD] text-[1.6rem] py-2 px-4 text-left hover:bg-[#F6F6F6] cursor-pointer font-medium not-italic leading-normal';
-const carrierOptions = ['SKT', 'KT', 'LGU+'];
 
 const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
-  const [carrierOpen, setCarrierOpen] = useState(false);
   return (
     <div className="flex flex-col items-center w-full pt-8 px-[3.3rem] pb-[8rem]">
       <SignUpHeader title="회원가입 하기" />

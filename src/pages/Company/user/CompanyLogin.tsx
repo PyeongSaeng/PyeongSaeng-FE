@@ -33,9 +33,9 @@ const CompanyLoginPage = () => {
           placeholder="비밀번호를 입력해주세요"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
-          className={`mb-[3rem] w-[270px] h-[45px] font-medium rounded-[8px] border border-[#e1e1e1 text-[#c2c2c2] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${pw ? 'text-black' : 'text-[#C2C2C2]'}`}
+          className={`mb-[1.9rem] w-[270px] h-[45px] rounded-[8px] font-medium border border-[#e1e1e1] text-[#c2c2c2] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${id ? 'text-black' : 'text-[#C2C2C2]'}`}
         />
-        <button className="w-[270px] bg-[#0D29B7] text-white text-[16px] py-[12px] rounded-[8px] mb-[3rem] shadow transition">
+        <button className="w-[270px] bg-[#0D29B7] text-white text-[16px] py-[12px] rounded-[8px] mt-[1.1rem] mb-[3rem] shadow transition">
           로그인
         </button>
       </form>

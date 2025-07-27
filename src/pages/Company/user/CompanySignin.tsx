@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import NextButton from '../../Personal/user/signIn/NextButton';
 
 type CompanySigninState = {
+  companyName: string;
+  companyPhone: string;
+  verificationCode: string;
   companyNumber: string;
   id: string;
   idCheck: string;
@@ -17,6 +20,9 @@ const inputClass =
 const CompanySignin = () => {
   const navigate = useNavigate();
   const [state, setState] = useState<CompanySigninState>({
+    companyName: '',
+    companyPhone: '',
+    verificationCode: '',
     companyNumber: '',
     id: '',
     idCheck: '',
@@ -32,6 +38,50 @@ const CompanySignin = () => {
   return (
     <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
       <div className="w-[29.4rem]">
+        {/* 사업자명 */}
+        <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mb-[1rem]">
+          사업자명
+        </div>
+        <input
+          className={inputClass}
+          placeholder="사업자명을 입력하세요"
+          value={state.companyName}
+          onChange={(e) =>
+            setState((s) => ({ ...s, companyName: e.target.value }))
+          }
+        />
+
+        {/* 사업자 전화번호 */}
+        <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mb-[1rem] mt-[2.8rem]">
+          사업자 전화번호
+        </div>
+        <input
+          className={inputClass}
+          placeholder="사업자 전화번호를 입력하세요"
+          value={state.companyPhone}
+          onChange={(e) =>
+            setState((s) => ({ ...s, companyPhone: e.target.value }))
+          }
+        />
+
+        {/* 인증번호(SMS) */}
+        <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mb-[1rem] mt-[2.8rem]">
+          인증번호(SMS)
+        </div>
+        <div className="flex gap-2 mb-[2.8rem]">
+          <input
+            className="w-[18.3rem] h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] bg-white placeholder-[#BDBDBD] text-[1.6rem]"
+            placeholder="인증번호를 입력하세요"
+            value={state.verificationCode}
+            onChange={(e) =>
+              setState((s) => ({ ...s, verificationCode: e.target.value }))
+            }
+          />
+          <button className="bg-[#0D29B7] w-[10.3rem] text-white rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem] text-center whitespace-nowrap">
+            인증번호 전송
+          </button>
+        </div>
+
         {/* 사업자 등록 번호 */}
         <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mb-[1rem]">
           사업자 등록 번호
@@ -112,7 +162,7 @@ const CompanySignin = () => {
       </div>
       <NextButton
         onClick={handleCompleteSignIn}
-        className="!bg-[#0D29B7] text-white mt-[3.3rem]"
+        className="!bg-[#0D29B7] text-white mt-[3.3rem] mb-[2.8rem]"
       >
         회원가입
       </NextButton>
