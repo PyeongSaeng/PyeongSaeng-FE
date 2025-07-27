@@ -6,8 +6,8 @@ const PersonalHomePage = () => {
   return (
     <div>
       <Topbar>
-        {/* <HomeBeforeLogin /> */}
-        <HomeAfterLogin />
+        <HomeBeforeLogin />
+        {/* <HomeAfterLogin /> */}
       </Topbar>
     </div>
   );

@@ -18,7 +18,7 @@ const HomeBeforeLogin = () => {
             요즘 뜨는 일자리
           </span>
           <div className="h-[356px] overflow-y-scroll scrollbar-hide">
-            <div className="w-[298px] h-[196px] mt-[10px] mb-[17px] flex flex-col items-center justify-center gap-[27px] rounded-[13px] border-[1px] border-[#D3D3D3]">
+            <div className="w-[298px] h-[196px] mt-[2px] mb-[17px] flex flex-col items-center justify-center gap-[27px] rounded-[13px] border-[1px] border-[#D3D3D3]">
               <span>죽전 2동 행정복지센터 미화원</span>
               <img
                 className="rounded-[8px] border-[1px] border-[#A4A4A4]"
