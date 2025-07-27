@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
+
+  const handleFindAccount = () => {
+    navigate('/personal/find-account');
+  };
 
   return (
     <div className="flex flex-col items-center w-full pt-12">
@@ -38,7 +44,10 @@ const LoginPage = () => {
         <p className="text-[#747474] text-[1.6rem] mb-[1.2rem]">
           비밀번호를 잊어버리셨나요?
         </p>
-        <button className="w-[270px] border-[1.3px] border-[#08D485] text-black text-[16px] py-[12px] rounded-[8px] mb-[26px]">
+        <button
+          className="w-[270px] border-[1.3px] border-[#08D485] text-black text-[16px] py-[12px] rounded-[8px] mb-[26px]"
+          onClick={handleFindAccount}
+        >
           아이디/비밀번호 찾기
         </button>
       </div>

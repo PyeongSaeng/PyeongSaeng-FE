@@ -13,6 +13,7 @@ import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import CompanyLoginPage from '../pages/Company/user/CompanyLogin';
 import CompanySignin from '../pages/Company/user/CompanySignin';
+import FindAccount from '../pages/Personal/user/FindAccount/FindAccount';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -52,6 +53,7 @@ const AppRoutes = () => {
       <Route path="/personal/my/info" element={<></>}></Route>
       <Route path="/personal/my/delete-account" element={<></>}></Route>
       <Route path="/personal/my/seniors" element={<></>}></Route>
+      <Route path="/personal/find-account" element={<FindAccount />}></Route>
 
       {/* 기업버전 */}
       <Route path="/company" element={<CompanyHomePage />}></Route>
