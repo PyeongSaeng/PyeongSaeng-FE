@@ -64,9 +64,10 @@ const AppRoutes = () => {
         element={<ApplicationsPage />}
       ></Route>
       <Route
-        path="/company/jobs/applications/:applicationId"
+        path="/company/jobs/applications/:title"
         element={<ApplicationDetailPage />}
-      ></Route>
+      />
+
       <Route
         path="/company/jobs/applications/:applicationId/results"
         element={<ApplicationResultsPage />}

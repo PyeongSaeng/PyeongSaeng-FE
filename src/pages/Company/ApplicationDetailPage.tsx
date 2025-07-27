@@ -3,94 +3,95 @@ import { useState } from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
-
-type ApplicationInfo = {
-  name: string;
-  title: string;
-};
-
-const applicationMap: Record<string, ApplicationInfo> = {
-  '101': {
-    name: '김영희',
-    title: '근무지 + 근무 내용',
-  },
-  '102': {
-    name: '이말덕',
-    title: '죽전도서관 사서 업무',
-  },
-};
+import { applicationGroups } from '../../shared/constants/applicationData';
 
 export default function ApplicationDetailPage() {
-  const { applicationId } = useParams();
+  const { title } = useParams();
+  const decodedTitle = decodeURIComponent(title ?? '');
+
   const navigate = useNavigate();
-  const info = applicationMap[applicationId ?? ''] ?? { name: '', title: '' };
 
-  const [status, setStatus] = useState<'init' | 'check' | 'complete'>('init');
+  // ✅ title로 그룹 찾기
+  const group = applicationGroups.find((group) => group.title === decodedTitle);
 
-  const goToResultPage = () => {
-    navigate(`/company/jobs/applications/${applicationId}/results`);
+  const [statusMap, setStatusMap] = useState<
+    Record<string, 'init' | 'check' | 'complete'>
+  >(
+    () =>
+      group?.applications.reduce(
+        (acc, app) => {
+          acc[app.id] = 'init';
+          return acc;
+        },
+        {} as Record<string, 'init' | 'check' | 'complete'>
+      ) ?? {}
+  );
+
+  const handleButtonClick = (id: string) => {
+    setStatusMap((prev) => {
+      const current = prev[id];
+      if (current === 'init') return { ...prev, [id]: 'check' };
+      if (current === 'check') return { ...prev, [id]: 'complete' };
+      return prev;
+    });
   };
 
-  const handleButtonClick = () => {
-    if (status === 'init') setStatus('check');
-    else if (status === 'check') setStatus('complete');
+  const goToResultPage = (id: string) => {
+    navigate(
+      `/company/jobs/applications/${encodeURIComponent(decodedTitle)}/results?id=${id}`
+    );
   };
 
   return (
-    <div className="pt-[10px] h-[740px] flex flex-col bg-white font-pretendard">
+    <div className="h-[740px] flex flex-col bg-white font-pretendard">
       <Topbar />
-
-      <div className="flex flex-col items-center w-full max-w-[320px] self-center px-4 py-10">
-        {/* 상단 제목 */}
+      <div className="flex flex-col items-center w-full max-w-[320px] self-center px-4 pt-10">
         <PageHeader title="받은 신청서" />
+        <PageHeader title={decodedTitle} />
 
-        {/* 리스트 타이틀 */}
-        <PageHeader title={info.title} />
-
-        {/* 리스트 항목 */}
         <ul className="w-full mt-6 space-y-6">
-          <li className="w-full">
-            <div className="flex items-center justify-between">
-              {/* 신청서 정보 + 페이지 이동 */}
-              <div
-                className="flex items-center cursor-pointer"
-                onClick={goToResultPage}
-              >
-                <span className="text-[16px] text-black font-normal">
-                  {info.name} 님 신청서
-                </span>
-                <FiChevronRight className="text-[20px] text-black ml-[12px]" />
+          {group?.applications.map((app) => (
+            <li key={app.id} className="w-full">
+              <div className="flex items-center justify-between">
+                {/* 이름 + 이동 */}
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() => goToResultPage(app.id)}
+                >
+                  <span className="text-[16px] text-black font-normal">
+                    {app.name} 님 신청서
+                  </span>
+                  <FiChevronRight className="text-[20px] text-black ml-[12px]" />
+                </div>
+
+                {/* 버튼 상태별 렌더링 */}
+                {statusMap[app.id] === 'init' && (
+                  <button
+                    onClick={() => handleButtonClick(app.id)}
+                    className="w-[94px] h-[34px] bg-[#0D29B7] text-white text-[16px] font-medium rounded-[8px]"
+                  >
+                    확인
+                  </button>
+                )}
+                {statusMap[app.id] === 'check' && (
+                  <button
+                    onClick={() => handleButtonClick(app.id)}
+                    className="w-[94px] h-[34px] bg-[#0D29B7] text-white text-[16px] font-medium rounded-[8px]"
+                  >
+                    합불입력
+                  </button>
+                )}
+                {statusMap[app.id] === 'complete' && (
+                  <button
+                    disabled
+                    className="w-[94px] h-[34px] border border-[#C9C9C9] text-[#C9C9C9] bg-white text-[16px] font-medium rounded-[8px]"
+                  >
+                    입력완료
+                  </button>
+                )}
               </div>
-
-              {/* 버튼 그룹 */}
-              {status === 'init' && (
-                <button
-                  onClick={handleButtonClick}
-                  className="w-[94px] h-[34px] bg-[#0D29B7] text-white text-[16px] font-medium rounded-[8px] flex items-center justify-center"
-                >
-                  확인
-                </button>
-              )}
-
-              {status === 'check' && (
-                <button
-                  onClick={handleButtonClick}
-                  className="w-[94px] h-[34px] bg-[#0D29B7] text-white text-[16px] font-medium rounded-[8px] flex items-center justify-center"
-                >
-                  합불입력
-                </button>
-              )}
-
-              {status === 'complete' && (
-                <button
-                  disabled
-                  className="w-[94px] h-[34px] border border-[#C9C9C9] text-[#C9C9C9] bg-white text-[16px] font-medium rounded-[8px] flex items-center justify-center cursor-default"
-                >
-                  입력완료
-                </button>
-              )}
-            </div>
-          </li>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
