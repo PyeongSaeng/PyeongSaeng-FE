@@ -11,17 +11,17 @@ import SignUpHeader from '../SignUpHeader';
 import NextButton from '../NextButton';
 
 const inputClass =
-  'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#BDBDBD] text-[1.6rem] font-medium';
+  'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem] font-medium';
 const selectClass =
-  'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] text-[#BDBDBD] text-[1.6rem] font-medium';
+  'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] text-[#c2c2c2] text-[1.6rem] font-medium';
 
 const genderBtnClass =
   'flex-1 h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] text-[1.6rem] font-semibold flex items-center justify-center mb-3';
 
 const dropdownBoxClass =
-  'w-full bg-white border border-[#E1E1E1] rounded-[1rem] p-0 mb-8 flex items-center justify-between cursor-pointer';
+  'w-[20rem] bg-white border border-[#E1E1E1] rounded-[1rem] p-0 mb-8 flex items-center justify-between cursor-pointer';
 const dropdownOptionClass =
-  'w-full text-[#BDBDBD] text-[1.6rem] py-2 px-4 text-left hover:bg-[#F6F6F6] cursor-pointer font-medium not-italic leading-normal';
+  'w-full text-[#c2c2c2] text-[1.6rem] py-2 px-4 text-left hover:bg-[#F6F6F6] cursor-pointer font-medium not-italic leading-normal';
 
 const jobOptions = [
   '주부',
@@ -92,39 +92,39 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
       className={`flex flex-col items-center w-full pt-8 px-[3.3rem] ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
     >
       <SignUpHeader title="구직자 정보 입력" />
-      <div className="w-[29.4rem] flex flex-col items-center gap-[1rem]">
-        <div className="text-[#747474] text-[1.6rem] font-semibold mb-6">
+      <div className="w-[29.4rem] flex flex-col gap-[1rem]">
+        <div className="text-[#747474] text-[1.6rem] font-semibold mb-[1.3rem]">
           어르신의 구직에 사용할 정보를 입력해주세요
         </div>
         <input
-          className={`${inputClass} ${state.age ? 'text-black' : 'text-[#BDBDBD]'}`}
+          className={`${inputClass} ${state.age ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="어르신의 연세를 입력해주세요"
           value={state.age}
           onChange={(e) => setState((s) => ({ ...s, age: e.target.value }))}
         />
         <div className="flex gap-2 w-full mb-3">
           <button
-            className={`${genderBtnClass} ${state.gender === '여성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#BDBDBD]'}`}
+            className={`${genderBtnClass} ${state.gender === '여성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
             onClick={() => setState((s) => ({ ...s, gender: '여성' }))}
           >
             여성
           </button>
           <button
-            className={`${genderBtnClass} ${state.gender === '남성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#BDBDBD]'}`}
+            className={`${genderBtnClass} ${state.gender === '남성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
             onClick={() => setState((s) => ({ ...s, gender: '남성' }))}
           >
             남성
           </button>
         </div>
         <input
-          className={`${inputClass} ${state.phone ? 'text-black' : 'text-[#BDBDBD]'}`}
+          className={`${inputClass} ${state.phone ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="전화번호를 입력해주세요"
           value={state.phone}
           onChange={(e) => setState((s) => ({ ...s, phone: e.target.value }))}
         />
         <div className="flex w-full gap-[0.5rem] mb-3">
           <input
-            className={`${selectClass} w-[18.7rem] mb-0 ${state.address ? 'text-black' : 'text-[#BDBDBD]'}`}
+            className={`${selectClass} w-[18.7rem] mb-0 ${state.address ? 'text-black' : 'text-[#c2c2c2]'}`}
             placeholder="거주지를 입력해주세요"
             value={state.address}
             onChange={(e) =>
@@ -140,7 +140,7 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
           </button>
         </div>
         <input
-          className={`${inputClass} ${state.detailAddress ? 'text-black' : 'text-[#BDBDBD]'}`}
+          className={`${inputClass} ${state.detailAddress ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="상세주소를 입력해주세요"
           value={state.detailAddress}
           onChange={(e) =>
@@ -150,7 +150,7 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
         <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mt-[1.4rem] mb-[1.4rem]">
           경력 사항
         </div>
-        <div className="flex gap-2 w-full mb-3">
+        <div className="flex w-full mb-3 gap-[6.5rem]">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             직무
           </div>
@@ -160,7 +160,7 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
               onClick={() => setJobOpen((open) => !open)}
             >
               <div
-                className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal ${state.job ? 'text-black' : 'text-[#BDBDBD]'}`}
+                className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal ${state.job ? 'text-black' : 'text-[#c2c2c2]'}`}
               >
                 {state.job || '직무를 선택하세요'}
               </div>
@@ -202,7 +202,7 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
             )}
           </div>
         </div>
-        <div className="flex gap-2 w-full">
+        <div className="flex gap-[6.5rem] w-full">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             기간
           </div>
@@ -212,7 +212,7 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
               onClick={() => setPeriodOpen((open) => !open)}
             >
               <div
-                className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal ${state.period ? 'text-black' : 'text-[#BDBDBD]'}`}
+                className={`py-2 px-4 font-medium not-italic text-[1.6rem] leading-normal ${state.period ? 'text-black' : 'text-[#c2c2c2]'}`}
               >
                 {state.period || '기간을 선택하세요'}
               </div>

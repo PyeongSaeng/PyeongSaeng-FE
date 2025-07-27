@@ -27,17 +27,17 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
 
       <input
         className={`${inputClass} w-[29.4rem] mb-[2.1rem] ${state.name ? 'text-black' : 'text-[#BDBDBD]'}`}
-        placeholder="이름을 입력하세요"
+        placeholder="본인 이름을 입력하세요"
         value={state.name}
         onChange={(e) => setState((s) => ({ ...s, name: e.target.value }))}
       />
       <input
         className={`${inputClass} w-[29.4rem] ${state.phone ? 'text-black' : 'text-[#BDBDBD]'}`}
-        placeholder="전화번호를 입력하세요"
+        placeholder="본인 전화번호를 입력하세요"
         value={state.phone}
         onChange={(e) => setState((s) => ({ ...s, phone: e.target.value }))}
       />
-      <div className="w-[29.4rem] text-left font-semibold text-[#747474] text-[1.6rem] mb-1 mt-[3.6rem]">
+      <div className="w-[29.4rem] text-left font-semibold text-[#747474] text-[1.6rem] mb-[2.1rem] mt-[3.6rem]">
         인증번호(SMS)
       </div>
       <div className="w-[29.4rem] flex gap-[1.4rem] mb-3">
@@ -47,8 +47,8 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
           value={state.smsCode}
           onChange={(e) => setState((s) => ({ ...s, smsCode: e.target.value }))}
         />
-        <button className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-semibold">
-          인증번호 전송
+        <button className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium">
+          인증하기
         </button>
       </div>
       <NextButton onClick={onNext}>다음</NextButton>
