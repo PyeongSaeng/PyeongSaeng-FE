@@ -11,6 +11,10 @@ const CompanyLoginPage = () => {
     navigate('/company/join');
   };
 
+  const handleFindAccount = () => {
+    navigate('/company/find-account');
+  };
+
   return (
     <div className="flex flex-col items-center w-full pt-12">
       <img
@@ -45,7 +49,10 @@ const CompanyLoginPage = () => {
         <p className="text-[#747474] text-[1.6rem] mb-[1.2rem]">
           비밀번호를 잊어버리셨나요?
         </p>
-        <button className="w-[270px] border-[1.3px] border-[#0D29B7] text-black text-[16px] py-[12px] rounded-[8px] mb-[3rem]">
+        <button
+          className="w-[270px] border-[1.3px] border-[#0D29B7] text-black text-[16px] py-[12px] rounded-[8px] mb-[3rem]"
+          onClick={handleFindAccount}
+        >
           아이디/비밀번호 찾기
         </button>
       </div>

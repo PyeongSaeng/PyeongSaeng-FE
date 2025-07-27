@@ -11,9 +11,10 @@ import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
-import CompanyLoginPage from '../pages/Company/user/CompanyLogin';
-import CompanySignin from '../pages/Company/user/CompanySignin';
+import CompanyLoginPage from '../pages/Company/CompanyLogin';
+import CompanySignin from '../pages/Company/CompanySignin';
 import FindAccount from '../pages/Personal/components/user/FindAccount/FindAccount';
+import CompanyFindAccount from '../pages/Company/components/FindAccount/FindAccount';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -68,6 +69,10 @@ const AppRoutes = () => {
       <Route path="/company/jobs/applications/results" element={<></>}></Route>
       <Route path="/company/my" element={<></>}></Route>
       <Route path="/company/my/delete-account" element={<></>}></Route>
+      <Route
+        path="/company/find-account"
+        element={<CompanyFindAccount />}
+      ></Route>
     </Routes>
   );
 };
