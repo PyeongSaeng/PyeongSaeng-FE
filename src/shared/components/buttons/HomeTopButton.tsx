@@ -12,8 +12,8 @@ const bgColorMap = {
 } as const;
 
 const textColorMap = {
-  white: 'text-white',
-  black: 'text-black',
+  white: 'text-white font-[500]',
+  black: 'text-black font-[400]',
 } as const;
 
 const HomeTopButton = ({
@@ -23,7 +23,7 @@ const HomeTopButton = ({
 }: HomeTopButtonProps) => {
   return (
     <button
-      className={`w-[102px] h-[65px] rounded-[8px] px-[12px] py-[22px] font-[500] text-[16px] ${bgColorMap[bgColor]} ${textColorMap[textColor]}`}
+      className={`flex justify-center items-center w-[102px] h-[65px] rounded-[8px] px-[12px] text-[16px] ${bgColorMap[bgColor]} ${textColorMap[textColor]}`}
     >
       {children}
     </button>
