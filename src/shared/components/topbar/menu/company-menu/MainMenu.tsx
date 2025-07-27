@@ -1,10 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import { IoChevronForward } from 'react-icons/io5';
 import MenuNavButton from '../MenuNavButton';
 
 const MainMenu = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="px-[8px]">
-      <div className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]">
+      <div
+        className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]"
+        onClick={() => navigate('/company/login')}
+      >
         {'로그인 하세요'}
         <IoChevronForward className="size-[30px]" />
       </div>
