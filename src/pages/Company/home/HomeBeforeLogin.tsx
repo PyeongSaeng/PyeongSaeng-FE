@@ -16,7 +16,7 @@ const HomeBeforeLogin = () => {
         <span className="font-[pretendard JP] font-[600] text-[20px] text-[#747474]">
           이번 주 지원이 많은 공고
         </span>
-        <div className="h-[348px] overflow-y-scroll scrollbar-hide">
+        <div className="h-[356px] overflow-y-scroll scrollbar-hide">
           <div className="w-[298px] h-[196px] mt-[10px] mb-[17px] flex flex-col items-center justify-center gap-[12px] rounded-[13px] border-[1px] border-[#D3D3D3]">
             <span>죽전 2동 행정복지센터 미화원</span>
             <img
