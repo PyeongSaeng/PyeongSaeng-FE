@@ -28,7 +28,7 @@ const IdFind = () => {
   };
 
   const handleGoToLogin = () => {
-    navigate('/personal/login');
+    navigate('/company/login');
   };
 
   const inputClass =
