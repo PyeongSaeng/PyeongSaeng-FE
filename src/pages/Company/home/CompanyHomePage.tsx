@@ -1,11 +1,16 @@
+import Topbar from '../../../shared/components/topbar/Topbar';
+import HomeAfterLogin from './HomeAfterLogin';
 import HomeBeforeLogin from './HomeBeforeLogin';
 
-const CompanyHomePageBeforeLogin = () => {
+const CompanyHomePage = () => {
   return (
-    <>
-      <HomeBeforeLogin />
-    </>
+    <div>
+      <Topbar>
+        {/* <HomeBeforeLogin /> */}
+        <HomeAfterLogin />
+      </Topbar>
+    </div>
   );
 };
 
-export default CompanyHomePageBeforeLogin;
+export default CompanyHomePage;
