@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ImageUploadButton from "../../shared/components/EvidenceSection/ImageUploadButton";
+import AddressSearchInput from "../../shared/components/AddressSearchInput";
 
 interface Props {
     onNext: () => void;
@@ -36,25 +37,9 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     근무지
                 </label>
                 <div className="w-[251px] h-[120px] pl-[12px] flex flex-col gap-[10px] items-center justify-center">
-                    <div className="flex gap-[7px]">
-                        <input
-                            type="text"
-                            placeholder="주소를 입력하세요"
-                            className="w-[141px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#c2c2c2] placeholder:text-[#c2c2c2] font-medium"
-                            readOnly // 주소 검색 API 결과만 입력 가능
-                        />
-                        <button className="w-[83px] h-[45px] bg-[#0D29B7] text-white rounded-[8px] text-[14px] font-medium">
-                            주소 검색
-                        </button>
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="상세 주소를 입력하세요"
-                        className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000] placeholder:text-[#c2c2c2]"
-                    />
+                    <AddressSearchInput />
                 </div>
             </div>
-
             {/* 단순 입력 필드들 */}
             {[
                 "근무내용",
