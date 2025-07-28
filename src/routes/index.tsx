@@ -12,6 +12,8 @@ import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
+import PersonalDeleteAccount from '../pages/Personal/my/PersonalDeleteAccount';
+import PersonalDeleteAccountDone from '../pages/Personal/my/PersonalDeleteAccountDone';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -49,7 +51,14 @@ const AppRoutes = () => {
       <Route path="/personal/my/applied/:appliedId" element={<></>}></Route>
       <Route path="/personal/my/applied/results" element={<></>}></Route>
       <Route path="/personal/my/info" element={<></>}></Route>
-      <Route path="/personal/my/delete-account" element={<></>}></Route>
+      <Route
+        path="/personal/my/delete-account"
+        element={<PersonalDeleteAccount />}
+      ></Route>
+      <Route
+        path="/personal/my/delete-account/done"
+        element={<PersonalDeleteAccountDone />}
+      ></Route>
       <Route path="/personal/my/seniors" element={<></>}></Route>
 
       {/* 기업버전 */}
