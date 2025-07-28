@@ -49,7 +49,6 @@ export default function ImageUploadButton({ imageFile, onFileSelect, className, 
         flex flex-col items-center justify-center
         rounded-[8px]
         border
-        
         ${className ? className : ''}
         transition-all duration-150
         cursor-pointer

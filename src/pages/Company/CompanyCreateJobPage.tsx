@@ -18,10 +18,10 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
             <div className="flex flex-row mt-[26px] gap-[24px]">
                 <label className="w-[56px] h-[48px] font-medium text-[#414141] text-[20px] flex justify-center items-center">근무지 이미지</label>
                 <div className={`
-        w-[231px] h-[45px] 
-        transition-colors
-        ${dragging ? 'border-[#08D485] bg-blue-50' : 'border-[#08D485] bg-white'}
-      `}>
+                    w-[231px] h-[45px] 
+                    transition-colors
+                    ${dragging ? 'bg-blue-50' : 'bg-white'}
+                    `}>
                     <ImageUploadButton
                         imageFile={imageFile}
                         onFileSelect={handleFileSelect}
