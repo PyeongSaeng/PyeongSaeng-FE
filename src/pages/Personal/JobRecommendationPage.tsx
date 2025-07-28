@@ -11,7 +11,7 @@ const JobRecommendationPage = () => {
     <Topbar>
       <div className="w-full h-full flex flex-col">
         <div className="flex justify-center mt-6">
-          <div className="relative w-[293px] h-[48px]">
+          <div className="relative w-[293px] h-[48px] mt-[11px]">
             <input
               type="text"
               value={search}

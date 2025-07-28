@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import FileDropZone from './FileDropZone';
-import { usePasteUpload } from './usePasteUpload';
+import ImageUploadButton from './ImageUploadButton';
 import TwoButtonGroup from '../TwoButtonGroup';
 
 interface Props {
@@ -16,11 +15,6 @@ export default function EvidenceSection({
 }: Props) {
   const [showUpload, setShowUpload] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  usePasteUpload((file) => {
-    setImageFile(file);
-    onFileUpload(file); // 붙여넣기 업로드도 반영
-  });
 
   const handleFileSelect = (file: File) => {
     setImageFile(file);
@@ -52,7 +46,7 @@ export default function EvidenceSection({
       </button>
 
       {showUpload && (
-        <FileDropZone imageFile={imageFile} onFileSelect={handleFileSelect} />
+        <ImageUploadButton imageFile={imageFile} onFileSelect={handleFileSelect} />
       )}
 
       <TwoButtonGroup

@@ -1,19 +1,37 @@
+import { useState } from "react";
+import ImageUploadButton from "../../shared/components/EvidenceSection/ImageUploadButton";
+
 interface Props {
     onNext: () => void;
 }
 
 export default function CompanyCreateJobPage({ onNext }: Props) {
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [dragging, setDragging] = useState(false);
+    const handleFileSelect = (file: File) => {
+        setImageFile(file);
+    };
+
     return (
         <div className="w-full h-full flex flex-col items-center">
             {/* 근무지 이미지 */}
             <div className="flex flex-row mt-[26px] gap-[24px]">
                 <label className="w-[56px] h-[48px] font-medium text-[#414141] text-[20px] flex justify-center items-center">근무지 이미지</label>
-                <button className="w-[231px] h-[45px] border border-[#0D29B7] rounded-[8px] text-[#0D29B7] text-[16px] font-medium">
-                    이미지를 업로드 하세요.
-                </button>
+                <div className={`
+        w-[231px] h-[45px] 
+        transition-colors
+        ${dragging ? 'border-[#08D485] bg-blue-50' : 'border-[#08D485] bg-white'}
+      `}>
+                    <ImageUploadButton
+                        imageFile={imageFile}
+                        onFileSelect={handleFileSelect}
+                        className="text-[#0D29B7]"
+                        onDragStateChange={setDragging} />
+                </div>
             </div>
+
             {/* 근무지 주소 */}
-            <div className="flex flex-row mt-[28px] mb-[3px] gap-[14px]">
+            <div className="flex flex-row mt-[15px] mb-[3px] gap-[14px]">
                 <label className="mt-[19px] font-medium text-[#414141] text-[20px]">
                     근무지
                 </label>
