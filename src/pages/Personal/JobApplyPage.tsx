@@ -110,11 +110,14 @@ export default function JobApplyPage() {
                             className="text-[20px] text-[#333] ml-2 shrink-0"
                             onClick={() => setUploadedImageFile(null)}
                           >
-                            ✕
+                            <img
+                              src="/icons/close_icon.svg"
+                              alt="삭제"
+                              className="w-[24px] h-[24px]"
+                            />
                           </button>
                         )}
                       </div>
-
                       {/* 검색 버튼 */}
                       <label className="ml-2 h-full cursor-pointer shrink-0">
                         <input
@@ -174,10 +177,10 @@ export default function JobApplyPage() {
             <>
               <QuestionWriteFormSection
                 inputValue={formInput}
-                onChange={() => {}}
+                onChange={() => { }}
                 readOnly={true}
-                onSave={() => {}}
-                onSubmit={() => {}}
+                onSave={() => { }}
+                onSubmit={() => { }}
               />
               <TwoButtonGroup
                 leftLabel="직접 작성"

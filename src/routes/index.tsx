@@ -8,7 +8,7 @@ import SeniorSignIn from '../pages/Personal/components/user/signIn/Senior/Senior
 import CareSignIn from '../pages/Personal/components/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
-import CompanyHomePage from '../pages/Company/CompanyHomePage';
+import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import CompanyLoginPage from '../pages/Company/CompanyLogin';
@@ -16,6 +16,7 @@ import CompanySignin from '../pages/Company/CompanySignin';
 import FindAccount from '../pages/Personal/components/user/FindAccount/FindAccount';
 import CompanyFindAccount from '../pages/Company/components/FindAccount/FindAccount';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
+import Test from '../shared/components/topbar/Test';
 
 const AppRoutes = () => {
   return (
@@ -60,13 +61,25 @@ const AppRoutes = () => {
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<CompanySignin />}></Route>
       <Route path="/company/login" element={<CompanyLoginPage />}></Route>
-      <Route path="/company/jobs/create-form" element={<></>}></Route>
-      <Route path="/company/jobs/applications" element={<></>}></Route>
       <Route
-        path="/company/jobs/applications/:applicationId"
-        element={<></>}
+        path="/company/jobs/create-form"
+        element={<CompanyJobListPage />}
       ></Route>
-      <Route path="/company/jobs/applications/results" element={<></>}></Route>
+      <Route path="/company/jobs/applications" element={<></>}></Route>
+
+      <Route
+        path="/company/jobs/applications"
+        element={<ApplicationsPage />}
+      ></Route>
+      <Route
+        path="/company/jobs/applications/:title"
+        element={<ApplicationDetailPage />}
+      />
+
+      <Route
+        path="/company/jobs/applications/:applicationId/results"
+        element={<ApplicationResultsPage />}
+      ></Route>
       <Route path="/company/my" element={<></>}></Route>
       <Route path="/company/my/delete-account" element={<></>}></Route>
       <Route

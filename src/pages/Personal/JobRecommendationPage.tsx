@@ -1,34 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
-
-// test용 더미 추후 삭제 예정
-const dummyJobs = [
-  {
-    jobId: 1,
-    name: '죽전1동 행정복지센터 미화원',
-    image: '/icons/popular-dummy1.png',
-    details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-  },
-  {
-    jobId: 2,
-    name: '죽전2동 행정복지센터 미화원',
-    image: '/icons/popular-dummy1.png',
-    details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-  },
-  {
-    jobId: 3,
-    name: '죽전3동 행정복지센터 미화원',
-    image: '/icons/popular-dummy1.png',
-    details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-  },
-  {
-    jobId: 4,
-    name: '죽전4동 행정복지센터 미화원',
-    image: '/icons/popular-dummy1.png',
-    details: '거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원'
-  },
-];
+import { dummyJobs, JobType } from '../../shared/constants/dummyJobs';
 
 const JobRecommendationPage = () => {
   const [search, setSearch] = useState('');
@@ -38,7 +11,7 @@ const JobRecommendationPage = () => {
     <Topbar>
       <div className="w-full h-full flex flex-col">
         <div className="flex justify-center mt-6">
-          <div className="relative w-[293px] h-[48px]">
+          <div className="relative w-[293px] h-[48px] mt-[11px]">
             <input
               type="text"
               value={search}
@@ -49,7 +22,7 @@ const JobRecommendationPage = () => {
                        bg-white text-[16px] focus:outline-none"
             />
             <img
-              src="/icons/search_line.png"
+              src="/icons/magnifier_icon.png"
               alt="search"
               className="absolute right-4 top-1/2 transform -translate-y-1/2 w-[23px] h-[23px]"
             />
@@ -68,7 +41,7 @@ const JobRecommendationPage = () => {
           <div className="mt-[17px] flex-1 w-full flex justify-center" style={{ minHeight: 0 }}>
             <div className="flex flex-col items-center overflow-y-auto gap-[41px] scrollbar-hide"
                         style={{ maxHeight: "400px" }}>
-              {dummyJobs.map((job) => (
+              {dummyJobs.map((job: JobType) => (
                 <div
                   key={job.jobId}
                   className="cursor-pointer"
