@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
-import PersonalHomePage from '../pages/Personal/PersonalHomePage';
+import PersonalHomePage from '../pages/Personal/home/PersonalHomePage';
 import LoginMainPage from '../pages/Personal/LoginMain';
 import SignIn from '../pages/Personal/SignIn';
 import SeniorSignIn from '../pages/Personal/components/user/signIn/Senior/SeniorSignIn';
@@ -15,8 +15,11 @@ import CompanyLoginPage from '../pages/Company/CompanyLogin';
 import CompanySignin from '../pages/Company/CompanySignin';
 import FindAccount from '../pages/Personal/components/user/FindAccount/FindAccount';
 import CompanyFindAccount from '../pages/Company/components/FindAccount/FindAccount';
+import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
+import ApplicationsPage from '../pages/Company/ApplicationsPage';
+import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
+import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
-import Test from '../shared/components/topbar/Test';
 
 const AppRoutes = () => {
   return (
