@@ -13,6 +13,7 @@ import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
 import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
+import Test from '../shared/components/topbar/Test';
 
 const AppRoutes = () => {
   return (
@@ -51,12 +52,16 @@ const AppRoutes = () => {
       <Route path="/personal/my/info" element={<></>}></Route>
       <Route path="/personal/my/delete-account" element={<></>}></Route>
       <Route path="/personal/my/seniors" element={<></>}></Route>
+      <Route path="/personal/test" element={<Test></Test>}></Route>
 
       {/* 기업버전 */}
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
-      <Route path="/company/jobs/create-form" element={< CompanyJobListPage/>}></Route>
+      <Route
+        path="/company/jobs/create-form"
+        element={<CompanyJobListPage />}
+      ></Route>
       <Route path="/company/jobs/applications" element={<></>}></Route>
       <Route
         path="/company/jobs/applications/:applicationId"
