@@ -12,6 +12,7 @@ const PersonalInfo = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // post
+    console.log('서밋');
   };
 
   return (
@@ -53,7 +54,7 @@ const PersonalInfo = () => {
           className="absolute bottom-[80px] left-1/2 -translate-x-1/2 w-[309px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[16px]"
           onClick={() => {
             if (isClicked === 'basic') {
-              navigate('/personal/info/edit');
+              navigate('/personal/my/info/edit');
             }
           }}
         >

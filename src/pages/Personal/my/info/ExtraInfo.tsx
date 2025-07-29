@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import clsx from 'clsx';
 
 const questions = [
   'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',
@@ -17,23 +18,38 @@ const answers = [
 ];
 
 const ExtraInfo = () => {
-  const [isClicked, setIsClicked] = useState<(string | null)[]>(['']);
+  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(
+    Array(questions.length).fill(null)
+  );
+
+  const handleSelect = (questionIndex: number, answer: string) => {
+    const updated = [...selectedAnswers];
+
+    if (updated[questionIndex] === answer) {
+      updated[questionIndex] = null;
+    } else {
+      updated[questionIndex] = answer;
+    }
+    setSelectedAnswers(updated);
+  };
 
   return (
     <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
       <div className="h-[440px] overflow-y-scroll scrollbar-hide">
         {questions.map((q, index) => {
-          const answer = answers[index];
+          const answerList = answers[index];
           return (
-            <div className="py-[8px]">
-              <div key={q} className="pb-[4px]">
-                {q}
-              </div>
+            <div key={q} className="py-[8px]">
+              <div className="pb-[4px]">{q}</div>
               <div className="flex flex-wrap gap-[10px] ">
-                {answer.map((e) => (
+                {answerList.map((e) => (
                   <button
                     key={e}
-                    className=" min-w-[94px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] text-[14px]"
+                    onClick={() => handleSelect(index, e)}
+                    className={clsx(
+                      selectedAnswers[index] === e ? 'bg-[#ECF6F2]' : '',
+                      'min-w-[94px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] text-[14px]'
+                    )}
                   >
                     {e}
                   </button>
