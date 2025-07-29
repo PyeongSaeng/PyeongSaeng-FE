@@ -11,6 +11,10 @@ import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
+import ApplicationsPage from '../pages/Company/ApplicationsPage';
+import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
+import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
+
 import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
@@ -56,16 +60,27 @@ const AppRoutes = () => {
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
+
       <Route
         path="/company/jobs/create-form"
         element={<CompanyJobListPage />}
       ></Route>
+
       <Route path="/company/jobs/applications" element={<></>}></Route>
+
       <Route
-        path="/company/jobs/applications/:applicationId"
-        element={<></>}
+        path="/company/jobs/applications"
+        element={<ApplicationsPage />}
       ></Route>
-      <Route path="/company/jobs/applications/results" element={<></>}></Route>
+      <Route
+        path="/company/jobs/applications/:title"
+        element={<ApplicationDetailPage />}
+      />
+
+      <Route
+        path="/company/jobs/applications/:applicationId/results"
+        element={<ApplicationResultsPage />}
+      ></Route>
       <Route path="/company/my" element={<></>}></Route>
       <Route path="/company/my/delete-account" element={<></>}></Route>
     </Routes>

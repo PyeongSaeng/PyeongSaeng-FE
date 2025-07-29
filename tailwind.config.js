@@ -22,13 +22,10 @@ export default {
         'gray-400': '#E1E1E1',
         'gray-300': '#F3F3F3',
         'gray-200': '#FFFFFF',
-
       },
       fontFamily: {
-        
-
+        pretendard: ['Pretendard', ...fontFamily.sans],
       },
-      fontFamily: {},
     },
   },
   plugins: [],
