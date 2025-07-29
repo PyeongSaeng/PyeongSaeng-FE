@@ -1,44 +1,13 @@
 // src/pages/jobs/JobSavedPage.tsx
 import { useEffect, useState } from "react";
 import Topbar from "../../shared/components/topbar/Topbar";
+import { dummyJobs, JobType } from '../../shared/constants/dummyJobs';
 
-interface JobType {
-  jobId: number;
-  name: string;
-  image: string;
-  details: string;
-}
+const getSavedJobIds = (): number[] =>
+  JSON.parse(localStorage.getItem('savedJobs') || '[]');
 
-const dummyJobs: JobType[] = [
-  {
-    jobId: 1,
-    name: "죽전1동 행정복지센터 미화원",
-    image: "/icons/popular-dummy1.png",
-    details:
-      "거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원",
-  },
-  {
-    jobId: 2,
-    name: "죽전2동 행정복지센터 미화원",
-    image: "/icons/popular-dummy1.png",
-    details:
-      "거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원",
-  },
-  {
-    jobId: 3,
-    name: "죽전3동 행정복지센터 미화원",
-    image: "/icons/popular-dummy1.png",
-    details:
-      "거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원",
-  },
-  {
-    jobId: 4,
-    name: "죽전4동 행정복지센터 미화원",
-    image: "/icons/popular-dummy1.png",
-    details:
-      "거리: 도보 및 지하철 20분, 시급: 12,240원, 근무시간: 월수금 2시간, 월급: 29만원",
-  },
-];
+const setSavedJobIds = (ids: number[]) =>
+  localStorage.setItem('savedJobs', JSON.stringify(ids));
 
 const JobSavedPage = () => {
   const [savedJobs, setSavedJobs] = useState<JobType[]>([]);
@@ -50,6 +19,13 @@ const JobSavedPage = () => {
     setSavedJobs(jobs);
   }, []);
 
+  const handleRemove = (jobId: number) => {
+    setSelectedJobId(null);
+    setSavedJobs((prev) => prev.filter((j) => j.jobId !== jobId));
+    const newIds = getSavedJobIds().filter((id) => id !== jobId);
+    setSavedJobIds(newIds);
+  };
+
   return (
     <Topbar>
       <div className="w-full h-full flex flex-col items-center">
@@ -57,16 +33,15 @@ const JobSavedPage = () => {
           <p className="text-[20px] font-semibold text-[#747474]">일자리 저장함</p>
         </div>
         {/* 스크롤 영역 */}
-        <div className="flex-1 w-full flex justify-center" style={{ minHeight: 0 }}></div>
-        <div className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
+        <div className="flex-1 w-full flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
           style={{ maxHeight: "450px" }}>
           {savedJobs.length === 0 ? (
-            <p className="text-gray-500">저장된 일자리가 없습니다.</p>
+            <p className="text-[#747474] text-[16px]">저장된 일자리가 없습니다.</p>
           ) : (
             savedJobs.map((job) => {
               const isSelected = selectedJobId === job.jobId;
               return (
-                <div key={job.jobId} className="flex flex-col ">
+                <div key={job.jobId} className="flex flex-col relative">
                   <div className="flex items-center gap-2">
                     {/* 동그라미 */}
                     <div
@@ -88,9 +63,14 @@ const JobSavedPage = () => {
                     >
                       선택하기
                     </div>
+                    {/* 취소하기 */}
+                    <img
+                      src="/icons/close_icon.svg"
+                      alt="취소"
+                      className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
+                      onClick={() => handleRemove(job.jobId)}
+                    />
                   </div>
-
-
                   <div
                     className={`
                       w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import FileDropZone from './FileDropZone';
-import { usePasteUpload } from './usePasteUpload';
+import ImageUploadButton from './ImageUploadButton';
 import TwoButtonGroup from '../TwoButtonGroup';
 
 interface Props {
@@ -14,14 +13,8 @@ export default function EvidenceSection({
   onSubmit,
   onFileUpload,
 }: Props) {
-  const [showUpload, setShowUpload] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  usePasteUpload((file) => {
-    setImageFile(file);
-    onFileUpload(file); // 붙여넣기 업로드도 반영
-  });
-
+  const [dragging, setDragging] = useState(false);
   const handleFileSelect = (file: File) => {
     setImageFile(file);
     onFileUpload(file); // 파일 선택 시도 반영
@@ -43,17 +36,17 @@ export default function EvidenceSection({
         </p>
       </div>
 
-      <button
-        type="button"
-        className="w-full h-[4.5rem] rounded-lg bg-[#08D485] text-black text-[16px] font-medium"
-        onClick={() => setShowUpload(true)}
-      >
-        이미지를 첨부하세요
-      </button>
-
-      {showUpload && (
-        <FileDropZone imageFile={imageFile} onFileSelect={handleFileSelect} />
-      )}
+      <div className={`
+          w-[300px] h-[45px] 
+          transition-colors
+          ${dragging ? 'bg-green-50' : 'bg-white'}
+          `}>
+        <ImageUploadButton
+          imageFile={imageFile}
+          onFileSelect={handleFileSelect}
+          className="text-[#000000] border-[#08D485] bg-[#08D485]"
+          onDragStateChange={setDragging} />
+      </div>
 
       <TwoButtonGroup
         leftLabel="저장"
