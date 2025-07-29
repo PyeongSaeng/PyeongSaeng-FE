@@ -17,6 +17,7 @@ import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 
 import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
+import Test from '../shared/components/topbar/Test';
 
 const AppRoutes = () => {
   return (
@@ -60,12 +61,10 @@ const AppRoutes = () => {
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
-
       <Route
         path="/company/jobs/create-form"
         element={<CompanyJobListPage />}
       ></Route>
-
       <Route path="/company/jobs/applications" element={<></>}></Route>
 
       <Route
