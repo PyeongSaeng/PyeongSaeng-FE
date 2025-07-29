@@ -20,7 +20,7 @@ const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#C2C2C2] text-[1.6rem]';
 
 const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => (
-  <div className="flex flex-col w-full pt-8 px-[3.3rem]">
+  <div className="flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem]">
     <SignUpHeader title="회원가입 하기" />
     <div className="w-[29.4rem]">
       <p className="text-[#747474] mb-[2.3rem] text-[1.6rem] font-semibold">

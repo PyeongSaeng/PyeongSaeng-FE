@@ -2,6 +2,7 @@ import { useState } from 'react';
 import SeniorStep1 from './SeniorStep1';
 import SeniorStep2 from './SeniorStep2';
 import SeniorStep3 from './SeniorStep3';
+import TopbarForLogin from '../../../../../../shared/components/topbar/TopbarForLogin';
 
 const SeniorSignIn = () => {
   const [step, setStep] = useState(1);
@@ -35,7 +36,7 @@ const SeniorSignIn = () => {
   };
 
   return (
-    <>
+    <TopbarForLogin>
       {step === 1 && (
         <SeniorStep1
           state={step1State}
@@ -57,7 +58,7 @@ const SeniorSignIn = () => {
           onSubmit={handlesubmit}
         />
       )}
-    </>
+    </TopbarForLogin>
   );
 };
 

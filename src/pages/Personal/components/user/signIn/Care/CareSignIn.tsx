@@ -4,6 +4,7 @@ import CareStep2 from './CareStep2';
 import CareStep3 from './CareStep3';
 import CareStep4 from './CareStep4';
 import CareStep5 from './CareStep5';
+import TopbarForLogin from '../../../../../../shared/components/topbar/TopbarForLogin';
 
 const CareSignIn = () => {
   const [step, setStep] = useState(1);
@@ -49,7 +50,7 @@ const CareSignIn = () => {
   };
 
   return (
-    <>
+    <TopbarForLogin>
       {step === 1 && (
         <CareStep1
           state={step1State}
@@ -85,7 +86,7 @@ const CareSignIn = () => {
           onSubmit={handlesubmit}
         />
       )}
-    </>
+    </TopbarForLogin>
   );
 };
 
