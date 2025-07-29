@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
-import PersonalHomePage from '../pages/Personal/PersonalHomePage';
+import PersonalHomePage from '../pages/Personal/home/PersonalHomePage';
 import LoginMainPage from '../pages/Personal/user/LoginMain';
 import SignIn from '../pages/Personal/user/signIn/SignIn';
 import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
@@ -61,7 +61,11 @@ const AppRoutes = () => {
       <Route path="/company/join" element={<></>}></Route>
       <Route path="/company/login" element={<></>}></Route>
 
-      <Route path="/company/jobs/create-form" element={< CompanyJobListPage/>}></Route>
+      <Route
+        path="/company/jobs/create-form"
+        element={<CompanyJobListPage />}
+      ></Route>
+
       <Route path="/company/jobs/applications" element={<></>}></Route>
 
       <Route
