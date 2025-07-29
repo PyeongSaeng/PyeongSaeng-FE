@@ -20,30 +20,24 @@ const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#BDBDBD] text-[1.6rem]';
 
 const CareStep2 = ({ state, setState, onNext }: CareStep2Props) => (
-  <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
+  <div className="flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem]">
     <SignUpHeader title="회원가입 하기" />
     <div className="w-[29.4rem]">
       <p className="text-[#747474] mb-[2.3rem] text-[1.6rem] font-semibold">
         회원가입을 위해 필수정보를 입력해주세요
       </p>
-      <input
-        className={`${inputClass} ${state.id ? 'text-black' : 'text-[#BDBDBD]'}`}
-        placeholder="아이디를 입력해주세요"
-        value={state.id}
-        onChange={(e) => setState((s) => ({ ...s, id: e.target.value }))}
-      />
       <div className="flex gap-2 mt-[1.6rem] mb-1">
         <input
           className={`${inputClass} ${state.idCheck ? 'text-black' : 'text-[#BDBDBD]'}`}
-          placeholder="아이디를 입력해주세요"
+          placeholder="본인 아이디를 입력해주세요"
           value={state.idCheck}
           onChange={(e) => setState((s) => ({ ...s, idCheck: e.target.value }))}
         />
-        <button className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-semibold h-[4.5rem]">
+        <button className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium h-[4.5rem]">
           확인
         </button>
       </div>
-      <div className="text-[#08D485] text-[1.4rem] mb-[2.2rem] mt-[1.3rem]">
+      <div className="text-[#08D485] text-[1.4rem] mb-[2.2rem] mt-[0.6rem]">
         쓸 수 있는 아이디입니다
       </div>
       <input

@@ -2,22 +2,24 @@ import { Routes, Route } from 'react-router-dom';
 import JobRecommendationPage from '../pages/Personal/JobRecommendationPage';
 import JobDetailPage from '../pages/Personal/JobDetailPage';
 import PersonalHomePage from '../pages/Personal/home/PersonalHomePage';
-import LoginMainPage from '../pages/Personal/user/LoginMain';
-import SignIn from '../pages/Personal/user/signIn/SignIn';
-import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
-import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
+import LoginMainPage from '../pages/Personal/LoginMain';
+import SignIn from '../pages/Personal/SignIn';
+import SeniorSignIn from '../pages/Personal/components/user/signIn/Senior/SeniorSignIn';
+import CareSignIn from '../pages/Personal/components/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
 import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
+import CompanyLoginPage from '../pages/Company/CompanyLogin';
+import CompanySignin from '../pages/Company/CompanySignin';
+import FindAccount from '../pages/Personal/components/user/FindAccount/FindAccount';
+import CompanyFindAccount from '../pages/Company/components/FindAccount/FindAccount';
+import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
-
-import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
-import Test from '../shared/components/topbar/Test';
 
 const AppRoutes = () => {
   return (
@@ -56,11 +58,12 @@ const AppRoutes = () => {
       <Route path="/personal/my/info" element={<></>}></Route>
       <Route path="/personal/my/delete-account" element={<></>}></Route>
       <Route path="/personal/my/seniors" element={<></>}></Route>
+      <Route path="/personal/find-account" element={<FindAccount />}></Route>
 
       {/* 기업버전 */}
       <Route path="/company" element={<CompanyHomePage />}></Route>
-      <Route path="/company/join" element={<></>}></Route>
-      <Route path="/company/login" element={<></>}></Route>
+      <Route path="/company/join" element={<CompanySignin />}></Route>
+      <Route path="/company/login" element={<CompanyLoginPage />}></Route>
       <Route
         path="/company/jobs/create-form"
         element={<CompanyJobListPage />}
@@ -82,6 +85,10 @@ const AppRoutes = () => {
       ></Route>
       <Route path="/company/my" element={<></>}></Route>
       <Route path="/company/my/delete-account" element={<></>}></Route>
+      <Route
+        path="/company/find-account"
+        element={<CompanyFindAccount />}
+      ></Route>
     </Routes>
   );
 };
