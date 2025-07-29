@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
 
 interface info {
   name: string;
@@ -78,13 +77,6 @@ const BasicInfo = () => {
           </div>
         ))}
       </div>
-      <button
-        type="button"
-        className="w-[309px] h-[45px] rounded-[8px] bg-[#08D485] text-white"
-        onClick={() => navigate('/personal/my/info/edit')}
-      >
-        수정
-      </button>
     </div>
   );
 };
