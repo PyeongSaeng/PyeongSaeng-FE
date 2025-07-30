@@ -7,7 +7,7 @@ const SeniorMyMenu = () => {
         내 정보
       </div>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="my/applied">신청 결과</MenuNavButton>
+        <MenuNavButton url="my/applied-results">신청 결과</MenuNavButton>
         <MenuNavButton url="my/info">개인정보</MenuNavButton>
         <MenuNavButton url="my/delete-account">회원탈퇴</MenuNavButton>
       </div>

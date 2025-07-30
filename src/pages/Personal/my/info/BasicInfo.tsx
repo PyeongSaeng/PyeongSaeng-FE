@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-interface info {
+type info = {
   name: string;
   id: string;
   password: string;
@@ -12,7 +12,7 @@ interface info {
   };
   job: string;
   period: string;
-}
+};
 
 const dummyInfo: info = {
   name: '김영희',

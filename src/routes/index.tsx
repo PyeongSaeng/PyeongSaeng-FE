@@ -17,6 +17,8 @@ import PersonalDeleteAccountDone from '../pages/Personal/my/PersonalDeleteAccoun
 import PersonalInfo from '../pages/Personal/my/info/PersonalInfo';
 import PersonalInfoEdit from '../pages/Personal/my/info/PersonalInfoEdit';
 import PersonalInfoEditPassword from '../pages/Personal/my/info/PersonalInfoEditPassword';
+import ApplyResult from '../pages/Personal/my/apply/ApplyResults';
+import ApplyResults from '../pages/Personal/my/apply/ApplyResults';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -50,9 +52,14 @@ const AppRoutes = () => {
       ></Route>
       <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
       <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
-      <Route path="/personal/my/applied" element={<></>}></Route>
-      <Route path="/personal/my/applied/:appliedId" element={<></>}></Route>
-      <Route path="/personal/my/applied/results" element={<></>}></Route>
+      <Route
+        path="/personal/my/applied-results"
+        element={<ApplyResults />}
+      ></Route>
+      <Route
+        path="/personal/my/applied-results/:appliedId"
+        element={<></>}
+      ></Route>
       <Route path="/personal/my/info" element={<PersonalInfo />}></Route>
       <Route
         path="/personal/my/info/edit"
