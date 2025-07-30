@@ -62,10 +62,16 @@ const ApplyResults = () => {
                     />
                   </div>
                   <div className="flex justify-center items-center gap-[6px] pt-[16px] pb-[6px]">
-                    <button className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2]">
+                    <button
+                      type="button"
+                      className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2]"
+                    >
                       신청서 확인
                     </button>
-                    <button className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]">
+                    <button
+                      type="button"
+                      className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]"
+                    >
                       {apply.result}
                     </button>
                   </div>
