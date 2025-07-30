@@ -25,7 +25,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* 개인 버전 */}
-      <Route path="/personal" element={<PersonalHomePage />}></Route>
+      <Route path="/" element={<PersonalHomePage />}></Route>
       <Route path="/personal/join" element={<SignIn />}></Route>
       <Route path="/personal/join/senior" element={<SeniorSignIn />}></Route>
       <Route path="/personal/join/guardian" element={<CareSignIn />}></Route>

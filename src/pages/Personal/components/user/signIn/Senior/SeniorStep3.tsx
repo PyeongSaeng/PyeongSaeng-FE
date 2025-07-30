@@ -50,15 +50,23 @@ type Step3State = {
   detailAddress: string;
   job: string;
   period: string;
+  zipcode: string;
+  roadAddress: string;
 };
 
 type SeniorStep3Props = {
   state: Step3State;
   setState: React.Dispatch<React.SetStateAction<Step3State>>;
   onSubmit: () => void;
+  isLoading?: boolean;
 };
 
-const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
+const SeniorStep3 = ({
+  state,
+  setState,
+  onSubmit,
+  isLoading = false,
+}: SeniorStep3Props) => {
   const [jobOpen, setJobOpen] = useState(false);
   const [periodOpen, setPeriodOpen] = useState(false);
 
@@ -77,14 +85,36 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
     if (window.daum?.Postcode) {
       new window.daum.Postcode({
         oncomplete: function (data: any) {
-          setState((s) => ({ ...s, address: data.address }));
+          setState((s) => ({
+            ...s,
+            address: data.address,
+            zipcode: data.zonecode,
+            roadAddress: data.address,
+          }));
         },
       }).open();
     } else {
       alert(
-        '주소 검색 스크립트가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
+        '주소 검색 스크립트가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
       );
     }
+  };
+
+  const handleSubmit = () => {
+    // 필수 입력 검증
+    if (
+      !state.age ||
+      !state.gender ||
+      !state.phone ||
+      !state.address ||
+      !state.job ||
+      !state.period
+    ) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    onSubmit();
   };
 
   return (
@@ -101,17 +131,20 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
           placeholder="어르신의 연세를 입력해주세요"
           value={state.age}
           onChange={(e) => setState((s) => ({ ...s, age: e.target.value }))}
+          type="number"
         />
         <div className="flex gap-2 w-full mb-3">
           <button
-            className={`${genderBtnClass} ${state.gender === '여성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
-            onClick={() => setState((s) => ({ ...s, gender: '여성' }))}
+            className={`${genderBtnClass} ${state.gender === 'FEMALE' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
+            onClick={() => setState((s) => ({ ...s, gender: 'FEMALE' }))}
+            type="button"
           >
             여성
           </button>
           <button
-            className={`${genderBtnClass} ${state.gender === '남성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
-            onClick={() => setState((s) => ({ ...s, gender: '남성' }))}
+            className={`${genderBtnClass} ${state.gender === 'MALE' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
+            onClick={() => setState((s) => ({ ...s, gender: 'MALE' }))}
+            type="button"
           >
             남성
           </button>
@@ -127,9 +160,7 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
             className={`${selectClass} w-[18.7rem] mb-0 ${state.address ? 'text-black' : 'text-[#c2c2c2]'}`}
             placeholder="거주지를 입력해주세요"
             value={state.address}
-            onChange={(e) =>
-              setState((s) => ({ ...s, address: e.target.value }))
-            }
+            readOnly
           />
           <button
             className="bg-[#08D485] w-[10rem] text-black rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem]"
@@ -150,13 +181,15 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
         <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mt-[1.4rem] mb-[1.4rem]">
           경력 사항
         </div>
+
+        {/* 직무 선택 */}
         <div className="flex w-full mb-3 gap-[6.5rem]">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             직무
           </div>
           <div className="flex-1 relative">
             <div
-              className={`${dropdownBoxClass} h-[4.5rem] ${jobOpen ? '' : ''}`}
+              className={`${dropdownBoxClass} h-[4.5rem]`}
               onClick={() => setJobOpen((open) => !open)}
             >
               <div
@@ -202,13 +235,15 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
             )}
           </div>
         </div>
+
+        {/* 경력 기간 선택 */}
         <div className="flex gap-[6.5rem] w-full">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             기간
           </div>
           <div className="flex-1 relative">
             <div
-              className={`${dropdownBoxClass} h-[4.5rem] ${periodOpen ? '' : ''}`}
+              className={`${dropdownBoxClass} h-[4.5rem]`}
               onClick={() => setPeriodOpen((open) => !open)}
             >
               <div
@@ -254,8 +289,12 @@ const SeniorStep3 = ({ state, setState, onSubmit }: SeniorStep3Props) => {
             )}
           </div>
         </div>
-        <NextButton className="!mt-[1.4rem]" onClick={onSubmit}>
-          회원가입 완료
+        <NextButton
+          className="!mt-[1.4rem]"
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? '회원가입 중...' : '회원가입 완료'}
         </NextButton>
       </div>
     </div>
