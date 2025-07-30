@@ -18,7 +18,7 @@ const MainMenu = () => {
         <MenuNavButton url="/company/jobs/create-form">
           신청서 입력
         </MenuNavButton>
-        <MenuNavButton url="/company/jobs/application">
+        <MenuNavButton url="/company/jobs/applications">
           받은 신청서
         </MenuNavButton>
         <MenuNavButton url="/company/jobs/application/results">
