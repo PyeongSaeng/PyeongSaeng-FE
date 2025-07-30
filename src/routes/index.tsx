@@ -68,7 +68,6 @@ const AppRoutes = () => {
         path="/company/jobs/create-form"
         element={<CompanyJobListPage />}
       ></Route>
-      <Route path="/company/jobs/applications" element={<></>}></Route>
 
       <Route
         path="/company/jobs/applications"
