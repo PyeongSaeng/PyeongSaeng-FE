@@ -86,18 +86,3 @@ const ApplyResults = () => {
 };
 
 export default ApplyResults;
-
-{
-  /* <div className="flex flex-col items-center justify-center">
-            <div className="flex justify-between w-[292px]">
-              <span>죽전 2동 행정복지센터 미화원</span>
-              <span>~ 7/20 (일)</span>
-            </div>
-            <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
-              <img className="w-[292px] h-[165px]" src={dummy1} alt="더미1" />
-            </div>
-            <div>
-              <button>신청서 확인</button>
-            </div>
-          </div> */
-}
