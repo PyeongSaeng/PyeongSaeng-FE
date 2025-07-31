@@ -64,7 +64,13 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     근무지
                 </label>
                 <div className="w-[251px] h-[120px] pl-[12px] flex flex-col gap-[10px] items-center justify-center">
-                    <AddressSearchInput />
+                    <AddressSearchInput
+                        address={form.address}
+                        zipcode={form.zipcode}
+                        detailAddress={form.detailAddress}
+                        onChangeAddress={address => setForm({ ...form, address })}
+                        onChangeZipcode={zipcode => setForm({ ...form, zipcode })}
+                        onChangeDetail={detail => setForm({ ...form, detailAddress: detail })} />
                 </div>
             </div >
             {/* 입력 필드들 */}
@@ -111,7 +117,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     type="number"
                     value={form.recruitCount ?? ""}
                     onChange={e => setForm({ ...form, recruitCount: Number(e.target.value) || undefined })}
-                    placeholder="예: 3"
+                    placeholder="여기에 입력하세요."
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
@@ -132,10 +138,10 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
             <div className="flex flex-row items-center gap-[12px] mt-[13px]">
                 <label className="w-[70px] text-[20px] text-[#414141] font-medium">마감기한</label>
                 <input
-                    type="date"
+                    type="text"
                     value={form.deadline}
                     onChange={e => setForm({ ...form, deadline: e.target.value })}
-                    placeholder="마감일 선택"
+                    placeholder="xxxx-xx-xx"
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
