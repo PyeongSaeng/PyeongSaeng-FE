@@ -26,6 +26,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
 
   const checkUsernameMutation = useCheckUsername();
 
+  // 아이디 중복 확인
   const handleCheckUsername = () => {
     if (!state.idCheck.trim()) {
       alert('아이디를 입력해주세요.');
@@ -33,9 +34,12 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
     }
 
     checkUsernameMutation.mutate(state.idCheck, {
-      onSuccess: (data: { isAvailable: boolean }) => {
+      onSuccess: (data: any) => {
         setHasChecked(true);
-        if (data.isAvailable) {
+
+        const isAvailable = data.result && data.result.includes('사용 가능한');
+
+        if (isAvailable) {
           setState((s) => ({ ...s, id: state.idCheck, isIdAvailable: true }));
           setUsernameMessage('사용 가능한 아이디입니다.');
         } else {
@@ -52,6 +56,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
     });
   };
 
+  // 아이디 입력 변경
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((s) => ({ ...s, idCheck: e.target.value, isIdAvailable: false }));
     setUsernameMessage('');
@@ -59,12 +64,16 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
   };
 
   const handleNext = () => {
-    if (!state.isIdAvailable || !state.password || !state.passwordConfirm) {
+    if (!state.password || !state.passwordConfirm) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
     if (state.password !== state.passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    if (!state.isIdAvailable) {
+      alert('아이디 중복 확인을 해주세요.');
       return;
     }
     onNext();
@@ -77,10 +86,6 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
   };
 
   const getDefaultMessage = () => {
-    if (!hasChecked) {
-      alert('아이디 중복 확인을 해주세요');
-      return;
-    }
     return usernameMessage;
   };
 
@@ -103,7 +108,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
             onClick={handleCheckUsername}
             disabled={checkUsernameMutation.isPending || !state.idCheck.trim()}
           >
-            {checkUsernameMutation.isPending ? '확인 중...' : '확인'}
+            {checkUsernameMutation.isPending ? '확인 중...' : '중복 확인'}
           </button>
         </div>
         <div
