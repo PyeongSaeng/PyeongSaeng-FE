@@ -23,29 +23,31 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// 응답 인터셉터 - 토큰 저장 및 만료 처리
+// 응답 인터셉터 - 토큰 저장 및 만료 처리 (28-42번째 줄 수정)
 axiosInstance.interceptors.response.use(
   (response) => {
-    // 로그인 성공 시 accessToken만 저장 (refreshToken은 HttpOnly 쿠키로 자동 관리)
+    // 로그인 성공 시 accessToken만 저장
     if (response.config.url?.includes('/auth/login')) {
-      const { accessToken } = response.data;
+      
+      // result 안에 accessToken이 있는지 확인
+      const accessToken = response.data.result?.accessToken || response.data.accessToken;
       
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        console.log('Access Token 저장됨');
+      } else {
+        console.error('accessToken을 찾을 수 없음:', response.data);
       }
     }
-    
-    // OAuth 토큰 교환 시에도 accessToken 저장
+
+    // OAuth 토큰 교환 시에도 동일하게 처리
     if (response.config.url?.includes('/token/exchange')) {
-      const { accessToken } = response.data;
-      
+      const accessToken = response.data.result?.accessToken || response.data.accessToken;
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         console.log('OAuth Access Token 저장됨');
       }
     }
-    
+
     return response;
   },
   
