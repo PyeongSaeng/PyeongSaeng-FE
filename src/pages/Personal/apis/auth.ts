@@ -3,6 +3,7 @@ import {
   SeniorSignupRequest,
   SendVerificationRequest,
   VerifyCodeRequest,
+  LoginRequest,
 } from '../types/auth';
 
 // 시니어 회원가입
@@ -30,3 +31,9 @@ export const checkUsernameAvailability = async (username: string) => {
   const response = await axiosInstance.get(`/api/auth/check-username?username=${username}`);
   return response.data;
 }; 
+
+// 일반 로그인
+export const login = async (data: LoginRequest) => {
+  const response = await axiosInstance.post('/api/auth/login', data);
+  return response.data;
+};

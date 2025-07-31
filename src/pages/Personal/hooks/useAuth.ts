@@ -4,11 +4,13 @@ import {
   sendVerificationCode,
   verifyCode,
   checkUsernameAvailability,
+  login,
 } from '../apis/auth';
 import {
   SeniorSignupRequest,
   SendVerificationRequest,
   VerifyCodeRequest,
+  LoginRequest,
 } from '../types/auth';
 
 // 시니어 회원가입 훅
@@ -62,3 +64,10 @@ export const useCheckUsername = () => {
     },
   });
 }; 
+
+// 일반 로그인 훅
+export const useLogin = () => {
+  return useMutation({
+    mutationFn: (data: LoginRequest) => login(data)
+  })
+};

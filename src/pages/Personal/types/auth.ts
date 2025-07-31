@@ -75,3 +75,9 @@ export interface VerifyCodeRequest {
   phone: string;
   verificationCode: string;
 }
+
+// 일반 로그인
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
