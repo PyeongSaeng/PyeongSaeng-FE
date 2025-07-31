@@ -1,31 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 
 type info = {
+  id: number;
+  username: string;
   name: string;
-  id: string;
-  password: string;
-  age: number;
   phone: string;
-  address: {
-    main: string;
-    detail: string;
-  };
+  age: number;
+  password: string;
+  roadAddress: string;
+  detailAddress: string;
   job: string;
-  period: string;
+  experincePeriod: string;
 };
 
 const dummyInfo: info = {
-  name: '김영희',
-  id: 'youngid',
-  password: '1234',
-  age: 63,
+  id: 1,
+  username: '김영희',
+  name: 'youngid',
   phone: '010-0000-0000',
-  address: {
-    main: '대지로 49',
-    detail: '203동 105호',
-  },
+  age: 63,
+  password: '1234',
+  roadAddress: '대지로 49',
+  detailAddress: '203동 105호',
   job: '주부',
-  period: '10년 이상',
+  experincePeriod: '10년 이상',
 };
 
 const infoData = [
@@ -36,10 +34,10 @@ const infoData = [
   { label: '연락처', value: dummyInfo.phone },
   {
     label: '거주지',
-    value: `${dummyInfo.address.main}\n${dummyInfo.address.detail}`,
+    value: `${dummyInfo.roadAddress}\n${dummyInfo.detailAddress}`,
   },
   { label: '직무', value: dummyInfo.job },
-  { label: '기간', value: dummyInfo.period },
+  { label: '기간', value: dummyInfo.experincePeriod },
 ];
 
 const BasicInfo = () => {

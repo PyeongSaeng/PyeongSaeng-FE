@@ -12,7 +12,6 @@ const PersonalInfo = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // post
-    console.log('서밋');
   };
 
   return (
