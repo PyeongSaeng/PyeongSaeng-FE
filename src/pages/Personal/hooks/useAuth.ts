@@ -5,12 +5,14 @@ import {
   verifyCode,
   checkUsernameAvailability,
   login,
+  signupProtector,
 } from '../apis/auth';
 import {
   SeniorSignupRequest,
   SendVerificationRequest,
   VerifyCodeRequest,
   LoginRequest,
+  ProtectorSignupRequest,
 } from '../types/auth';
 
 // 시니어 회원가입 훅
@@ -22,6 +24,19 @@ export const useSeniorSignup = () => {
     },
     onError: (error) => {
       console.error('회원가입 실패:', error);
+    },
+  });
+};
+
+// 보호자 회원가입 훅
+export const useProtectorSignup = () => {
+  return useMutation({
+    mutationFn: (data: ProtectorSignupRequest) => signupProtector(data),
+    onSuccess: (data) => {
+      console.log('보호자 회원가입 성공:', data);
+    },
+    onError: (error) => {
+      console.error('보호자 회원가입 실패:', error);
     },
   });
 };

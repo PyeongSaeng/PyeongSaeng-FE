@@ -4,11 +4,18 @@ import {
   SendVerificationRequest,
   VerifyCodeRequest,
   LoginRequest,
+  ProtectorSignupRequest,
 } from '../types/auth';
 
 // 시니어 회원가입
 export const signupSenior = async (data: SeniorSignupRequest) => {
   const response = await axiosInstance.post('/api/auth/signup/senior', data);
+  return response.data;
+};
+
+// 보호자 회원가입
+export const signupProtector = async (data: ProtectorSignupRequest) => {
+  const response = await axiosInstance.post('/api/auth/signup/protector', data);
   return response.data;
 };
 
