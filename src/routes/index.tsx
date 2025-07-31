@@ -19,6 +19,7 @@ import PersonalInfoEdit from '../pages/Personal/my/info/PersonalInfoEdit';
 import PersonalInfoEditPassword from '../pages/Personal/my/info/PersonalInfoEditPassword';
 import ApplyResult from '../pages/Personal/my/apply/ApplyResults';
 import ApplyResults from '../pages/Personal/my/apply/ApplyResults';
+import ApplyDetail from '../pages/Personal/my/apply/ApplyDetail';
 // import ExtraQuestionsPage from '../pages/Personal/ExtraQuestionsPage';
 
 const AppRoutes = () => {
@@ -58,7 +59,7 @@ const AppRoutes = () => {
       ></Route>
       <Route
         path="/personal/my/applied-results/:appliedId"
-        element={<></>}
+        element={<ApplyDetail />}
       ></Route>
       <Route path="/personal/my/info" element={<PersonalInfo />}></Route>
       <Route

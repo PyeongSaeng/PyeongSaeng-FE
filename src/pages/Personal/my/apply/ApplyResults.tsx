@@ -41,13 +41,13 @@ const ApplyResults = () => {
     <div>
       <Topbar>
         <div className="text-[16px]">
-          <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px]">
+          <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px] border-b-[1.3px] border-[#CCCCCC]">
             신청 결과
           </div>
           <div className="h-[572px] overflow-y-scroll scrollbar-hide">
             {dummyApplies.map((apply) => {
               return (
-                <div className="flex flex-col items-center justify-center border-t-[1.3px] border-[#CCCCCC] py-[12px]">
+                <div className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]">
                   <div className="flex justify-between w-[292px] pb-[10px]">
                     <span>{apply.job}</span>
                     <span>
