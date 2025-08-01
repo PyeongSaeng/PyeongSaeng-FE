@@ -26,7 +26,7 @@ const dummyInfo: info = {
 
 const infoData = [
   { label: '이름', value: dummyInfo.name },
-  { label: 'id', value: dummyInfo.id },
+  { label: 'id', value: dummyInfo.name },
   { label: '비밀번호', value: '수정화면에서 변경하세요' },
   { label: '나이', value: dummyInfo.age },
   { label: '연락처', value: dummyInfo.phone },

@@ -4,6 +4,14 @@ import { NavLink } from 'react-router-dom';
 import Topbar from '../../../../shared/components/topbar/Topbar';
 
 const PersonalInfo = () => {
+  const [answers, setAnswers] = useState<(string | null)[]>([
+    '1시간 내외',
+    '실외',
+    '여럿이',
+    '교육/강사',
+    'C',
+  ]);
+
   const navigate = useNavigate();
   const location = useLocation();
   const [btn, setBtn] = useState<'수정' | '저장'>('수정');
@@ -18,7 +26,19 @@ const PersonalInfo = () => {
     }
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const pathArr = location.pathname.split('/');
+    const lastPath = pathArr[pathArr.length - 1];
+    const prevPath = pathArr[pathArr.length - 2];
+
+    if (lastPath === 'edit' && prevPath === 'basic') {
+      navigate('/personal/my/info/basic');
+    } else if (lastPath === 'edit' && prevPath === 'extra') {
+      navigate('/personal/my/info/extra');
+    }
+  };
 
   useEffect(() => {
     const currentPath = location.pathname.split('/').pop();
@@ -58,7 +78,7 @@ const PersonalInfo = () => {
             </NavLink>
           </div>
           <div className="h-[466px]">
-            <Outlet />
+            <Outlet context={{ answers, setAnswers }} key={location.pathname} />
           </div>
           <button
             type={btn === '수정' ? 'button' : 'submit'}

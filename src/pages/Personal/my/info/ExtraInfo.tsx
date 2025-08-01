@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
 
 const questions = [
@@ -9,7 +9,7 @@ const questions = [
   'Q5. 질문',
 ];
 
-const answers = [
+const options = [
   ['1시간 내외', '2시간 내외', '3시간 내외', '3시간 초과'],
   ['실내', '실외'],
   ['혼자서', '여럿이'],
@@ -17,37 +17,27 @@ const answers = [
   ['A', 'B', 'C'],
 ];
 
+interface OutletContextType {
+  answers: (string | null)[];
+}
+
 const ExtraInfo = () => {
-  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(
-    Array(questions.length).fill(null)
-  );
-
-  const handleSelect = (questionIndex: number, answer: string) => {
-    const updated = [...selectedAnswers];
-
-    if (updated[questionIndex] === answer) {
-      updated[questionIndex] = null;
-    } else {
-      updated[questionIndex] = answer;
-    }
-    setSelectedAnswers(updated);
-  };
-
+  const { answers } = useOutletContext<OutletContextType>();
   return (
     <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
-      <div className="h-[440px] overflow-y-scroll scrollbar-hide">
+      <div className="h-[450px] overflow-y-scroll scrollbar-hide">
         {questions.map((q, index) => {
-          const answerList = answers[index];
+          const answerList = options[index];
           return (
             <div key={q} className="py-[8px]">
               <div className="pb-[4px]">{q}</div>
               <div className="flex flex-wrap gap-[10px] ">
                 {answerList.map((e) => (
                   <button
+                    type="button"
                     key={e}
-                    onClick={() => handleSelect(index, e)}
                     className={clsx(
-                      selectedAnswers[index] === e ? 'bg-[#ECF6F2]' : '',
+                      answers[index] === e ? 'bg-[#ECF6F2]' : '',
                       'min-w-[94px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] text-[14px]'
                     )}
                   >
