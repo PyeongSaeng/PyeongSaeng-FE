@@ -16,7 +16,7 @@ export interface CreateJobDTO {
   keyName?: string[];
 }
 //////////////////////////////////////////////////////
-// 일자리 get 요청 타입 이걸로 가져다 쓰면됨
+// 일자리 get 요청 타입 이걸로 가져다 쓰면됨 목록 조회
 export interface JobPost {
   jobPostId: number;    //jobPostId!!로 변경
   title: string;

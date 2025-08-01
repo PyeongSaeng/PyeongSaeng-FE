@@ -3,6 +3,7 @@ import ImageUploadButton from "../../shared/components/EvidenceSection/ImageUplo
 import AddressSearchInput from "../../shared/components/AddressSearchInput";
 import { CreateJobDTO } from "../../shared/types/job";
 import { useJobPost } from "../../shared/hooks/job/useJobPost";
+import { useImageUpload } from "../../shared/hooks/useImageUpload";
 
 interface Props {
     onNext: () => void;
@@ -10,6 +11,9 @@ interface Props {
 
 export default function CompanyCreateJobPage({ onNext }: Props) {
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [imageKey, setImageKey] = useState<string | null>(null);
+    const { uploadImage, loading, error } = useImageUpload();
     const [dragging, setDragging] = useState(false);
     const { postJob } = useJobPost();
     const [form, setForm] = useState<CreateJobDTO>({
@@ -28,13 +32,28 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
         note: "",
         keyName: [],
     });
-    const handleFileSelect = (file: File) => {
+
+    const handleFileSelect = async (file: File) => {
         setImageFile(file);
+        const res = await uploadImage(file);
+        if (res) {
+            setImageUrl(res.url);
+            setImageKey(res.keyName);
+            setForm((prev) => ({
+                ...prev,
+                keyName: [res.keyName],
+            }));
+        }
     };
+
     const handelSubmit = async () => {
+        if (!form.keyName || form.keyName.length === 0) {
+            alert("근무지 이미지를 첨부해 주세요!");
+            return;
+        }
         try {
             await postJob(form);
-            onNext();
+            onNext(); // 여기서만 호출
         } catch (e) {
             alert("등록에 실패했습니다!");
         }
@@ -147,10 +166,8 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
             </div>
             {/* 신청서 양식 작성 버튼 */}
             <button
-                onClick={() => {
-                    handelSubmit();
-                    onNext();
-                }}
+                //onClick={handelSubmit}
+                onClick={onNext}
                 className="w-[294px] h-[45px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium"
             >
                 신청서 양식 작성하기
