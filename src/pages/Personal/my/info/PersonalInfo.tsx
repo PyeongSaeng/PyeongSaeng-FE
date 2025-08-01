@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Topbar from '../../../../shared/components/topbar/Topbar';
-import BasicInfo from './BasicInfo';
-import ExtraInfo from './ExtraInfo';
 
 const PersonalInfo = () => {
   const [isClicked, setIsClicked] = useState<'basic' | 'extra'>('basic');
@@ -17,48 +15,41 @@ const PersonalInfo = () => {
   return (
     <div>
       <Topbar>
-        <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px]">
-          개인정보
-        </div>
-        <div className="flex justify-center items-center gap-[10px] font-[Pretendard JP] font-[500] text-black text-[16px]">
+        <div className="flex flex-col items-center">
+          <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px]">
+            개인정보
+          </div>
+          <div className="flex justify-center items-center gap-[10px] font-[Pretendard JP] font-[500] text-black text-[16px]">
+            <NavLink
+              to="basic"
+              className={({ isActive }) =>
+                `flex justify-center items-center w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] 
+              ${isActive ? 'bg-[#ECF6F2]' : ''}`
+              }
+            >
+              기본 정보
+            </NavLink>
+            <NavLink
+              to="extra"
+              className={({ isActive }) =>
+                `flex justify-center items-center w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]
+              ${isActive ? 'bg-[#ECF6F2]' : ''}`
+              }
+            >
+              추가 정보
+            </NavLink>
+          </div>
+          <div className="h-[466px]">
+            <Outlet />
+          </div>
           <button
             type="button"
-            className={clsx(
-              isClicked === 'basic' ? 'bg-[#ECF6F2]' : '',
-              'w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]'
-            )}
-            onClick={() => setIsClicked('basic')}
+            className="w-[309px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[16px] font-[pretendard] font-[400]"
+            onClick={() => navigate('/personal/my/info/basic/edit')}
           >
-            기본 정보
-          </button>
-          <button
-            type="button"
-            className={clsx(
-              isClicked === 'basic' ? '' : 'bg-[#ECF6F2]',
-              'w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]'
-            )}
-            onClick={() => setIsClicked('extra')}
-          >
-            추가 정보
+            수정
           </button>
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col justify-center items-center"
-        >
-          {isClicked === 'basic' ? <BasicInfo /> : <ExtraInfo />}
-        </form>
-        <button
-          type={isClicked === 'basic' ? 'button' : 'submit'}
-          className="absolute bottom-[80px] left-1/2 -translate-x-1/2 w-[309px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[16px]"
-          onClick={() => {
-            if (isClicked === 'basic') {
-              navigate('/personal/my/info/edit');
-            }
-          }}
-        >
-          수정
-        </button>
       </Topbar>
     </div>
   );

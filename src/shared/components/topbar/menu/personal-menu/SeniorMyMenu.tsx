@@ -10,7 +10,7 @@ const SeniorMyMenu = () => {
         <MenuNavButton url="/personal/my/applied-results">
           신청 결과
         </MenuNavButton>
-        <MenuNavButton url="/personal/my/info">개인정보</MenuNavButton>
+        <MenuNavButton url="/personal/my/info/basic">개인정보</MenuNavButton>
         <MenuNavButton url="/personal/my/delete-account">
           회원탈퇴
         </MenuNavButton>

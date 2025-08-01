@@ -42,7 +42,7 @@ const infoData = [
   { label: '기간', value: dummyInfo.period },
 ];
 
-const PersonalInfoEdit = () => {
+const BasicInfoEdit = () => {
   // 수정 필요
   return (
     <div>
@@ -59,12 +59,12 @@ const PersonalInfoEdit = () => {
                 </span>
                 <span className="w-full flex justify-center items-center text-[#C2C2C2] text-[16px]">
                   {label === '비밀번호' ? (
-                    <button
+                    <div
                       className="w-[170px] h-[40px] rounded-[8px] font-[Pretendard] text-white bg-[#08D485]"
                       onClick={() => {}}
                     >
                       수정
-                    </button>
+                    </div>
                   ) : typeof value === 'string' && value.includes('\n') ? (
                     <div className="text-center leading-tight">
                       {value.split('\n').map((line, idx) => (
@@ -84,4 +84,4 @@ const PersonalInfoEdit = () => {
   );
 };
 
-export default PersonalInfoEdit;
+export default BasicInfoEdit;
