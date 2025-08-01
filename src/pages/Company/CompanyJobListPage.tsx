@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useJobGet } from "../../shared/hooks/job/useJobGet";
 import Topbar from "../../shared/components/topbar/Topbar"
 import CompanyCreateJobPage from "./CompanyCreateJobPage";
 import CompanyCreateFormPage from "./CompanyCreateFormPage";
 
 const CompanyJobListPage = () => {
+
     const [step, setStep] = useState(0);
+    const { jobs, fetchJobs, loading, error } = useJobGet();
+
+    useEffect(() => {
+        if (step === 0) fetchJobs();
+    }, [step, fetchJobs]);
 
     return (
         <div>
@@ -34,19 +41,29 @@ const CompanyJobListPage = () => {
                                 </button>
                                 <div className="w-[323px] border-[1.3px] border-[#cccccc] mt-[10px]" />
                                 {/* 스트롤 영역 */}
-                                
-                                {/* 버튼 */}
-                                <div>
-                                    <div className="w-[301px] flex gap-[13px] mt-[20px]">
-                                        <button
-                                            className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-white text-[16px] font-medium text-black">
-                                            삭제
-                                        </button>
-                                        <button
-                                            className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-[#0D29B7] text-[16px] font-medium text-white">
-                                            수정
-                                        </button>
-                                    </div>
+                                <div className="overflow-y-auto max-h-[520px] mt-2 w-full flex flex-col gap-6 text-[17px] items-center">
+                                    {loading && <div>로딩중...</div>}
+                                    {error && <div>에러: {error.message}</div>}
+                                    {jobs.map(job => (
+                                        <div key={job.jobPostId} className="w-[301px] bg-white rounded-lg shadow-md p-3 flex flex-col items-center">
+                                            <div className="font-semibold text-[17px] mb-2 text-[#222] text-center">{job.title}</div>
+                                            <img
+                                                src={job.imageUrl}
+                                                alt={job.title}
+                                                className="w-[265px] h-[115px] object-cover rounded-md mb-2 border"
+                                            />
+                                            <div className="w-full flex gap-[13px] mt-[7px]">
+                                                <button
+                                                    className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-white text-[16px] font-medium text-black">
+                                                    삭제
+                                                </button>
+                                                <button
+                                                    className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-[#0D29B7] text-[16px] font-medium text-white">
+                                                    수정
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         )}

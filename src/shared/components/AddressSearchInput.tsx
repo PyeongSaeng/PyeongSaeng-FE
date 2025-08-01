@@ -1,17 +1,26 @@
-import { useState } from "react";
+interface Props {
+  address: string;
+  zipcode: string;
+  detailAddress: string;
+  onChangeAddress: (address: string) => void;
+  onChangeZipcode: (zipcode: string) => void;
+  onChangeDetail: (detail: string) => void;
+}
 
-export default function AddressSearchInput() {
-  const [address, setAddress] = useState(""); // 주소
-  const [zipcode, setZipcode] = useState(""); // 우편번호
-  const [detail, setDetail] = useState("");   // 상세주소
-
-
+export default function AddressSearchInput({
+  address,
+  zipcode,
+  detailAddress,
+  onChangeAddress,
+  onChangeZipcode,
+  onChangeDetail,
+}: Props) {
   const handleSearch = () => {
-    // @ts-ignore (카카오 전역 객체 타입 무시)
+    // @ts-ignore
     new window.daum.Postcode({
       oncomplete: function (data: any) {
-        setZipcode(data.zonecode);
-        setAddress(data.roadAddress || data.jibunAddress);
+        onChangeZipcode(data.zonecode);
+        onChangeAddress(data.roadAddress || data.jibunAddress);
       },
     }).open();
   };
@@ -22,9 +31,9 @@ export default function AddressSearchInput() {
         <input
           type="text"
           placeholder="주소를 입력하세요"
-          className="w-[141px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000] placeholder:text-[#c2c2c2] font-medium"
           value={address}
           readOnly
+          className="w-[141px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000] placeholder:text-[#c2c2c2] font-medium"
         />
         <button
           className="w-[83px] h-[45px] bg-[#0D29B7] text-white rounded-[8px] text-[14px] font-medium"
@@ -37,9 +46,9 @@ export default function AddressSearchInput() {
       <input
         type="text"
         placeholder="상세 주소를 입력하세요"
+        value={detailAddress}
+        onChange={e => onChangeDetail(e.target.value)}
         className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000] placeholder:text-[#c2c2c2]"
-        value={detail}
-        onChange={e => setDetail(e.target.value)}
       />
     </div>
   );

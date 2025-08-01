@@ -33,6 +33,7 @@ import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<PersonalHomePage />}></Route>
       {/* 개인 버전 */}
       <Route path="/" element={<PersonalHomePage />}></Route>
       <Route path="/personal/join" element={<SignIn />}></Route>
