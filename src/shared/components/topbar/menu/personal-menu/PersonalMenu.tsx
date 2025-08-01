@@ -34,8 +34,8 @@ const PersonalMenu = () => {
           {currentMenu === 'main' ? (
             <MainMenu handleMenu={goToMyMenu} />
           ) : (
-            // <SeniorMyMenu />
-            <GuardianMyMenu />
+            <SeniorMyMenu />
+            // <GuardianMyMenu />
           )}
         </div>
       )}
