@@ -7,7 +7,6 @@ import SignIn from '../pages/Personal/user/signIn/SignIn';
 import SeniorSignIn from '../pages/Personal/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/user/signIn/Care/CareSignIn';
 import JobApplyPage from '../pages/Personal/JobApplyPage';
-import QuestionDetail from '../pages/Personal/QuestionDetailPage';
 import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
@@ -48,10 +47,6 @@ const AppRoutes = () => {
         path="/personal/jobs/recommend/:jobId/apply/question"
         element={<></>}
       ></Route>
-      <Route
-        path="/personal/jobs/recommend/:jobId/apply/question/detail"
-        element={<QuestionDetail />}
-      ></Route>
       <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
       <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
       <Route
@@ -65,15 +60,9 @@ const AppRoutes = () => {
       <Route path="/personal/my/info" element={<PersonalInfo />}>
         <Route path="basic" element={<BasicInfo />}></Route>
         <Route path="extra" element={<ExtraInfo />}></Route>
+        <Route path="basic/edit" element={<BasicInfoEdit />}></Route>
+        <Route path="extra/edit" element={<ExtraInfoEdit />}></Route>
       </Route>
-      <Route
-        path="/personal/my/info/basic/edit"
-        element={<BasicInfoEdit />}
-      ></Route>
-      <Route
-        path="/personal/my/info/extra/edit"
-        element={<ExtraInfoEdit />}
-      ></Route>
       <Route
         path="/personal/my/info/password"
         element={<PersonalInfoEditPassword />}
