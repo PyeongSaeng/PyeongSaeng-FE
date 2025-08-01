@@ -14,13 +14,14 @@ import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 import PersonalDeleteAccount from '../pages/Personal/my/PersonalDeleteAccount';
 import PersonalDeleteAccountDone from '../pages/Personal/my/PersonalDeleteAccountDone';
 import PersonalInfo from '../pages/Personal/my/info/PersonalInfo';
-import PersonalInfoEditPassword from '../pages/Personal/my/info/PersonalInfoEditPassword';
+import PersonalPasswordEdit from '../pages/Personal/my/info/PersonalPasswordEdit';
 import ApplyResults from '../pages/Personal/my/apply/ApplyResults';
 import ApplyDetail from '../pages/Personal/my/apply/ApplyDetail';
 import BasicInfo from '../pages/Personal/my/info/BasicInfo';
 import ExtraInfo from '../pages/Personal/my/info/ExtraInfo';
 import BasicInfoEdit from '../pages/Personal/my/info/BasicInfoEdit';
 import ExtraInfoEdit from '../pages/Personal/my/info/ExtraInfoEdit';
+import PersonalPasswordEditDone from '../pages/Personal/my/info/PersonalPasswordEditDone';
 
 const AppRoutes = () => {
   return (
@@ -65,7 +66,11 @@ const AppRoutes = () => {
       </Route>
       <Route
         path="/personal/my/info/basic/edit/password"
-        element={<PersonalInfoEditPassword />}
+        element={<PersonalPasswordEdit />}
+      ></Route>
+      <Route
+        path="/personal/my/info/basic/edit/password/done"
+        element={<PersonalPasswordEditDone />}
       ></Route>
       <Route
         path="/personal/my/delete-account"

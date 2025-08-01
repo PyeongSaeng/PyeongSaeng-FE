@@ -24,9 +24,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         </MenuNavButton>
         <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
-        <MenuNavButton url="/personal/jobs/recommend/:jobId/apply/additional">
-          질문답변
-        </MenuNavButton>
+        <MenuNavButton url="/personal/my/info/extra">질문답변</MenuNavButton>
         <MenuNavButton handleMenu={handleMenu}>내 정보</MenuNavButton>
         <MenuNavButton>로그아웃</MenuNavButton>
         <MenuNavButton url="/personal/my/delete-account">
