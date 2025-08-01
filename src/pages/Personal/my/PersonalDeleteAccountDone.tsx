@@ -18,7 +18,7 @@ const PersonalDeleteAccountDone = () => {
             type="button"
             className="w-[293px] h-[45px] bg-[#08D485] rounded-[8px] text-black font-[500]"
             onClick={() => {
-              navigate('/personal');
+              navigate('/');
             }}
           >
             홈으로
