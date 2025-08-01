@@ -13,11 +13,9 @@ interface TopbarProps {
 const Topbar = ({ children }: TopbarProps) => {
   const location = useLocation();
 
-  const version: 'personal' | 'company' = location.pathname.startsWith(
-    '/company'
-  )
+  const version: '' | 'company' = location.pathname.startsWith('/company')
     ? 'company'
-    : 'personal';
+    : '';
 
   return (
     <>
@@ -28,14 +26,14 @@ const Topbar = ({ children }: TopbarProps) => {
             <div className="relative flex justify-around items-start gap-[21px]">
               {/* {version === 'personal' ? <PersonalMenu /> : <CompanyMenu />}
               {version === 'personal' ? <QuestionButton /> : ''} */}
-              {version === 'personal' ? (
+              {version === 'company' ? (
                 <>
-                  <PersonalMenu />
-                  <QuestionButton />
+                  <CompanyMenu />
                 </>
               ) : (
                 <>
-                  <CompanyMenu />
+                  <PersonalMenu />
+                  <QuestionButton />
                 </>
               )}
             </div>

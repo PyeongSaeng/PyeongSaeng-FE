@@ -6,22 +6,22 @@ const ToggleButton = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [toggleVersion, setToggleVersion] = useState<'personal' | 'company'>(
-    location.pathname.startsWith('/company') ? 'company' : 'personal'
+  const [toggleVersion, setToggleVersion] = useState<'' | 'company'>(
+    location.pathname.startsWith('/company') ? 'company' : ''
   );
 
   useEffect(() => {
     if (location.pathname.startsWith('/company')) {
       setToggleVersion('company');
     } else {
-      setToggleVersion('personal');
+      setToggleVersion('');
     }
   }, [location.pathname]);
 
   const goToPersonalVersion = () => {
-    if (toggleVersion !== 'personal') {
-      setToggleVersion('personal');
-      setTimeout(() => navigate('/personal'), 300);
+    if (toggleVersion !== '') {
+      setToggleVersion('');
+      setTimeout(() => navigate('/'), 300);
     }
   };
   const goToCompanyVersion = () => {
@@ -37,7 +37,7 @@ const ToggleButton = () => {
         <div
           className={clsx(
             'absolute top-0 left-0 z-0 transition-transform duration-300 w-[44.12px] h-full rounded-[16px]',
-            toggleVersion === 'personal'
+            toggleVersion === ''
               ? 'translate-x-0 bg-[#08D485]'
               : 'translate-x-[36.49px] bg-[#0D29B7]'
           )}
@@ -47,9 +47,7 @@ const ToggleButton = () => {
             onClick={goToPersonalVersion}
             className={clsx(
               'transition-colors duration-200',
-              toggleVersion === 'personal'
-                ? 'font-semibold'
-                : 'font-normal text-black'
+              toggleVersion === '' ? 'font-semibold' : 'font-normal text-black'
             )}
           >
             개인
