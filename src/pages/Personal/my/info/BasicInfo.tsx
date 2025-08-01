@@ -32,8 +32,9 @@ const infoData = [
   { label: '연락처', value: dummyInfo.phone },
   {
     label: '거주지',
-    value: `${dummyInfo.roadAddress}\n${dummyInfo.detailAddress}`,
+    value: dummyInfo.roadAddress,
   },
+  { label: '', value: dummyInfo.detailAddress },
   { label: '직무', value: dummyInfo.job },
   { label: '기간', value: dummyInfo.experincePeriod },
 ];
@@ -41,18 +42,18 @@ const infoData = [
 const BasicInfo = () => {
   return (
     <div className="flex flex-col justify-center items-center text-[16px] font-[Pretendard] font-[500]">
-      <div className="py-[26px]">
+      <div className="py-[6px]">
         {infoData.map(({ label, value }) => (
           <div
             key={label}
-            className="w-full flex justify-center gap-[36px] text-black leading-[2.8]"
+            className="w-full flex justify-center text-black leading-[2.8]"
           >
             <span className="w-[140px] pl-[30px] flex justify-end items-center text-[18px] text-[#414141]">
               {label}
             </span>
             <span className="w-full flex justify-center items-center text-[#C2C2C2]">
               {label === '비밀번호' ? (
-                <div className="w-[170px] h-[40px] rounded-[8px] border-[1px] border-[#E1E1E1] text-[14px] text-center">
+                <div className="w-[200px] h-[40px] rounded-[8px] border-[1px] border-[#E1E1E1] text-[14px] text-center">
                   {value}
                 </div>
               ) : typeof value === 'string' && value.includes('\n') ? (

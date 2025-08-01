@@ -64,7 +64,7 @@ const AppRoutes = () => {
         <Route path="extra/edit" element={<ExtraInfoEdit />}></Route>
       </Route>
       <Route
-        path="/personal/my/info/password"
+        path="/personal/my/info/basic/edit/password"
         element={<PersonalInfoEditPassword />}
       ></Route>
       <Route
