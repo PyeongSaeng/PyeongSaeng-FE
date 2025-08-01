@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopbarForLogin from '../../shared/components/topbar/TopbarForLogin';
+import { useLogin } from './hooks/useAuth';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -9,6 +10,28 @@ const LoginPage = () => {
 
   const handleFindAccount = () => {
     navigate('/personal/find-account');
+  };
+
+  const loginMutation = useLogin();
+
+  const handleLogin = () => {
+    if (!id || !pw) {
+      alert('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    loginMutation.mutate(
+      { username: id, password: pw },
+      {
+        onSuccess: () => {
+          alert('로그인 성공! 메인 페이지로 이동합니다.');
+          navigate('/', { replace: true });
+        },
+        onError: (error: unknown) => {
+          console.error('로그인 실패:', error);
+        },
+      }
+    );
   };
 
   return (
@@ -21,7 +44,11 @@ const LoginPage = () => {
         <div className="w-[320px] border-t border-[#d9d9d9] mb-[2.4rem]" />
 
         {/* 입력 폼 */}
-        <form className="flex flex-col items-center w-full">
+        <form
+          className="flex flex-col items-center w-full"
+          autoComplete="off"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <input
             type="text"
             placeholder="아이디를 입력해주세요"
@@ -36,7 +63,10 @@ const LoginPage = () => {
             onChange={(e) => setPw(e.target.value)}
             className={`mb-[3rem] w-[270px] h-[45px] font-medium rounded-[8px] border border-[#e1e1e1] text-[1.6rem] px-[13px] py-[16px] focus:outline-black ${pw ? 'text-black' : 'text-[#C2C2C2]'}`}
           />
-          <button className="w-[270px] bg-[#08D485] text-black text-[16px] py-[12px] rounded-[8px] mb-[26px] shadow transition">
+          <button
+            className="w-[270px] bg-[#08D485] text-black text-[16px] py-[12px] rounded-[8px] mb-[26px] shadow transition"
+            onClick={handleLogin}
+          >
             로그인
           </button>
         </form>
@@ -47,6 +77,7 @@ const LoginPage = () => {
             비밀번호를 잊어버리셨나요?
           </p>
           <button
+            type="button"
             className="w-[270px] border-[1.3px] border-[#08D485] text-black text-[16px] py-[12px] rounded-[8px] mb-[26px]"
             onClick={handleFindAccount}
           >
