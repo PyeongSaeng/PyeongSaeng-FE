@@ -1,4 +1,3 @@
-// src/shared/components/Button.tsx
 import { clsx } from 'clsx';
 
 interface ButtonProps {

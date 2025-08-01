@@ -38,6 +38,7 @@ const dummyJobs: JobType[] = [
 ];
 
 const JobDraftsPage = () => {
+    const [jobs, setJobs] = useState<JobType[]>(dummyJobs);
     const [selected, setSelected] = useState(0);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
 
@@ -75,10 +76,10 @@ const JobDraftsPage = () => {
                         className="w-[291] flex flex-col items-center overflow-y-auto mt-[22px] space-y-9 scrollbar-hide"
                         style={{ maxHeight: "400px" }}
                     >
-                        {dummyJobs.map((job) => {
+                        {jobs.map((job) => {
                             const isSelected = selectedJobId === job.jobId;
                             return (
-                                <div key={job.jobId} className="flex flex-col items-start">
+                                <div key={job.jobId} className="flex flex-col items-start relative">
                                     <div className="flex items-center gap-[6px]">
                                         {/* 동그라미 */}
                                         <div
@@ -95,6 +96,17 @@ const JobDraftsPage = () => {
                                         >
                                             선택하기
                                         </div>
+                                        {/* 취소하기 */}
+                                        <img
+                                            src="/icons/close_icon.svg"
+                                            alt="취소"
+                                            className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0"
+                                            onClick={() => {
+                                                setSelectedJobId(null);
+                                                setJobs((prevJobs) => prevJobs.filter((j) => j.jobId !== job.jobId));
+                                            }}
+
+                                        />
                                     </div>
                                     <div
                                         className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
