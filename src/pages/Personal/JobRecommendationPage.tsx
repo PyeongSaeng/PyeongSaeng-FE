@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { dummyJobs, JobType } from '../../shared/constants/dummyJobs';
@@ -6,6 +6,22 @@ import { dummyJobs, JobType } from '../../shared/constants/dummyJobs';
 const JobRecommendationPage = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const [filteredJobs, setFilteredJobs] = useState<JobType[]>(dummyJobs);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search.trim() === '') {
+        setFilteredJobs(dummyJobs);
+      } else {
+        setFilteredJobs(
+          dummyJobs.filter(job =>
+            job.name.toLowerCase().includes(search.trim().toLowerCase())
+          )
+        );
+      }
+    }, 300); // 300ms 딜레이
+    return () => clearTimeout(handler);
+  }, [search]);
 
   return (
     <Topbar>
@@ -40,23 +56,27 @@ const JobRecommendationPage = () => {
           {/* 스크롤 영역 */}
           <div className="mt-[17px] flex-1 w-full flex justify-center" style={{ minHeight: 0 }}>
             <div className="flex flex-col items-center overflow-y-auto gap-[41px] scrollbar-hide"
-                        style={{ maxHeight: "400px" }}>
-              {dummyJobs.map((job: JobType) => (
-                <div
-                  key={job.jobId}
-                  className="cursor-pointer"
-                  onClick={() => navigate(`/personal/jobs/recommend/${job.jobId}`)}
-                >
-                  <p className="text-[14px] font-normal text-black text-center">
-                    {job.name}
-                  </p>
-                  <img
-                    src={job.image}
-                    alt={job.name}
-                    className="w-[230px] h-auto mt-[10px] rounded-[8px] border border-gray-200"
-                  />
-                </div>
-              ))}
+              style={{ maxHeight: "400px" }}>
+              {filteredJobs.length === 0 ? (
+                <p className="text-gray-400">검색 결과가 없습니다.</p>
+              ) : (
+                filteredJobs.map((job: JobType) => (
+                  <div
+                    key={job.jobId}
+                    className="cursor-pointer"
+                    onClick={() => navigate(`/personal/jobs/recommend/${job.jobId}`)}
+                  >
+                    <p className="text-[14px] font-normal text-black text-center">
+                      {job.name}
+                    </p>
+                    <img
+                      src={job.image}
+                      alt={job.name}
+                      className="w-[230px] h-auto mt-[10px] rounded-[8px] border border-gray-200"
+                    />
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
