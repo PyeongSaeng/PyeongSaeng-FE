@@ -20,7 +20,7 @@ type SeniorStep1Props = {
 };
 
 const inputClass =
-  'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem]';
+  'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem]';
 const selectClass =
   'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] bg-white text-[#c2c2c2] text-[1.6rem]';
 
@@ -68,7 +68,6 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
       },
       {
         onSuccess: () => {
-          alert('인증이 완료되었습니다.');
           setIsVerified(true);
         },
         onError: (error: unknown) => {

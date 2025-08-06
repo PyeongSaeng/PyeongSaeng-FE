@@ -94,8 +94,7 @@ const SeniorSignIn = () => {
   }, [isFromKakao]);
 
   const handleSubmit = () => {
-    console.log('🚀 시니어 회원가입 제출 시작');
-    console.log('📋 카카오 사용자 여부:', isFromKakao);
+    console.log('카카오 사용자 여부:', isFromKakao);
 
     const seniorData: SeniorSignupRequest = {
       username: isFromKakao ? kakaoInfo.kakaoId : step2State.id,
@@ -116,11 +115,10 @@ const SeniorSignIn = () => {
       providerUserId: isFromKakao ? parseInt(kakaoInfo.kakaoId) || null : null,
     };
 
-    console.log('📤 전송할 데이터:', seniorData);
+    console.log('전송할 데이터:', seniorData);
 
     signupMutation.mutate(seniorData, {
       onSuccess: () => {
-        console.log('✅ 시니어 회원가입 성공');
         alert(
           isFromKakao
             ? '카카오 회원가입이 완료되었습니다! 🎉'
