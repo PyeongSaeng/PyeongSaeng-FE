@@ -88,7 +88,6 @@ const SeniorSignIn = () => {
 
       // 보호자 연결 없음
       protectorId: null,
-      relation: undefined,
 
       // 일반 회원가입
       providerType: null,

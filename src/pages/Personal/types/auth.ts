@@ -36,7 +36,6 @@ export interface AddressInfo {
 // 보호자 연결 여부
 export interface ProtectorConnectionInfo {
   protectorId: number | null; // null이면 독립 가입
-  relation?: string; // protectorId가 있을 때만 필수
 }
 
 export interface ProfileInfo {

@@ -151,7 +151,6 @@ const CareSignIn = () => {
 
       // 보호자 연결 정보
       protectorId: protectorId,
-      relation: '모녀', // 임시 값 (서버 수정 후 제거)
 
       // 소셜 로그인 관련
       providerType: null,
