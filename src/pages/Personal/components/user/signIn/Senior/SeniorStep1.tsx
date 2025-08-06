@@ -42,7 +42,9 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
       { phone: state.phone },
       {
         onSuccess: () => {
-          alert('인증번호가 발송되었습니다.');
+          alert(
+            '인증번호가 발송되었습니다. 문자가 오지 않으면 한 번 더 눌러주세요.'
+          );
           setIsVerificationSent(true);
         },
         onError: (error: unknown) => {
@@ -105,7 +107,7 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
       </div>
       <div className="w-[29.4rem] flex gap-[1.4rem] mb-3">
         <input
-          className={`w-[18.3rem] ${selectClass} mb-0 ${state.smsCode ? 'text-black' : 'text-[#c2c2c2]'}`}
+          className={`w-[18.3rem] ${selectClass} mb-0 ${state.smsCode ? 'text-black' : 'text-[#BDBDBD]'}`}
           placeholder="인증번호를 입력하세요"
           value={state.smsCode}
           onChange={(e) => setState((s) => ({ ...s, smsCode: e.target.value }))}
@@ -117,9 +119,7 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
             onClick={handleSendVerification}
             disabled={sendVerificationMutation.isPending || !state.phone}
           >
-            {sendVerificationMutation.isPending
-              ? '발송 중...'
-              : '인증번호 전송'}
+            {sendVerificationMutation.isPending ? '발송 중...' : '인증하기'}
           </button>
         ) : (
           <button
@@ -137,10 +137,26 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
               ? '확인 중...'
               : isVerified
                 ? '인증완료'
-                : '인증확인'}
+                : '확인'}
           </button>
         )}
       </div>
+      {isVerificationSent && !isVerified && (
+        <div className="w-[29.4rem] mb-4">
+          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2">
+            인증번호를 받지 못한 경우 한 번 더 눌러주세요
+          </p>
+          <button
+            className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
+            onClick={handleSendVerification}
+            disabled={sendVerificationMutation.isPending}
+          >
+            {sendVerificationMutation.isPending
+              ? '재전송 중...'
+              : '인증번호 재전송'}
+          </button>
+        </div>
+      )}
       <NextButton onClick={handleNext}>다음</NextButton>
     </div>
   );
