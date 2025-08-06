@@ -120,8 +120,17 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
         <input
           className={`${inputClass} ${state.age ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="어르신의 연세를 입력해주세요"
-          value={state.age}
-          onChange={(e) => setState((s) => ({ ...s, age: e.target.value }))}
+          value={state.age || ''}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === '' || /^\d+$/.test(value)) {
+              setState((s) => ({ ...s, age: value }));
+            }
+          }}
+          type="number"
+          min="1"
+          max="120"
+          autoComplete="off"
         />
         <div className="flex gap-2 w-full mb-3">
           <button
@@ -148,9 +157,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
             className={`${selectClass} w-[18.7rem] mb-0 ${state.roadAddress ? 'text-black' : 'text-[#c2c2c2]'}`}
             placeholder="거주지를 입력해주세요"
             value={state.roadAddress}
-            onChange={(e) =>
-              setState((s) => ({ ...s, address: e.target.value }))
-            }
+            readOnly
           />
           <button
             className="bg-[#08D485] w-[10rem] text-black rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem]"

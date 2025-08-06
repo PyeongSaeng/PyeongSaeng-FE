@@ -67,7 +67,6 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
       },
       {
         onSuccess: () => {
-          alert('인증이 완료되었습니다.');
           setIsVerified(true);
         },
         onError: (error) => {

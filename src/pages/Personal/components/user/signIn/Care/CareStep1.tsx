@@ -67,7 +67,6 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
       },
       {
         onSuccess: () => {
-          alert('인증이 완료되었습니다.');
           setIsVerified(true);
         },
         onError: (error) => {
