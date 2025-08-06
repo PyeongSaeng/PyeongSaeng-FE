@@ -29,17 +29,17 @@ button {
 /* 사용 예시 bg-[var(--main-blue-100)] */
 /* 복붙용 [var()]*/
 :root {
-  /* Main Blue */
+  /* Blue */
   --main-blue: #0D29B7;
   --main-blue-300: #B4BDE9;
-  --main-blue-100: #DBDFF4;
-  --main-blue-50: #ECEEF9;
-  /* Main Green */
+  --main-blue-200: #DBDFF4;
+  --main-blue-100: #ECEEF9;
+  /* Green */
   --main-green: #08D485;
   --main-green-300: #B3F4DB;
-  --main-green-100: #DAF4EA;
-  --main-green-50: #ECF6F2;
-  /* Gray Scale */
+  --main-green-200: #DAF4EA;
+  --main-green-100: #ECF6F2;
+  /* Gray */
   --gray-900: #212121;
   --gray-800: #414141;
   --gray-700: #707070;
