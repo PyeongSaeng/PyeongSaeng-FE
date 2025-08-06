@@ -150,8 +150,8 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
         )}
       </div>
       {isVerificationSent && !isVerified && (
-        <div className="w-[29.4rem] mb-4">
-          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2">
+        <div className="w-[29.4rem] mb-4 flex flex-col items-end">
+          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
             인증번호를 받지 못한 경우 한 번 더 눌러주세요
           </p>
           <button

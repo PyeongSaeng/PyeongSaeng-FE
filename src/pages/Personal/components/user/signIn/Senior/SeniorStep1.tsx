@@ -125,8 +125,8 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
           <button
             className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
               isVerified
-                ? 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
-                : 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
+                ? 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
+                : 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
             }`}
             onClick={handleVerifyCode}
             disabled={
@@ -142,8 +142,8 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
         )}
       </div>
       {isVerificationSent && !isVerified && (
-        <div className="w-[29.4rem] mb-4">
-          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2">
+        <div className="w-[29.4rem] mb-4 flex flex-col items-end">
+          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
             인증번호를 받지 못한 경우 한 번 더 눌러주세요
           </p>
           <button

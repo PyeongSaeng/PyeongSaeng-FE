@@ -79,7 +79,7 @@ const SeniorSignIn = () => {
       name: step1State.name,
       age: parseInt(step3State.age),
       gender: step3State.gender as Gender,
-      phoneNum: step1State.phone,
+      phoneNum: step3State.phone,
       zipcode: step3State.zipcode,
       roadAddress: step3State.roadAddress,
       detailAddress: step3State.detailAddress || undefined,

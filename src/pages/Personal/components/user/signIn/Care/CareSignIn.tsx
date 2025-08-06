@@ -142,7 +142,7 @@ const CareSignIn = () => {
       name: step3State.name,
       age: parseInt(step4State.age),
       gender: step4State.gender as Gender,
-      phoneNum: step4State.phone,
+      phoneNum: step5State.phone,
       zipcode: '',
       roadAddress: step4State.address,
       detailAddress: step4State.detailAddress || undefined,
