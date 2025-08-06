@@ -41,6 +41,7 @@ const periodOptions = [
   '10년 이상',
 ];
 
+// Step3State 타입 제대로 사용
 type Step3State = {
   type: string;
   age: string;
@@ -53,23 +54,24 @@ type Step3State = {
   roadAddress: string;
 };
 
-type SeniorStep3Props = {
-  state: Step3State;
-  setState: React.Dispatch<React.SetStateAction<Step3State>>;
+// Props 타입 정의 개선
+interface SeniorStep3Props {
+  state: Step3State; // any 대신 Step3State 사용
+  setState: React.Dispatch<React.SetStateAction<Step3State>>; // 정확한 타입
   onSubmit: () => void;
-  isLoading?: boolean;
-};
+  isFromKakao?: boolean;
+}
 
-const SeniorStep3 = ({
+const SeniorStep3: React.FC<SeniorStep3Props> = ({
   state,
   setState,
   onSubmit,
-  isLoading = false,
-}: SeniorStep3Props) => {
+  isFromKakao = false,
+}) => {
   const [jobOpen, setJobOpen] = useState(false);
   const [periodOpen, setPeriodOpen] = useState(false);
 
-  // 주소
+  // 주소 검색 스크립트 로드
   useEffect(() => {
     if (!window.daum?.Postcode) {
       const script = document.createElement('script');
@@ -84,8 +86,8 @@ const SeniorStep3 = ({
     if (window.daum?.Postcode) {
       new window.daum.Postcode({
         oncomplete: function (data: any) {
-          setState((s) => ({
-            ...s,
+          setState((prevState) => ({
+            ...prevState,
             zipcode: data.zonecode,
             roadAddress: data.roadAddress,
           }));
@@ -99,7 +101,7 @@ const SeniorStep3 = ({
   };
 
   const handleSubmit = () => {
-    // 필수 입력 검증
+    // 필수 입력 검증 - zipcode 제외 (주소 찾기에서 자동 설정)
     if (
       !state.age ||
       !state.gender ||
@@ -117,43 +119,66 @@ const SeniorStep3 = ({
   };
 
   return (
-    <div
-      className={`flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem] ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
-    >
+    <div className="px-[2rem] pt-[2rem] pb-[4rem] min-h-screen bg-white">
       <SignUpHeader title="구직자 정보 입력" />
+
+      {isFromKakao && (
+        <div className="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded">
+          <p className="text-yellow-800 text-sm">
+            카카오 계정 연동 중입니다. 추가 정보를 입력해주세요!
+          </p>
+        </div>
+      )}
+
       <div className="w-[29.4rem] flex flex-col gap-[1rem]">
         <div className="text-[#747474] text-[1.6rem] font-semibold mb-[1.3rem]">
           어르신의 구직에 사용할 정보를 입력해주세요
         </div>
+
+        {/* 나이 입력 */}
         <input
           className={`${inputClass} ${state.age ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="어르신의 연세를 입력해주세요"
           value={state.age}
-          onChange={(e) => setState((s) => ({ ...s, age: e.target.value }))}
+          onChange={(e) =>
+            setState((prevState) => ({ ...prevState, age: e.target.value }))
+          }
           type="number"
         />
+
+        {/* 성별 선택 */}
         <div className="flex gap-2 w-full mb-3">
           <button
             className={`${genderBtnClass} ${state.gender === 'FEMALE' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
-            onClick={() => setState((s) => ({ ...s, gender: 'FEMALE' }))}
+            onClick={() =>
+              setState((prevState) => ({ ...prevState, gender: 'FEMALE' }))
+            }
             type="button"
           >
             여성
           </button>
           <button
             className={`${genderBtnClass} ${state.gender === 'MALE' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
-            onClick={() => setState((s) => ({ ...s, gender: 'MALE' }))}
+            onClick={() =>
+              setState((prevState) => ({ ...prevState, gender: 'MALE' }))
+            }
             type="button"
           >
             남성
           </button>
         </div>
+
+        {/* 전화번호 입력 */}
         <input
           className={`${inputClass} ${state.phone ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="전화번호를 입력해주세요"
           value={state.phone}
-          onChange={(e) => setState((s) => ({ ...s, phone: e.target.value }))}
+          onChange={(e) =>
+            setState((prevState) => ({ ...prevState, phone: e.target.value }))
+          }
         />
+
+        {/* 주소 검색 */}
         <div className="flex w-full gap-[0.5rem] mb-3">
           <input
             className={`${selectClass} w-[18.7rem] mb-0 ${state.roadAddress ? 'text-black' : 'text-[#c2c2c2]'}`}
@@ -169,14 +194,20 @@ const SeniorStep3 = ({
             주소 찾기
           </button>
         </div>
+
+        {/* 상세주소 입력 */}
         <input
           className={`${inputClass} ${state.detailAddress ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="상세주소를 입력해주세요"
           value={state.detailAddress}
           onChange={(e) =>
-            setState((s) => ({ ...s, detailAddress: e.target.value }))
+            setState((prevState) => ({
+              ...prevState,
+              detailAddress: e.target.value,
+            }))
           }
         />
+
         <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mt-[1.4rem] mb-[1.4rem]">
           경력 사항
         </div>
@@ -223,7 +254,7 @@ const SeniorStep3 = ({
                     style={{ fontWeight: 500 }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setState((s) => ({ ...s, job: option }));
+                      setState((prevState) => ({ ...prevState, job: option }));
                       setJobOpen(false);
                     }}
                   >
@@ -277,7 +308,10 @@ const SeniorStep3 = ({
                     style={{ fontWeight: 500 }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setState((s) => ({ ...s, period: option }));
+                      setState((prevState) => ({
+                        ...prevState,
+                        period: option,
+                      }));
                       setPeriodOpen(false);
                     }}
                   >
@@ -288,12 +322,13 @@ const SeniorStep3 = ({
             )}
           </div>
         </div>
+
         <NextButton
           className="!mt-[1.4rem]"
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={false}
         >
-          {isLoading ? '회원가입 중...' : '회원가입 완료'}
+          {isFromKakao ? '카카오 회원가입 완료' : '회원가입 완료'}
         </NextButton>
       </div>
     </div>

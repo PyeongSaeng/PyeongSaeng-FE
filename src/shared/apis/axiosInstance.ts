@@ -44,7 +44,15 @@ axiosInstance.interceptors.response.use(
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        console.log('OAuth Access Token 저장됨');
+        console.log('카카오 Access Token 저장됨');
+      }
+    }
+
+    // 카카오 회원가입 성공 시에도 토큰 저장
+    if (response.config.url?.includes('/auth/signup/kakao')) {
+      const accessToken = response.data.result?.accessToken || response.data.accessToken;
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
       }
     }
 

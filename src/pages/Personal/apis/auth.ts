@@ -44,3 +44,9 @@ export const login = async (data: LoginRequest) => {
   const response = await axiosInstance.post('/api/auth/login', data);
   return response.data;
 };
+
+// 카카오 OAuth 로그인 시작 (리다이렉트)
+export const initKakaoLogin = () => {
+  // 카카오 OAuth 인증 페이지로 리다이렉트
+  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/kakao`
+};
