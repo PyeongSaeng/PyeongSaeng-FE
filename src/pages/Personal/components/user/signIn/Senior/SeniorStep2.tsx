@@ -64,7 +64,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
   };
 
   const handleNext = () => {
-    if (!state.password || !state.passwordConfirm) {
+    if (!state.idCheck || !state.password || !state.passwordConfirm) {
       alert('모든 항목을 입력해주세요.');
       return;
     }

@@ -37,7 +37,6 @@ const SeniorSignIn = () => {
     age: '',
     gender: '',
     phone: '',
-    address: '',
     detailAddress: '',
     job: '',
     period: '',

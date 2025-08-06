@@ -46,7 +46,6 @@ type Step3State = {
   age: string;
   gender: string;
   phone: string;
-  address: string;
   detailAddress: string;
   job: string;
   period: string;
@@ -87,9 +86,8 @@ const SeniorStep3 = ({
         oncomplete: function (data: any) {
           setState((s) => ({
             ...s,
-            address: data.address,
             zipcode: data.zonecode,
-            roadAddress: data.address,
+            roadAddress: data.roadAddress,
           }));
         },
       }).open();
@@ -106,9 +104,10 @@ const SeniorStep3 = ({
       !state.age ||
       !state.gender ||
       !state.phone ||
-      !state.address ||
       !state.job ||
-      !state.period
+      !state.period ||
+      !state.roadAddress ||
+      !state.detailAddress
     ) {
       alert('모든 항목을 입력해주세요.');
       return;
@@ -157,9 +156,9 @@ const SeniorStep3 = ({
         />
         <div className="flex w-full gap-[0.5rem] mb-3">
           <input
-            className={`${selectClass} w-[18.7rem] mb-0 ${state.address ? 'text-black' : 'text-[#c2c2c2]'}`}
+            className={`${selectClass} w-[18.7rem] mb-0 ${state.roadAddress ? 'text-black' : 'text-[#c2c2c2]'}`}
             placeholder="거주지를 입력해주세요"
-            value={state.address}
+            value={state.roadAddress}
             readOnly
           />
           <button

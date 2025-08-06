@@ -62,12 +62,13 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
   };
 
   const handleNext = () => {
-    if (!state.id || !state.idCheck) {
+    if (
+      !state.name ||
+      !state.idCheck ||
+      !state.password ||
+      !state.passwordConfirm
+    ) {
       alert('모든 항목을 입력해주세요.');
-      return;
-    }
-    if (!state.isIdAvailable) {
-      alert('아이디 중복 확인을 해주세요.');
       return;
     }
     if (state.password !== state.passwordConfirm) {

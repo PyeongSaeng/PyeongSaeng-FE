@@ -61,8 +61,8 @@ const CareStep2 = ({ state, setState, onNext }: CareStep2Props) => {
   };
 
   const handleNext = () => {
-    if (!state.password || !state.passwordConfirm) {
-      alert('비밀번호를 입력해주세요.');
+    if (!state.idCheck || !state.password || !state.passwordConfirm) {
+      alert('모든 항목을 입력해주세요.');
       return;
     }
     if (state.password !== state.passwordConfirm) {
