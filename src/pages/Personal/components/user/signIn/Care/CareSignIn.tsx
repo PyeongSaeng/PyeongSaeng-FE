@@ -38,6 +38,7 @@ const CareSignIn = () => {
     isIdAvailable: false,
     password: '',
     passwordConfirm: '',
+    phone: '',
   });
 
   // Step3: 시니어 기본 정보
@@ -77,7 +78,7 @@ const CareSignIn = () => {
       username: step2State.idCheck,
       password: step2State.password,
       name: step1State.name,
-      phone: step1State.phone,
+      phone: step2State.phone,
       providerType: null,
       providerUserId: null,
     };

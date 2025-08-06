@@ -9,6 +9,7 @@ type Step2State = {
   isIdAvailable: boolean;
   password: string;
   passwordConfirm: string;
+  phone: string;
 };
 
 type CareStep2Props = {
@@ -129,6 +130,13 @@ const CareStep2 = ({ state, setState, onNext }: CareStep2Props) => {
           onChange={(e) =>
             setState((s) => ({ ...s, passwordConfirm: e.target.value }))
           }
+        />
+
+        <input
+          className={`${inputClass} w-[29.4rem] mt-[2.2rem] ${state.phone ? 'text-black' : 'text-[#BDBDBD]'}`}
+          placeholder="전화번호를 입력하세요"
+          value={state.phone}
+          onChange={(e) => setState((s) => ({ ...s, phone: e.target.value }))}
         />
         {state.password &&
           state.passwordConfirm &&
