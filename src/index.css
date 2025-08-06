@@ -1,9 +1,6 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 @import 'tailwindcss';
-
-html,
-body,
-#root {
+html, body, #root {
   width: 100vw;
   height: 100vh;
   margin: 0;
@@ -14,18 +11,6 @@ body,
   font-family: 'Pretendard Variable', system-ui, sans-serif;
 }
 
-button {
-  cursor: pointer;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
 /* 메인 컬러 토큰 */
 /* 사용 예시 bg-[var(--main-blue-100)] */
 /* 복붙용 [var()]*/
@@ -49,4 +34,17 @@ button {
   --gray-400: #E1E1E1;
   --gray-300: #F3F3F3;
   --gray-200: #FFFFFF;
+}
+
+button {
+  cursor: pointer;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

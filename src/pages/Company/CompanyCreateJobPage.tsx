@@ -60,7 +60,8 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
     };
 
     return (
-        <div className="w-full h-full flex flex-col items-center" >
+        <div className="w-full h-full flex flex-col items-center overflow-y-auto scrollbar-hide"
+            style={{ maxHeight: "562px" }}>
             {/* 근무지 이미지 */}
             < div className="flex flex-row mt-[26px] gap-[24px]" >
                 <label className="w-[56px] h-[48px] font-medium text-[#414141] text-[20px] flex justify-center items-center">근무지 이미지</label>
@@ -168,7 +169,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
             <button
                 //onClick={handelSubmit}
                 onClick={onNext}
-                className="w-[294px] h-[45px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium"
+                className="w-[294px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium mb-[44px] p-5"
             >
                 신청서 양식 작성하기
             </button>
