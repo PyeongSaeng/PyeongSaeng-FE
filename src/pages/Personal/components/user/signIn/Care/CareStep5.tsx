@@ -129,7 +129,11 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
           </button>
         ) : (
           <button
-            className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium"
+            className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
+              isVerified
+                ? 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
+                : 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
+            }`}
             onClick={handleVerifyCode}
             disabled={
               verifyCodeMutation.isPending || !state.smsCode || isVerified
