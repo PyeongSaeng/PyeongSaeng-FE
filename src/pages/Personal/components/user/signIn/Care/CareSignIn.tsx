@@ -67,7 +67,6 @@ const CareSignIn = () => {
   // Step5: 시니어 인증
   const [step5State, setStep5State] = useState({
     carrier: '',
-    name: '',
     phone: '',
     smsCode: '',
   });
@@ -92,7 +91,7 @@ const CareSignIn = () => {
 
         if (receivedProtectorId) {
           setProtectorId(receivedProtectorId);
-          console.log('✅ protectorId 저장됨:', receivedProtectorId);
+          console.log('protectorId 저장됨:', receivedProtectorId);
           setStep(3);
         } else {
           console.error('protectorId를 찾을 수 없음:', data);

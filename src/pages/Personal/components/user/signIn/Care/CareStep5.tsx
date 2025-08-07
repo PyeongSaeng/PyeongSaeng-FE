@@ -8,7 +8,6 @@ import {
 
 type Step5State = {
   carrier: string;
-  name: string;
   phone: string;
   smsCode: string;
 };
@@ -78,7 +77,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
   };
 
   const handleSubmit = () => {
-    if (!state.name || !state.phone) {
+    if (!state.phone) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
@@ -97,12 +96,6 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
         <br />
         어르신의 정보를 입력해주세요.
       </div>
-      <input
-        className={`${inputClass} w-[29.4rem] mb-[2.1rem] ${state.name ? 'text-black' : 'text-[#BDBDBD]'}`}
-        placeholder="어르신 이름을 입력하세요"
-        value={state.name}
-        onChange={(e) => setState((s) => ({ ...s, name: e.target.value }))}
-      />
       <input
         className={`${inputClass} w-[29.4rem] ${state.phone ? 'text-black' : 'text-[#BDBDBD]'}`}
         placeholder="어르신 전화번호를 입력하세요"
