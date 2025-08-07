@@ -123,8 +123,8 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
       <SignUpHeader title="구직자 정보 입력" />
 
       {isFromKakao && (
-        <div className="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded">
-          <p className="text-yellow-800 text-sm">
+        <div className="mb-4 p-3 bg-[#DAF4EA] border border-[#08D485] rounded">
+          <p className="text-black text-sm">
             카카오 계정 연동 중입니다. 추가 정보를 입력해주세요!
           </p>
         </div>

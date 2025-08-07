@@ -33,8 +33,8 @@ const SeniorSignIn = () => {
     id: isFromKakao ? kakaoInfo?.kakaoId || '' : '',
     idCheck: isFromKakao ? kakaoInfo?.kakaoId || '' : '',
     isIdAvailable: isFromKakao,
-    password: isFromKakao ? '' : '',
-    passwordConfirm: isFromKakao ? '' : '',
+    password: isFromKakao ? null : '',
+    passwordConfirm: isFromKakao ? null : '',
   });
 
   const [step3State, setStep3State] = useState({
@@ -88,7 +88,6 @@ const SeniorSignIn = () => {
   // 카카오 사용자인 경우 Step 3부터 시작
   useEffect(() => {
     if (isFromKakao) {
-      console.log('🎯 카카오 사용자 - Step 3부터 시작');
       setStep(3);
     }
   }, [isFromKakao]);
@@ -98,7 +97,7 @@ const SeniorSignIn = () => {
 
     const seniorData: SeniorSignupRequest = {
       username: isFromKakao ? kakaoInfo.kakaoId : step2State.id,
-      password: isFromKakao ? '' : step2State.password,
+      password: isFromKakao ? null : step2State.password,
       name: step1State.name,
       age: parseInt(step3State.age),
       gender: mapGenderToEnum(step3State.gender),
@@ -121,7 +120,7 @@ const SeniorSignIn = () => {
       onSuccess: () => {
         alert(
           isFromKakao
-            ? '카카오 회원가입이 완료되었습니다! 🎉'
+            ? '카카오 회원가입이 완료되었습니다!'
             : '회원가입이 완료되었습니다!'
         );
         navigate('/', { replace: true });
@@ -136,13 +135,6 @@ const SeniorSignIn = () => {
   return (
     <div>
       <TopbarForLogin />
-      {isFromKakao && (
-        <div className="mb-4 p-3 bg-blue-100 border border-blue-300 rounded mx-4">
-          <p className="text-blue-800 text-sm">
-            🎉 카카오 계정으로 가입 중입니다! 추가 정보만 입력해주세요.
-          </p>
-        </div>
-      )}
 
       {step === 1 && !isFromKakao && (
         <SeniorStep1

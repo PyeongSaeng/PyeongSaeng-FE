@@ -1,21 +1,59 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SignUpHeader from './components/user/signIn/SignUpHeader';
 import TopbarForLogin from '../../shared/components/topbar/TopbarForLogin';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [kakaoInfo, setKakaoInfo] = useState<any>(null);
+
+  useEffect(() => {
+    // 카카오에서 온 정보가 있는지 확인
+    if (location.state?.fromKakao) {
+      setKakaoInfo(location.state);
+      console.log('카카오 가입 정보 수신:', location.state);
+    }
+  }, [location.state]);
 
   const goToSeniorSignIn = () => {
-    navigate('/personal/join/senior');
+    if (kakaoInfo) {
+      // 카카오 정보를 시니어 가입으로 전달
+      navigate('/personal/join/senior', {
+        state: kakaoInfo,
+        replace: true,
+      });
+    } else {
+      navigate('/personal/join/senior');
+    }
   };
+
   const goToCareSignIn = () => {
-    navigate('/personal/join/guardian');
+    if (kakaoInfo) {
+      // 카카오 정보를 보호자 가입으로 전달
+      navigate('/personal/join/guardian', {
+        state: kakaoInfo,
+        replace: true,
+      });
+    } else {
+      navigate('/personal/join/guardian');
+    }
   };
 
   return (
     <TopbarForLogin>
       <div className="flex flex-col items-center w-full mt-[1.8rem]">
         <SignUpHeader title="회원가입 하기" />
+
+        {/* 카카오 정보 표시 */}
+        {kakaoInfo && (
+          <div className="w-[270px] mb-4 p-3 bg-[#08D485] rounded-[8px]">
+            <p className="text-m text-center">
+              <strong>{kakaoInfo.nickname || ' 카카오 사용자'}</strong>님의
+              카카오 계정으로 가입을 진행합니다
+            </p>
+          </div>
+        )}
 
         {/* 회원가입 선택 버튼 */}
         <div className="flex flex-col gap-[1.5rem] w-full items-center mb-8">
@@ -34,7 +72,7 @@ const SignIn = () => {
         </div>
 
         {/* 안내문구 */}
-        <div className=" text-[#747474] text-[1.6rem] font-semibold text-start ml-[1.2rem]">
+        <div className="text-[#747474] text-[1.6rem] font-semibold text-start ml-[1.2rem]">
           <p className="mb-2">
             보호자 케어 회원가입은
             <br />

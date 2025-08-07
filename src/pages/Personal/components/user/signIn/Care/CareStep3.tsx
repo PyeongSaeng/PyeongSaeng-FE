@@ -62,6 +62,7 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
   };
 
   const handleNext = () => {
+    // 일반 가입: 모든 필드 필수
     if (
       !state.name ||
       !state.idCheck ||
@@ -69,6 +70,10 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
       !state.passwordConfirm
     ) {
       alert('모든 항목을 입력해주세요.');
+      return;
+    }
+    if (!state.isIdAvailable) {
+      alert('아이디 중복 확인을 완료해주세요.');
       return;
     }
     if (state.password !== state.passwordConfirm) {
@@ -94,18 +99,24 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
         <p className="text-[#747474] mb-[2.3rem] text-[1.5rem] font-semibold">
           회원가입을 위해 어르신의 필수정보를 입력해주세요
         </p>
+
+        {/* 이름 입력 */}
         <input
           className={`${inputClass} ${state.name ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="어르신 이름을 입력해주세요"
           value={state.name}
           onChange={(e) => setState((s) => ({ ...s, name: e.target.value }))}
+          autoComplete="off"
         />
+
+        {/* 아이디 입력 및 중복확인 */}
         <div className="flex gap-2 mt-[0.9rem] mb-1">
           <input
             className={`${inputClass} ${state.idCheck ? 'text-black' : 'text-[#c2c2c2]'}`}
             placeholder="어르신의 아이디를 입력해주세요"
             value={state.idCheck}
             onChange={handleUsernameChange}
+            autoComplete="off"
           />
           <button
             className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-bold h-[4.5rem]"
@@ -120,6 +131,8 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
         >
           {getDefaultMessage()}
         </div>
+
+        {/* 비밀번호 입력 */}
         <input
           className={`${inputClass} ${state.password ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="비밀번호를 입력해주세요"
@@ -128,6 +141,7 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
           onChange={(e) =>
             setState((s) => ({ ...s, password: e.target.value }))
           }
+          autoComplete="new-password"
         />
         <input
           className={`${inputClass} ${state.passwordConfirm ? 'text-black' : 'text-[#c2c2c2]'}`}
@@ -137,6 +151,7 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
           onChange={(e) =>
             setState((s) => ({ ...s, passwordConfirm: e.target.value }))
           }
+          autoComplete="new-password"
         />
         {state.password &&
           state.passwordConfirm &&

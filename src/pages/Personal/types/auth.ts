@@ -20,7 +20,7 @@ export type ExperiencePeriod =
 // 프로필
 export interface BaseSignupInfo {
   username: string;
-  password: string;
+  password: string | null;
   name: string;
   age: number;
   gender: Gender;
@@ -57,7 +57,7 @@ export interface SeniorSignupRequest
 // 보호자
 export interface ProtectorSignupRequest {
   username: string;
-  password: string;
+  password: string | null;
   name: string;
   phone: string;
   providerType: string | null;

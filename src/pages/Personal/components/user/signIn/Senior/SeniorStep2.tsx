@@ -7,8 +7,8 @@ type Step2State = {
   id: string;
   idCheck: string;
   isIdAvailable: boolean;
-  password: string;
-  passwordConfirm: string;
+  password: string | null;
+  passwordConfirm: string | null;
 };
 
 type SeniorStep2Props = {
@@ -120,7 +120,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
           className={`${inputClass} ${state.password ? 'text-black' : 'text-[#C2C2C2]'}`}
           placeholder="비밀번호를 입력해주세요"
           type="password"
-          value={state.password}
+          value={state.password || ''}
           onChange={(e) =>
             setState((s) => ({ ...s, password: e.target.value }))
           }
@@ -129,7 +129,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
           className={`${inputClass} ${state.passwordConfirm ? 'text-black' : 'text-[#C2C2C2]'}`}
           placeholder="비밀번호를 다시 입력해주세요"
           type="password"
-          value={state.passwordConfirm}
+          value={state.passwordConfirm || ''}
           onChange={(e) =>
             setState((s) => ({ ...s, passwordConfirm: e.target.value }))
           }
