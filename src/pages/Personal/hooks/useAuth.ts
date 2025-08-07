@@ -8,6 +8,8 @@ import {
   signupProtector,
   sendAccountSMS,
   findUsername,
+  verifyPasswordReset,
+  resetPassword,
 } from '../apis/auth';
 import {
   SeniorSignupRequest,
@@ -16,7 +18,7 @@ import {
   LoginRequest,
   ProtectorSignupRequest,
 } from '../types/auth';
-import { IdFindRequest, AccountSMSRequest } from '../types/user';
+import { IdFindRequest, AccountSMSRequest, VerifyPasswordResetRequest, ResetPasswordRequest } from '../types/user';
 
 // 시니어 회원가입 훅
 export const useSeniorSignup = () => {
@@ -112,6 +114,32 @@ export const useFindUsername = () => {
     },
     onError: (error) => {
       console.error('아이디 찾기 실패:', error);
+    },
+  });
+};
+
+// 비밀번호 재설정 인증 훅
+export const useVerifyPasswordReset = () => {
+  return useMutation({
+    mutationFn: (data: VerifyPasswordResetRequest) => verifyPasswordReset(data),
+    onSuccess: (data) => {
+      console.log('비밀번호 재설정 인증 성공:', data);
+    },
+    onError: (error) => {
+      console.error('비밀번호 재설정 인증 실패:', error);
+    },
+  });
+};
+
+// 비밀번호 재설정 훅
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: (data: ResetPasswordRequest) => resetPassword(data),
+    onSuccess: (data) => {
+      console.log('비밀번호 재설정 성공:', data);
+    },
+    onError: (error) => {
+      console.error('비밀번호 재설정 실패:', error);
     },
   });
 };

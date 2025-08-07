@@ -21,3 +21,16 @@ export interface IdFindResponse {
 export interface AccountSMSRequest {
   phone: string;
 } 
+
+// 비밀번호 재설정 인증 요청
+export interface VerifyPasswordResetRequest {
+  username: string;
+  phone: string;
+  verificationCode: string;
+}
+
+// 비밀번호 재설정 요청
+export interface ResetPasswordRequest {
+  username: string;
+  newPassword: string;
+}

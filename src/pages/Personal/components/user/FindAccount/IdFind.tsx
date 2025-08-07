@@ -13,6 +13,7 @@ const IdFind = () => {
   const [idFindResult, setIdFindResult] = useState<IdFindResult | null>(null);
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [isKakaoUser, setIsKakaoUser] = useState(false);
 
   const sendSMSMutation = useSendAccountSMS();
   const findUsernameMutation = useFindUsername();
@@ -40,7 +41,8 @@ const IdFind = () => {
       {
         onSuccess: (data) => {
           console.log('SMS 발송 성공:', data);
-          alert('인증번호가 발송되었습니다.');
+          const kakaoUser = data.result?.kakaoUser || false;
+          setIsKakaoUser(kakaoUser);
           setIsVerificationSent(true);
         },
         onError: (error) => {
@@ -176,15 +178,19 @@ const IdFind = () => {
         {isVerificationSent && !isVerified && (
           <div className="w-[29.4rem] mb-4 flex flex-col items-end mt-[0.8rem]">
             <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
-              인증번호를 받지 못한 경우 한 번 더 눌러주세요
+              {isKakaoUser
+                ? '카카오톡으로 로그인해주세요'
+                : '인증번호를 받지 못한 경우 한 번 더 눌러주세요'}
             </p>
-            <button
-              className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
-              onClick={handleSendVerification}
-              disabled={sendSMSMutation.isPending}
-            >
-              {sendSMSMutation.isPending ? '재전송 중...' : '인증번호 재전송'}
-            </button>
+            {!isKakaoUser && (
+              <button
+                className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
+                onClick={handleSendVerification}
+                disabled={sendSMSMutation.isPending}
+              >
+                {sendSMSMutation.isPending ? '재전송 중...' : '인증번호 재전송'}
+              </button>
+            )}
           </div>
         )}
       </div>

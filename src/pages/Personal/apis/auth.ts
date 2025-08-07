@@ -6,7 +6,7 @@ import {
   LoginRequest,
   ProtectorSignupRequest,
 } from '../types/auth';
-import { IdFindRequest, AccountSMSRequest } from '../types/user';
+import { IdFindRequest, AccountSMSRequest, VerifyPasswordResetRequest, ResetPasswordRequest } from '../types/user';
 
 // 시니어 회원가입
 export const signupSenior = async (data: SeniorSignupRequest) => {
@@ -20,7 +20,7 @@ export const signupProtector = async (data: ProtectorSignupRequest) => {
   return response.data;
 };
 
-// 인증번호 발송 - body로 phone 전송
+// 인증번호 발송 
 export const sendVerificationCode = async (data: SendVerificationRequest) => {
   const response = await axiosInstance.post('/api/sms/send', {
     phone: data.phone
@@ -34,7 +34,7 @@ export const verifyCode = async (data: VerifyCodeRequest) => {
   return response.data;
 };
 
-// 아이디 중복 확인 - username을 query params로 전송
+// 아이디 중복 확인
 export const checkUsernameAvailability = async (username: string) => {
   const response = await axiosInstance.get(`/api/auth/check-username?username=${username}`);
   return response.data;
@@ -60,13 +60,25 @@ export const sendAccountSMS = async (data: AccountSMSRequest) => {
   return response.data;
 };
 
-// 아이디 찾기
+// 아이디 찾기 
 export const findUsername = async (data: IdFindRequest) => {
   const response = await axiosInstance.post('/api/user/find-username', {
     name: data.name,
     phone: data.phone,
     verificationCode: data.verificationCode
   });
+  return response.data;
+};
+
+// 비밀번호 재설정 인증
+export const verifyPasswordReset = async (data: VerifyPasswordResetRequest) => {
+  const response = await axiosInstance.post('/api/user/reset-password/verify', data);
+  return response.data;
+};
+
+// 비밀번호 재설정
+export const resetPassword = async (data: ResetPasswordRequest) => {
+  const response = await axiosInstance.post('/api/user/reset-password', data);
   return response.data;
 };
 
