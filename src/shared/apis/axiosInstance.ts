@@ -26,33 +26,52 @@ axiosInstance.interceptors.request.use(
 // 응답 인터셉터 - 토큰 저장 및 만료 처리 (28-42번째 줄 수정)
 axiosInstance.interceptors.response.use(
   (response) => {
-    // 로그인 성공 시 accessToken만 저장
+    // 로그인 성공 시 accessToken과 role 저장
     if (response.config.url?.includes('/auth/login')) {
       
       // result 안에 accessToken이 있는지 확인
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
-      
+      const role = response.data.result?.role; 
+
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
+        console.log('Access Token 저장됨');
       } else {
         console.error('accessToken을 찾을 수 없음:', response.data);
+      }
+
+      // role 저장 
+      if (role) {
+        localStorage.setItem('userRole', role);
+        console.log('User Role 저장됨:', role);
       }
     }
 
     // OAuth 토큰 교환 시에도 동일하게 처리
     if (response.config.url?.includes('/token/exchange')) {
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
+      const role = response.data.result?.role; // 카카오 로그인도 role 저장
+      
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        console.log('카카오 Access Token 저장됨');
+      }
+      if (role) {
+        localStorage.setItem('userRole', role);
       }
     }
 
     // 카카오 회원가입 성공 시에도 토큰 저장
     if (response.config.url?.includes('/auth/signup/kakao')) {
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
+      const role = response.data.result?.role; 
+      
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
+        console.log('카카오 회원가입 Token 저장됨');
+      }
+      if (role) {
+        localStorage.setItem('userRole', role);
+        console.log('카카오 회원가입 Role 저장됨:', role);
       }
     }
 
@@ -100,8 +119,9 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error('[axiosInstance] 토큰 재발급 실패:', refreshError);
 
-        // accessToken 제거
+        // 모든 사용자 정보 제거
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('userRole');
 
         // 로그인 페이지로 리다이렉트
         if (!window.location.pathname.includes('/login')) {
