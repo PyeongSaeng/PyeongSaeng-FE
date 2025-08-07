@@ -130,30 +130,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                 />
             </div>
 
-            {/* 구직인원 (recruitCount) */}
-            <div className="flex flex-row items-center gap-[12px] mt-[13px]">
-                <label className="w-[70px] text-[20px] text-[#414141] font-medium">구직인원</label>
-                <input
-                    type="number"
-                    value={form.recruitCount ?? ""}
-                    onChange={e => setForm({ ...form, recruitCount: Number(e.target.value) || undefined })}
-                    placeholder="여기에 입력하세요."
-                    className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
-                />
-            </div>
-
-            {/* 특이사항 (note) */}
-            <div className="flex flex-row items-center gap-[12px] mt-[13px]">
-                <label className="w-[70px] text-[20px] text-[#414141] font-medium">특이사항</label>
-                <input
-                    type="text"
-                    value={form.note}
-                    onChange={e => setForm({ ...form, note: e.target.value })}
-                    placeholder="특이사항이 있으면 입력"
-                    className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
-                />
-            </div>
-
             {/* 마감기한 (deadline) */}
             <div className="flex flex-row items-center gap-[12px] mt-[13px]">
                 <label className="w-[70px] text-[20px] text-[#414141] font-medium">마감기한</label>
