@@ -4,10 +4,10 @@ export interface IdFindResult {
   userId: string;
 }
 
-// API 연동을 위한 아이디 찾기 요청/응답 타입
+// 아이디 찾기 요청
 export interface IdFindRequest {
   name: string;
-  phoneNumber: string;
+  phone: string;
   verificationCode: string;
 }
 
@@ -15,4 +15,9 @@ export interface IdFindResponse {
   success: boolean;
   data?: IdFindResult;
   message?: string;
+}
+
+// 계정 찾기용 SMS 발송 요청
+export interface AccountSMSRequest {
+  phone: string;
 } 

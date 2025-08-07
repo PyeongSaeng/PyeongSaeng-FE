@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NextButton from '../signIn/NextButton';
 import { IdFindResult } from '../../../types/user';
+import { useSendAccountSMS, useFindUsername } from '../../../hooks/useAuth';
 
 const IdFind = () => {
   const navigate = useNavigate();
@@ -9,22 +10,90 @@ const IdFind = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [showResult, setShowResult] = useState(false);
+  const [idFindResult, setIdFindResult] = useState<IdFindResult | null>(null);
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
-  // 타입으로 관리되는 아이디 찾기 결과
-  const [idFindResult, setIdFindResult] = useState<IdFindResult>({
-    userName: '김영희',
-    userId: 'youngid',
-  });
+  const sendSMSMutation = useSendAccountSMS();
+  const findUsernameMutation = useFindUsername();
 
-  const handleVerificationSend = () => {
-    // 인증번호 전송 로직
-    console.log('인증번호 전송');
+  const state = {
+    phone: phoneNumber,
+    smsCode: verificationCode,
+  };
+
+  const handleSendVerification = () => {
+    if (!phoneNumber.trim()) {
+      alert('전화번호를 입력해주세요.');
+      return;
+    }
+
+    // 전화번호 형식 검증 (간단한 검증)
+    const phoneRegex = /^010\d{8}$/;
+    if (!phoneRegex.test(phoneNumber.replace(/-/g, ''))) {
+      alert('올바른 전화번호 형식을 입력해주세요.');
+      return;
+    }
+
+    sendSMSMutation.mutate(
+      { phone: phoneNumber },
+      {
+        onSuccess: (data) => {
+          console.log('SMS 발송 성공:', data);
+          alert('인증번호가 발송되었습니다.');
+          setIsVerificationSent(true);
+        },
+        onError: (error) => {
+          console.error('SMS 발송 실패:', error);
+          alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+        },
+      }
+    );
+  };
+
+  // 가짜 인증 확인
+  const handleVerifyCode = () => {
+    if (!verificationCode.trim()) {
+      alert('인증번호를 입력해주세요.');
+      return;
+    }
+
+    setTimeout(() => {
+      setIsVerified(true);
+    }, 500);
   };
 
   const handleIdFind = () => {
-    // 아이디 찾기 완료
-    // TODO: 실제 API 호출 시 응답 데이터로 setIdFindResult 업데이트
-    setShowResult(true);
+    if (!name.trim() || !phoneNumber.trim() || !verificationCode.trim()) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    if (!isVerified) {
+      alert('휴대폰 인증을 완료해주세요.');
+      return;
+    }
+
+    const requestData = {
+      name: name.trim(),
+      phone: phoneNumber.trim(),
+      verificationCode: verificationCode.trim(),
+    };
+
+    findUsernameMutation.mutate(requestData, {
+      onSuccess: (data) => {
+        const result = data.result || data.data;
+        if (result) {
+          setIdFindResult({
+            userName: result.userName || result.name || name,
+            userId: result.userId || result.username || result.id,
+          });
+          setShowResult(true);
+        } else {
+          alert('아이디를 찾을 수 없습니다.');
+        }
+      },
+    });
   };
 
   const handleGoToLogin = () => {
@@ -34,7 +103,7 @@ const IdFind = () => {
   const inputClass =
     'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-[2.1rem] bg-white placeholder-[#c2c2c2] text-[1.6rem]';
 
-  if (showResult) {
+  if (showResult && idFindResult) {
     return (
       <div className="flex flex-col items-center mb-[3.1rem]">
         <div className="flex flex-col items-center justify-center mb-[1.1rem] w-[27rem] h-[12.2rem] border border-[#08D485] rounded-[0.8rem] p-6 text-center">
@@ -59,6 +128,7 @@ const IdFind = () => {
         placeholder="이름을 입력하세요"
         value={name}
         onChange={(e) => setName(e.target.value)}
+        autoComplete="off"
       />
 
       <input
@@ -66,6 +136,7 @@ const IdFind = () => {
         placeholder="전화번호를 입력하세요"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
+        autoComplete="off"
       />
 
       <div className="mb-[5.9rem]">
@@ -78,17 +149,52 @@ const IdFind = () => {
             placeholder="인증번호를 입력하세요"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
+            autoComplete="off"
           />
-          <button
-            className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium whitespace-nowrap"
-            onClick={handleVerificationSend}
-          >
-            인증번호 전송
-          </button>
+          {!isVerificationSent ? (
+            <button
+              className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium"
+              onClick={handleSendVerification}
+              disabled={sendSMSMutation.isPending || !state.phone}
+            >
+              {sendSMSMutation.isPending ? '발송 중...' : '인증하기'}
+            </button>
+          ) : (
+            <button
+              className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
+                isVerified
+                  ? 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
+                  : 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
+              }`}
+              onClick={handleVerifyCode}
+              disabled={!state.smsCode || isVerified}
+            >
+              {isVerified ? '인증완료' : '확인'}
+            </button>
+          )}
         </div>
+        {isVerificationSent && !isVerified && (
+          <div className="w-[29.4rem] mb-4 flex flex-col items-end mt-[0.8rem]">
+            <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
+              인증번호를 받지 못한 경우 한 번 더 눌러주세요
+            </p>
+            <button
+              className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
+              onClick={handleSendVerification}
+              disabled={sendSMSMutation.isPending}
+            >
+              {sendSMSMutation.isPending ? '재전송 중...' : '인증번호 재전송'}
+            </button>
+          </div>
+        )}
       </div>
 
-      <NextButton onClick={handleIdFind}>인증 완료</NextButton>
+      <NextButton
+        onClick={handleIdFind}
+        disabled={findUsernameMutation.isPending || !isVerified}
+      >
+        {findUsernameMutation.isPending ? '찾는 중...' : '인증 완료'}
+      </NextButton>
     </div>
   );
 };

@@ -47,8 +47,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
           setUsernameMessage('이미 사용 중인 아이디입니다.');
         }
       },
-      onError: (error: unknown) => {
-        console.error('아이디 확인 실패:', error);
+      onError: () => {
         setHasChecked(true);
         setState((s) => ({ ...s, isIdAvailable: false }));
         setUsernameMessage('이미 사용 중인 아이디입니다.');

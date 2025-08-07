@@ -132,8 +132,6 @@ const CareSignIn = () => {
 
     protectorSignupMutation.mutate(protectorData, {
       onSuccess: (data) => {
-        console.log('보호자 회원가입 성공:', data);
-
         const receivedProtectorId = data.result?.userId;
 
         if (receivedProtectorId) {
@@ -146,7 +144,6 @@ const CareSignIn = () => {
         }
       },
       onError: (error: any) => {
-        console.error('보호자 회원가입 실패:', error);
         const errorMessage =
           error.response?.data?.message || '보호자 회원가입에 실패했습니다.';
         alert(errorMessage);
@@ -193,13 +190,12 @@ const CareSignIn = () => {
   // 디버깅용 useEffect
   useEffect(() => {
     if (step === 5) {
-      console.log('=== 🔍 Step 5 도달 - 모든 단계 정보 확인 ===');
-      console.log('📋 Step1:', step1State);
-      console.log('📋 Step2:', step2State);
-      console.log('📋 Step3:', step3State);
-      console.log('📋 Step4:', step4State);
-      console.log('📋 ProtectorId:', protectorId, typeof protectorId);
-      console.log('📋 카카오 정보:', kakaoInfo);
+      console.log('Step1:', step1State);
+      console.log('Step2:', step2State);
+      console.log('Step3:', step3State);
+      console.log('Step4:', step4State);
+      console.log('ProtectorId:', protectorId);
+      console.log('카카오 정보:', kakaoInfo);
     }
   }, [
     step,
@@ -231,7 +227,7 @@ const CareSignIn = () => {
       name: step3State.name,
       age: parsedAge,
       gender: mapGenderToEnum(step4State.gender),
-      phoneNum: step5State.phone,
+      phoneNum: step4State.phone,
       zipcode: step4State.zipcode,
       roadAddress: step4State.roadAddress,
       detailAddress: step4State.detailAddress || '',
@@ -249,8 +245,7 @@ const CareSignIn = () => {
     console.log('시니어 가입 데이터:', seniorData);
 
     seniorSignupMutation.mutate(seniorData, {
-      onSuccess: (data) => {
-        console.log('시니어 회원가입 성공:', data);
+      onSuccess: () => {
         if (isFromKakao) {
           alert('카카오 보호자 및 어르신 회원가입이 모두 완료되었습니다! 🎉');
         } else {

@@ -6,6 +6,8 @@ import {
   checkUsernameAvailability,
   login,
   signupProtector,
+  sendAccountSMS,
+  findUsername,
 } from '../apis/auth';
 import {
   SeniorSignupRequest,
@@ -14,6 +16,7 @@ import {
   LoginRequest,
   ProtectorSignupRequest,
 } from '../types/auth';
+import { IdFindRequest, AccountSMSRequest } from '../types/user';
 
 // 시니어 회원가입 훅
 export const useSeniorSignup = () => {
@@ -85,5 +88,31 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginRequest) => login(data)
   })
+};
+
+// 계정 찾기용 SMS 발송 훅
+export const useSendAccountSMS = () => {
+  return useMutation({
+    mutationFn: (data: AccountSMSRequest) => sendAccountSMS(data),
+    onSuccess: (data) => {
+      console.log('계정 찾기 SMS 발송 성공:', data);
+    },
+    onError: (error) => {
+      console.error('계정 찾기 SMS 발송 실패:', error);
+    },
+  });
+};
+
+// 아이디 찾기 훅
+export const useFindUsername = () => {
+  return useMutation({
+    mutationFn: (data: IdFindRequest) => findUsername(data),
+    onSuccess: (data) => {
+      console.log('아이디 찾기 성공:', data);
+    },
+    onError: (error) => {
+      console.error('아이디 찾기 실패:', error);
+    },
+  });
 };
 

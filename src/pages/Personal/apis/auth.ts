@@ -6,6 +6,7 @@ import {
   LoginRequest,
   ProtectorSignupRequest,
 } from '../types/auth';
+import { IdFindRequest, AccountSMSRequest } from '../types/user';
 
 // 시니어 회원가입
 export const signupSenior = async (data: SeniorSignupRequest) => {
@@ -49,6 +50,24 @@ export const login = async (data: LoginRequest) => {
 export const initKakaoLogin = () => {
   // 카카오 OAuth 인증 페이지로 리다이렉트
   window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/kakao`
+};
+
+// 계정 찾기용 SMS 발송
+export const sendAccountSMS = async (data: AccountSMSRequest) => {
+  const response = await axiosInstance.post('/api/sms/send/account', {
+    phone: data.phone
+  });
+  return response.data;
+};
+
+// 아이디 찾기
+export const findUsername = async (data: IdFindRequest) => {
+  const response = await axiosInstance.post('/api/user/find-username', {
+    name: data.name,
+    phone: data.phone,
+    verificationCode: data.verificationCode
+  });
+  return response.data;
 };
 
 // 로그아웃 

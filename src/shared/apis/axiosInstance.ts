@@ -35,7 +35,6 @@ axiosInstance.interceptors.response.use(
 
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        console.log('Access Token 저장됨');
       } else {
         console.error('accessToken을 찾을 수 없음:', response.data);
       }
@@ -43,7 +42,6 @@ axiosInstance.interceptors.response.use(
       // role 저장 
       if (role) {
         localStorage.setItem('userRole', role);
-        console.log('User Role 저장됨:', role);
       }
     }
 
