@@ -1,19 +1,19 @@
 interface Props {
   address: string;
-  zipcode: string;
   detailAddress: string;
   onChangeAddress: (address: string) => void;
   onChangeZipcode: (zipcode: string) => void;
   onChangeDetail: (detail: string) => void;
+  onChangeRoadAddress?: (roadAddress: string) => void;
 }
 
 export default function AddressSearchInput({
   address,
-  zipcode,
   detailAddress,
   onChangeAddress,
   onChangeZipcode,
   onChangeDetail,
+  onChangeRoadAddress,
 }: Props) {
   const handleSearch = () => {
     // @ts-ignore
@@ -21,6 +21,7 @@ export default function AddressSearchInput({
       oncomplete: function (data: any) {
         onChangeZipcode(data.zonecode);
         onChangeAddress(data.roadAddress || data.jibunAddress);
+        onChangeRoadAddress?.(data.roadAddress);
       },
     }).open();
   };

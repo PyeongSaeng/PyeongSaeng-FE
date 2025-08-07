@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ImageUploadButton from "../../shared/components/EvidenceSection/ImageUploadButton";
 import AddressSearchInput from "../../shared/components/AddressSearchInput";
-import { CreateJobDTO } from "../../shared/types/job";
+import { CreateJobDTO } from "./types/job";
 import { useJobPost } from "../../shared/hooks/job/useJobPost";
 import { useImageUpload } from "../../shared/hooks/useImageUpload";
 
@@ -10,12 +10,13 @@ interface Props {
 }
 
 export default function CompanyCreateJobPage({ onNext }: Props) {
+    const userToken = localStorage.getItem("accessToken");
+
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
-    const [imageKey, setImageKey] = useState<string | null>(null);
-    const { uploadImage, loading, error } = useImageUpload();
+    const { uploadImage } = useImageUpload();
     const [dragging, setDragging] = useState(false);
-    const { postJob } = useJobPost();
+    const { postJob } = useJobPost(userToken!);
+
     const [form, setForm] = useState<CreateJobDTO>({
         title: "",
         address: "",
@@ -23,32 +24,61 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
         roadAddress: "",
         zipcode: "",
         hourlyWage: undefined,
-        monthlySalary: undefined,
-        yearSalary: undefined,
+        monthlySalary: null,
+        yearSalary: null,
         description: "",
         workingTime: "",
         deadline: "",
-        recruitCount: undefined,
+        recruitCount: 1,
         note: "",
-        keyName: [],
+        jobPostImageList: [],
+        formFieldList: []
     });
-
+    // 이미지 파일 선택 핸들러
     const handleFileSelect = async (file: File) => {
-        setImageFile(file);
         const res = await uploadImage(file);
         if (res) {
-            setImageUrl(res.url);
-            setImageKey(res.keyName);
-            setForm((prev) => ({
+            setForm(prev => ({
                 ...prev,
-                keyName: [res.keyName],
+                jobPostImageList: [
+                    ...(prev.jobPostImageList ?? []),
+                    {
+                        keyName: res.keyName,
+                        originalFileName: file.name
+                    }
+                ]
             }));
         }
     };
 
-    const handelSubmit = async () => {
-        if (!form.keyName || form.keyName.length === 0) {
+
+    const handleSubmit = async () => {
+        if (!form.jobPostImageList || form.jobPostImageList.length === 0) {
             alert("근무지 이미지를 첨부해 주세요!");
+            return;
+        }
+        if (!form.address) {
+            alert("주소를 입력해 주세요!");
+            return;
+        }
+        if (!form.detailAddress) {
+            alert("상세 주소를 입력해 주세요!");
+            return;
+        }
+        if (!form.description) {
+            alert("근무내용을 입력해 주세요!");
+            return;
+        }
+        if (!form.hourlyWage) {
+            alert("시급을 입력해 주세요!");
+            return;
+        }
+        if (!form.workingTime) {
+            alert("근무일수를 입력해 주세요!");
+            return;
+        }
+        if (!form.deadline) {
+            alert("마감기한을 입력해 주세요!");
             return;
         }
         try {
@@ -77,7 +107,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                         onDragStateChange={setDragging} />
                 </div>
             </div >
-
             {/* 근무지 주소 */}
             < div className="flex flex-row mt-[15px] mb-[3px] gap-[14px]" >
                 <label className="mt-[19px] font-medium text-[#414141] text-[20px]">
@@ -86,11 +115,12 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                 <div className="w-[251px] h-[120px] pl-[12px] flex flex-col gap-[10px] items-center justify-center">
                     <AddressSearchInput
                         address={form.address}
-                        zipcode={form.zipcode}
                         detailAddress={form.detailAddress}
-                        onChangeAddress={address => setForm({ ...form, address })}
-                        onChangeZipcode={zipcode => setForm({ ...form, zipcode })}
-                        onChangeDetail={detail => setForm({ ...form, detailAddress: detail })} />
+                        onChangeAddress={address => setForm(f => ({ ...f, address }))}
+                        onChangeZipcode={zipcode => setForm(f => ({ ...f, zipcode }))}
+                        onChangeDetail={detail => setForm(f => ({ ...f, detailAddress: detail }))}
+                        onChangeRoadAddress={roadAddress => setForm(f => ({ ...f, roadAddress }))}
+                    />
                 </div>
             </div >
             {/* 입력 필드들 */}
@@ -105,7 +135,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
-
             {/* 시급 (hourlyWage) */}
             <div className="flex flex-row items-center gap-[12px] mt-[13px]">
                 <label className="w-[70px] text-[20px] text-[#414141] font-medium">시급</label>
@@ -117,7 +146,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
-
             {/* 근무일수 (workingTime) */}
             <div className="flex flex-row items-center gap-[12px] mt-[13px]">
                 <label className="w-[70px] text-[20px] text-[#414141] font-medium">근무일수</label>
@@ -129,7 +157,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
-
             {/* 마감기한 (deadline) */}
             <div className="flex flex-row items-center gap-[12px] mt-[13px]">
                 <label className="w-[70px] text-[20px] text-[#414141] font-medium">마감기한</label>
@@ -141,10 +168,13 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
+
             {/* 신청서 양식 작성 버튼 */}
             <button
-                //onClick={handelSubmit}
-                onClick={onNext}
+                onClick={async () => {
+                    await handleSubmit();
+                    onNext();
+                }}
                 className="w-[294px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium mb-[44px] p-5"
             >
                 신청서 양식 작성하기
