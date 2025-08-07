@@ -7,27 +7,26 @@ export const useLogout = () => {
 
   return useMutation({
     mutationFn: logout,
-    onSuccess: () => {
-      // 1. 로컬스토리지에서 토큰 제거
-      localStorage.removeItem('accessToken');
+    onSuccess: (data) => {
+      console.log('로그아웃 성공:', data);
       
-      // 2. 세션스토리지 정리
+      // 모든 사용자 정보 제거
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userRole');
       sessionStorage.clear();
       
-      // 3. 홈 페이지로 리다이렉트
-      navigate('/', { replace: true });
-      
-      // 4. 성공 메시지
+      navigate('/personal/login', { replace: true });
       alert('로그아웃되었습니다.');
     },
     onError: (error) => {
-      console.error(' 로그아웃 실패:', error);
+      console.error('로그아웃 실패:', error);
       
-      // 에러가 발생해도 로컬 정리는 진행
+      // 에러가 발생해도 로컬 정보는 정리
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('userRole');
       sessionStorage.clear();
-      navigate('/personal/login', { replace: true });
       
+      navigate('/', { replace: true });
       alert('로그아웃 처리 중 오류가 발생했습니다.');
     },
   });
