@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import Topbar from '../../../../shared/components/topbar/Topbar';
+import Topbar from '../../../shared/components/topbar/Topbar';
 
 const PersonalPasswordEdit = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');

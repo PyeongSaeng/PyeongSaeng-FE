@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import Topbar from '../../../../shared/components/topbar/Topbar';
+import Topbar from '../../../../../shared/components/topbar/Topbar';
 
-const PersonalInfo = () => {
+const SeniorInfo = () => {
   const [answers, setAnswers] = useState<(string | null)[]>([
     '1시간 내외',
     '실외',
@@ -93,4 +93,4 @@ const PersonalInfo = () => {
   );
 };
 
-export default PersonalInfo;
+export default SeniorInfo;

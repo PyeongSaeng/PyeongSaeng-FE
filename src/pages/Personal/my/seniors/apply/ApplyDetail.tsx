@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Topbar from '../../../../shared/components/topbar/Topbar';
-import dummy1 from '../../../../shared/assets/popular-dummy1.png';
+import Topbar from '../../../../../shared/components/topbar/Topbar';
+import dummy1 from '../../../../../shared/assets/popular-dummy1.png';
 
 type TjobData = {
   job: string;

@@ -2,12 +2,17 @@ import { IoChevronForward } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import MenuNavButton from '../MenuNavButton';
 
+type MenuType = 'main' | 'seniorMy' | 'careMy' | 'careSeniors';
+
 interface MainMenuProps {
-  handleMenu: () => void;
+  handleMenu: (menu: MenuType) => void;
 }
 
 const MainMenu = ({ handleMenu }: MainMenuProps) => {
   const navigate = useNavigate();
+
+  // 로컬 스토리지 값 가져오기 로직 추가 필요
+  // const myMenu = localStorage.getItem('');
 
   return (
     <div className="px-[8px]">
@@ -25,7 +30,9 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
         <MenuNavButton url="/personal/my/info/extra">질문답변</MenuNavButton>
-        <MenuNavButton handleMenu={handleMenu}>내 정보</MenuNavButton>
+        <MenuNavButton handleMenu={() => handleMenu('careMy')}>
+          내 정보
+        </MenuNavButton>
         <MenuNavButton>로그아웃</MenuNavButton>
         <MenuNavButton url="/personal/my/delete-account">
           회원탈퇴
