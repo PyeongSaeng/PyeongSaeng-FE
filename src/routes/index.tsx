@@ -17,18 +17,19 @@ import CompanyFindAccount from '../pages/Company/components/FindAccount/FindAcco
 import CompanyJobListPage from '../pages/Company/CompanyJobListPage';
 import PersonalDeleteAccount from '../pages/Personal/my/PersonalDeleteAccount';
 import PersonalDeleteAccountDone from '../pages/Personal/my/PersonalDeleteAccountDone';
-import PersonalInfo from '../pages/Personal/my/info/PersonalInfo';
-import PersonalPasswordEdit from '../pages/Personal/my/info/PersonalPasswordEdit';
-import ApplyResults from '../pages/Personal/my/apply/ApplyResults';
-import ApplyDetail from '../pages/Personal/my/apply/ApplyDetail';
-import BasicInfo from '../pages/Personal/my/info/BasicInfo';
-import ExtraInfo from '../pages/Personal/my/info/ExtraInfo';
-import BasicInfoEdit from '../pages/Personal/my/info/BasicInfoEdit';
-import ExtraInfoEdit from '../pages/Personal/my/info/ExtraInfoEdit';
-import PersonalPasswordEditDone from '../pages/Personal/my/info/PersonalPasswordEditDone';
+import SeniorInfo from '../pages/Personal/my/seniors/info/SeniorInfo';
+import PersonalPasswordEdit from '../pages/Personal/my/PersonalPasswordEdit';
+import ApplyResults from '../pages/Personal/my/seniors/apply/ApplyResults';
+import ApplyDetail from '../pages/Personal/my/seniors/apply/ApplyDetail';
+import BasicInfo from '../pages/Personal/my/seniors/info/BasicInfo';
+import ExtraInfo from '../pages/Personal/my/seniors/info/ExtraInfo';
+import BasicInfoEdit from '../pages/Personal/my/seniors/info/BasicInfoEdit';
+import ExtraInfoEdit from '../pages/Personal/my/seniors/info/ExtraInfoEdit';
+import PersonalPasswordEditDone from '../pages/Personal/my/PersonalPasswordEditDone';
 import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
+import CareSeniorDetail from '../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
 
 const AppRoutes = () => {
   return (
@@ -66,7 +67,7 @@ const AppRoutes = () => {
         path="/personal/my/applied-results/:appliedId"
         element={<ApplyDetail />}
       ></Route>
-      <Route path="/personal/my/info" element={<PersonalInfo />}>
+      <Route path="/personal/my/info" element={<SeniorInfo />}>
         <Route path="basic" element={<BasicInfo />}></Route>
         <Route path="extra" element={<ExtraInfo />}></Route>
         <Route path="basic/edit" element={<BasicInfoEdit />}></Route>
@@ -88,7 +89,10 @@ const AppRoutes = () => {
         path="/personal/my/delete-account/done"
         element={<PersonalDeleteAccountDone />}
       ></Route>
-      <Route path="/personal/my/seniors" element={<></>}></Route>
+      {/* <Route
+        path="/personal/my/seniors/:seniorId"
+        element={<CareSeniorDetail />}
+      ></Route> */}
       <Route path="/personal/find-account" element={<FindAccount />}></Route>
 
       {/* 기업버전 */}
