@@ -49,3 +49,14 @@ export const ExperiencePeriodLabel: Record<ExperiencePeriodType, string> = {
   [ExperiencePeriodType.FIVE_TO_TEN_YEARS]: '5년 이상 10년 미만',
   [ExperiencePeriodType.OVER_TEN_YEARS]: '10년 이상',
 };
+
+export interface updateSeniorData {
+  phone?: string;
+  roadAddress?: string;
+  detailAddress?: string;
+  job?: string;
+  experiencePeriod?: string;
+  passwordChangeRequest?: boolean;
+  currentPassword?: string;
+  newPassword?: string;
+}

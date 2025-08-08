@@ -11,8 +11,7 @@ interface MainMenuProps {
 const MainMenu = ({ handleMenu }: MainMenuProps) => {
   const navigate = useNavigate();
 
-  // 로컬 스토리지 값 가져오기 로직 추가 필요
-  // const myMenu = localStorage.getItem('');
+  const myMenu = localStorage.getItem('userRole');
 
   return (
     <div className="px-[8px]">
@@ -20,7 +19,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]"
         onClick={() => navigate('/personal/login')}
       >
-        {'로그인 하세요'}
+        {localStorage.getItem('accessToken') ? '안녕하세요' : '로그인 하세요'}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
@@ -30,7 +29,11 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
         <MenuNavButton url="/personal/my/info/extra">질문답변</MenuNavButton>
-        <MenuNavButton handleMenu={() => handleMenu('seniorMy')}>
+        <MenuNavButton
+          handleMenu={() =>
+            handleMenu(myMenu === 'SENIOR' ? 'seniorMy' : 'careMy')
+          }
+        >
           내 정보
         </MenuNavButton>
         <MenuNavButton>로그아웃</MenuNavButton>

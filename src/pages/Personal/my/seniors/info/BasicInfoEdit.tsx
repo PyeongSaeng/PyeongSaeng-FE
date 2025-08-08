@@ -3,49 +3,73 @@ import { useNavigate } from 'react-router-dom';
 import { Info } from '../../../types/userInfo';
 import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
 import { JobTypeLabel, ExperiencePeriodLabel } from '../../../types/userInfo';
+import axiosInstance from '../../../../../shared/apis/axiosInstance';
+
+// 나중에 유틸로 옮기기
+const formatPhone = (v: string) =>
+  v.replace(/\D/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+const normalizePhone = (v: string) => v.replace(/\D/g, '');
 
 const BasicInfoEdit = () => {
   const navigate = useNavigate();
-  const [info, setInfo] = useState<Info | null>();
+  const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
+  const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string | null>();
-  const [isPhoneEditing, setIsPhoneEditing] = useState(false);
+  const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
 
   useEffect(() => {
     getSeniorBasicInfo('/api/user/senior/me')
-      .then((data) => setInfo(data.result as Info))
+      .then((data) => {
+        const me = data.result as Info;
+        setOriginalInfo(me);
+        setEditedInfo(me);
+      })
       .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
   }, []);
 
+  // 뷰전용 데이터 로드
   const infoData = useMemo(() => {
-    if (!info) return [];
+    if (!editedInfo) return [];
     return [
-      { label: '이름', value: info.name },
-      { label: 'id', value: info.username },
+      { label: '이름', value: editedInfo.name },
+      { label: 'id', value: editedInfo.username },
       { label: '비밀번호', value: '' },
-      { label: '나이', value: String(info.age) },
+      { label: '나이', value: String(editedInfo.age) },
+      { label: '연락처', value: formatPhone(editedInfo.phone) },
+      { label: '거주지', value: editedInfo.roadAddress },
+      { label: '상세주소', value: editedInfo.detailAddress },
+      { label: '직무', value: JobTypeLabel[editedInfo.job] },
       {
-        label: '연락처',
-        value: info.phone
-          .replace(/[^0-9]/g, '')
-          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+        label: '기간',
+        value: ExperiencePeriodLabel[editedInfo.experiencePeriod],
       },
-      { label: '거주지', value: info.roadAddress },
-      {
-        label: '상세주소',
-        value: info.detailAddress,
-      },
-      { label: '직무', value: JobTypeLabel[info.job] },
-      { label: '기간', value: ExperiencePeriodLabel[info.experiencePeriod] },
     ];
-  }, [info]);
-
-  // 유틸
-  const formatPhone = (v: string) =>
-    v.replace(/\D/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-  const normalizePhone = (v: string) => v.replace(/\D/g, '');
+  }, [editedInfo]);
 
   function handleChange<K extends keyof Info>(key: K, value: Info[K]) {
-    setInfo((prev) => (prev ? { ...prev, [key]: value } : prev));
+    setEditedInfo((prev) => (prev ? { ...prev, [key]: value } : prev));
+  }
+
+  function diff<T extends object>(prev: T, curr: T): Partial<T> {
+    const out: Partial<T> = {};
+    (Object.keys(curr) as (keyof T)[]).forEach((k) => {
+      if (!Object.is(curr[k], prev[k])) {
+        out[k] = curr[k]; // 타입 안전
+      }
+    });
+    return out;
+  }
+
+  // 사용
+  function handleSave() {
+    if (!originalInfo || !editedInfo) return;
+    const changes = diff(originalInfo, editedInfo);
+    if (Object.keys(changes).length === 0) return;
+
+    axiosInstance
+      .patch('/api/user/senior/me', changes)
+      .then(() => alert('저장 완료'))
+      .catch(() => alert('저장 실패'));
   }
 
   // 주소 검색 기능 구현 필요
@@ -81,7 +105,10 @@ const BasicInfoEdit = () => {
                   <div className="flex jusity-between gap-[4px]">
                     <input
                       className="w-[146px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
-                      value={value}
+                      value={
+                        editedInfo?.roadAddress ?? ''
+                        // .length > 9 ? value.slice(0, 9) + '...' : value
+                      }
                       onChange={(e) =>
                         handleChange('roadAddress', e.target.value)
                       }
@@ -90,32 +117,38 @@ const BasicInfoEdit = () => {
                       검색
                     </button>
                   </div>
-                ) : label === '연락처' || label === '상세주소' ? (
+                ) : label === '연락처' ? (
                   <input
                     className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
                     value={
-                      label === '연락처'
-                        ? isPhoneEditing
-                          ? (info?.phone ?? '')
-                          : formatPhone(info?.phone ?? '')
-                        : info?.detailAddress
+                      isPhoneEditing
+                        ? (editedInfo?.phone ?? '')
+                        : formatPhone(editedInfo?.phone ?? '')
                     }
                     onFocus={() => setIsPhoneEditing(true)}
                     onBlur={() => setIsPhoneEditing(false)}
                     onChange={(e) =>
                       handleChange(
-                        label === '연락처' ? 'phone' : 'detailAddress',
-                        label === '연락처'
-                          ? (normalizePhone(e.target.value) as Info['phone'])
-                          : e.target.value
+                        'phone',
+                        normalizePhone(e.target.value) as Info['phone']
                       )
+                    }
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                  />
+                ) : label === '상세주소' ? (
+                  <input
+                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
+                    value={editedInfo?.detailAddress ?? ''}
+                    onChange={(e) =>
+                      handleChange('detailAddress', e.target.value)
                     }
                   />
                 ) : // 드롭다운메뉴 사용파트
                 label === '직무' ? (
                   <select
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px]"
-                    value={info?.job}
+                    value={editedInfo?.phone ?? ''}
                     onChange={(e) =>
                       handleChange('job', e.target.value as Info['job'])
                     }
@@ -131,7 +164,7 @@ const BasicInfoEdit = () => {
                 ) : label === '기간' ? (
                   <select
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px]"
-                    value={info?.experiencePeriod}
+                    value={editedInfo?.experiencePeriod}
                     onChange={(e) =>
                       handleChange(
                         'experiencePeriod',
