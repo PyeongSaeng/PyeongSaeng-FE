@@ -39,13 +39,7 @@ const KakaoCallback = () => {
       console.log('최초 로그인 여부:', isFirstLogin);
 
       try {
-        // axiosInstance가 자동으로 토큰과 role 저장 처리
-        const response = await axiosInstance.post('/api/token/exchange', {
-          code: code,
-        });
-
-        console.log('카카오 로그인 성공!');
-        console.log('응답 데이터:', response.data);
+        await axiosInstance.post('/api/token/exchange', { code });
 
         // localStorage에 토큰과 role이 저장되었는지 확인
         const savedToken = localStorage.getItem('accessToken');
