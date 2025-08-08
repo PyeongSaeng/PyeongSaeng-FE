@@ -57,7 +57,6 @@ const PasswordFind = () => {
 
   const handleNext = () => {
     if (step === 'input') {
-      // input 단계에서 reset 단계로
       if (!userId.trim() || !phoneNumber.trim() || !verificationCode.trim()) {
         alert('모든 항목을 입력해주세요.');
         return;
@@ -86,7 +85,6 @@ const PasswordFind = () => {
         }
       );
     } else if (step === 'reset') {
-      // reset 단계에서 complete 단계로
       if (!newPassword.trim() || !confirmPassword.trim()) {
         alert('새 비밀번호를 입력해주세요.');
         return;
@@ -210,7 +208,7 @@ const PasswordFind = () => {
     );
   }
 
-  // 2단계: 비밀번호 재설정 (reset 단계의 NextButton 수정)
+  // 2단계: 비밀번호 재설정
   if (step === 'reset') {
     return (
       <div>
