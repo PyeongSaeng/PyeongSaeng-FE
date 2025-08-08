@@ -4,8 +4,14 @@ import MainMenu from './MainMenu';
 import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
 import CareSeniors from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniors';
+import CareSeniorDetail from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
 
-type MenuType = 'main' | 'seniorMy' | 'careMy' | 'careSeniors';
+type MenuType =
+  | 'main'
+  | 'seniorMy'
+  | 'careMy'
+  | 'careSeniors'
+  | 'careSeniorDetail';
 
 const PersonalMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +54,10 @@ const PersonalMenu = () => {
           {currentMenu === 'main' && <MainMenu handleMenu={goToMyMenu} />}
           {currentMenu === 'careMy' && <CareMyMenu goNext={goToMyMenu} />}
           {currentMenu === 'seniorMy' && <SeniorMyMenu goNext={goToMyMenu} />}
-          {/* {currentMenu === 'seniorDetail' && <SeniorDetail />} */}
+          {currentMenu === 'careSeniors' && <CareSeniors goNext={goToMyMenu} />}
+          {currentMenu === 'careSeniorDetail' && (
+            <CareSeniorDetail goNext={goToMyMenu} />
+          )}
         </div>
       )}
     </>

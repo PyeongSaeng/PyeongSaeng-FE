@@ -2,12 +2,12 @@ import MenuNavButton from '../MenuNavButton';
 
 const CareMyMenu = ({ goNext }: { goNext: (menu: any) => void }) => {
   return (
-    <div className="px-[8px]">
-      <div className="flex justify-center text-[24px] text-black pt-[24px] pb-[10px] mb-[30px] border-b-[1.3px] border-[#CCCCCC]">
+    <div className="px-[8px] font-[Pretendard]">
+      <div className="flex justify-center text-[24px] text-black pt-[24px] pb-[10px] border-b-[1.3px] border-[#CCCCCC]">
         내 정보
       </div>
-      <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <button onClick={() => goNext('seniors')}>
+      <div className="flex flex-col items-start gap-[23px] text-[16px] py-[30px]">
+        <button onClick={() => goNext('careSeniors')}>
           {'케어 중인 어르신 >'}
         </button>
         <MenuNavButton url="personal/my/info">개인정보</MenuNavButton>

@@ -29,6 +29,7 @@ import PersonalPasswordEditDone from '../pages/Personal/my/PersonalPasswordEditD
 import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
+import CareSeniorDetail from '../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
 
 const AppRoutes = () => {
   return (
@@ -88,7 +89,10 @@ const AppRoutes = () => {
         path="/personal/my/delete-account/done"
         element={<PersonalDeleteAccountDone />}
       ></Route>
-      <Route path="/personal/my/seniors" element={<></>}></Route>
+      {/* <Route
+        path="/personal/my/seniors/:seniorId"
+        element={<CareSeniorDetail />}
+      ></Route> */}
       <Route path="/personal/find-account" element={<FindAccount />}></Route>
 
       {/* 기업버전 */}
