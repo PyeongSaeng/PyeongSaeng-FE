@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Topbar from '../../../../shared/components/topbar/Topbar';
+import Topbar from '../../../shared/components/topbar/Topbar';
 
 const PersonalPasswordEditDone = () => {
   const navigate = useNavigate();
