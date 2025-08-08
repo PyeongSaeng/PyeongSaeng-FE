@@ -30,7 +30,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
         <MenuNavButton url="/personal/my/info/extra">질문답변</MenuNavButton>
-        <MenuNavButton handleMenu={() => handleMenu('careMy')}>
+        <MenuNavButton handleMenu={() => handleMenu('seniorMy')}>
           내 정보
         </MenuNavButton>
         <MenuNavButton>로그아웃</MenuNavButton>
