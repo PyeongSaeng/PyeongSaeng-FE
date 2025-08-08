@@ -31,8 +31,14 @@ const IdFind = () => {
           setIsKakaoUser(kakaoUser);
           setIsVerificationSent(true);
         },
-        onError: () => {
-          alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+        onError: (error: any) => {
+          // 카카오 회원 에러 처리 (USER411)
+          if (error.response?.data?.code === 'USER411') {
+            setIsKakaoUser(true);
+            setIsVerificationSent(true);
+          } else {
+            alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+          }
         },
       }
     );

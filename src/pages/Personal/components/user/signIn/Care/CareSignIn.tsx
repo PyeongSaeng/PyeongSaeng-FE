@@ -247,7 +247,7 @@ const CareSignIn = () => {
     seniorSignupMutation.mutate(seniorData, {
       onSuccess: () => {
         if (isFromKakao) {
-          alert('카카오 보호자 및 어르신 회원가입이 모두 완료되었습니다! 🎉');
+          alert('카카오 보호자 및 어르신 회원가입이 모두 완료되었습니다!');
         } else {
           alert('보호자 및 어르신 회원가입이 모두 완료되었습니다.');
         }
