@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import dummy1 from '../../../shared/assets/popular-dummy1.png';
 
 const HomeBeforeLogin = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="text-[16px] font-[pretendard]">
       <div className="flex justify-center">
@@ -10,7 +13,10 @@ const HomeBeforeLogin = () => {
               <div>나에게 맞는 정보를</div>
               <div>확인하세요</div>
             </div>
-            <button className="w-[207px] w-[45px] px-[78px] py-[12px] rounded-[8px] bg-[#08D485]">
+            <button
+              className="w-[207px] w-[45px] px-[78px] py-[12px] rounded-[8px] bg-[#08D485]"
+              onClick={() => navigate('/personal/login')}
+            >
               로그인
             </button>
           </div>

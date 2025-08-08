@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import dummy1 from '../../../shared/assets/popular-dummy1.png';
 import HomeTopButton from '../../../shared/components/buttons/HomeTopButton';
 
 const HomeAfterLogin = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex justify-center font-[pretendard] text-[16px]">
       <div className="flex flex-col justify-center items-center">
@@ -27,7 +30,10 @@ const HomeAfterLogin = () => {
             <span>추가 정보를 입력하면</span>
             <span>AI가 맞춤형 신청서를 작성해줍니다</span>
           </div>
-          <button className="w-[270px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]">
+          <button
+            className="w-[270px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]"
+            onClick={() => navigate('/personal/my/info/extra')}
+          >
             내 정보 입력하러 가기
           </button>
         </div>
