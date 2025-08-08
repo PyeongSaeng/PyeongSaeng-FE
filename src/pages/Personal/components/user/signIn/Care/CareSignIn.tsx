@@ -187,25 +187,25 @@ const CareSignIn = () => {
     return periodMap[period] || 'LESS_THAN_6_MONTHS';
   };
 
-  // 디버깅용 useEffect
-  useEffect(() => {
-    if (step === 5) {
-      console.log('Step1:', step1State);
-      console.log('Step2:', step2State);
-      console.log('Step3:', step3State);
-      console.log('Step4:', step4State);
-      console.log('ProtectorId:', protectorId);
-      console.log('카카오 정보:', kakaoInfo);
-    }
-  }, [
-    step,
-    step1State,
-    step2State,
-    step3State,
-    step4State,
-    protectorId,
-    kakaoInfo,
-  ]);
+  // // 디버깅용 useEffect
+  // useEffect(() => {
+  //   if (step === 5) {
+  //     console.log('Step1:', step1State);
+  //     console.log('Step2:', step2State);
+  //     console.log('Step3:', step3State);
+  //     console.log('Step4:', step4State);
+  //     console.log('ProtectorId:', protectorId);
+  //     console.log('카카오 정보:', kakaoInfo);
+  //   }
+  // }, [
+  //   step,
+  //   step1State,
+  //   step2State,
+  //   step3State,
+  //   step4State,
+  //   protectorId,
+  //   kakaoInfo,
+  // ]);
 
   // Step5 완료 시 시니어 회원가입 (일반 가입만)
   const handleSeniorSignup = () => {
