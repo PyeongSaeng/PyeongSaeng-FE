@@ -134,9 +134,9 @@ const CareStep2 = ({
                   : 'bg-[#BDBDBD]'
             }`}
             placeholder="본인 아이디를 입력해주세요"
-            value={state.idCheck}
+            value={isFromKakao ? '••••' : state.idCheck}
             onChange={handleUsernameChange}
-            disabled={isFromKakao} // 카카오일 때 수정 불가
+            disabled={isFromKakao}
             readOnly={isFromKakao}
           />
           <button
