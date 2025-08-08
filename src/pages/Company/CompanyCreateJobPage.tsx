@@ -11,8 +11,8 @@ interface Props {
 
 export default function CompanyCreateJobPage({ onNext }: Props) {
     const userToken = localStorage.getItem("accessToken");
-
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imageFileName, setImageFileName] = useState<string | null>(null);
     const { uploadImage } = useImageUpload();
     const [dragging, setDragging] = useState(false);
     const { postJob } = useJobPost(userToken!);
@@ -48,6 +48,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     }
                 ]
             }));
+            setImageFileName(file.name);
         }
     };
 
@@ -105,6 +106,11 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                         onFileSelect={handleFileSelect}
                         className="text-[#0D29B7]"
                         onDragStateChange={setDragging} />
+                    {imageFileName && (
+                        <div className="mt-2 text-xs text-gray-500">
+                            {imageFileName}
+                        </div>
+                    )}
                 </div>
             </div >
             {/* 근무지 주소 */}
@@ -171,10 +177,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
 
             {/* 신청서 양식 작성 버튼 */}
             <button
-                onClick={async () => {
-                    await handleSubmit();
-                    onNext();
-                }}
+                onClick={handleSubmit}
                 className="w-[294px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium mb-[44px] p-5"
             >
                 신청서 양식 작성하기
