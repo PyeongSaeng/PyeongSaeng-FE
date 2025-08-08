@@ -6,15 +6,25 @@ export interface CreateJobDTO {
   roadAddress: string;
   zipcode: string;
   hourlyWage?: number;
-  monthlySalary?: number;
-  yearSalary?: number;
-  description?: string;
-  workingTime?: string;
+  monthlySalary?: number | null;
+  yearSalary?: number | null;
+  description: string;
+  workingTime: string;
   deadline?: string;
-  recruitCount?: number;
+  recruitCount: number;
   note?: string;
-  keyName?: string[];
+  jobPostImageList?: JobPostImage[];
+  formFieldList?: JobPostFormField[];
 }
+export interface JobPostImage {
+  keyName?: string;
+  originalFileName?: string;
+}
+export interface JobPostFormField {
+  fieldName?: string;
+  fieldType?: 'TEXT' | 'IMAGE';
+}
+
 //////////////////////////////////////////////////////
 // 일자리 get 요청 타입 이걸로 가져다 쓰면됨 목록 조회
 export interface JobPost {
