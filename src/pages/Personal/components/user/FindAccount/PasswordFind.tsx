@@ -21,7 +21,6 @@ const PasswordFind = () => {
 
   // SMS 및 인증 상태
   const [isVerificationSent, setIsVerificationSent] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
   const [isKakaoUser, setIsKakaoUser] = useState(false);
 
   // API 훅
@@ -50,19 +49,6 @@ const PasswordFind = () => {
     );
   };
 
-  const handleVerifyCode = () => {
-    if (!verificationCode.trim()) {
-      alert('인증번호를 입력해주세요.');
-      return;
-    }
-
-    // 가짜 인증 확인 (IdFind와 동일한 방식)
-    setTimeout(() => {
-      console.log('가짜 인증 확인 완료');
-      setIsVerified(true);
-    }, 500);
-  };
-
   const handleNext = () => {
     if (step === 'input') {
       // input 단계에서 reset 단계로
@@ -70,7 +56,7 @@ const PasswordFind = () => {
         alert('모든 항목을 입력해주세요.');
         return;
       }
-      if (!isVerified) {
+      if (!isVerificationSent) {
         alert('휴대폰 인증을 완료해주세요.');
         return;
       }
@@ -84,13 +70,11 @@ const PasswordFind = () => {
         },
         {
           onSuccess: (data) => {
-            console.log('비밀번호 재설정 인증 성공:', data);
             const username = data.result?.username || userId;
             setVerifiedUsername(username);
             setStep('reset');
           },
           onError: (error: any) => {
-            console.error('비밀번호 재설정 인증 실패:', error);
             const errorMessage =
               error.response?.data?.message || '인증에 실패했습니다.';
             alert(errorMessage);
@@ -115,12 +99,10 @@ const PasswordFind = () => {
           newPassword: newPassword.trim(),
         },
         {
-          onSuccess: (data) => {
-            console.log('비밀번호 재설정 성공:', data);
+          onSuccess: () => {
             setStep('complete');
           },
           onError: (error: any) => {
-            console.error('비밀번호 재설정 실패:', error);
             const errorMessage =
               error.response?.data?.message ||
               '비밀번호 재설정에 실패했습니다.';
@@ -152,7 +134,7 @@ const PasswordFind = () => {
 
         <input
           className={inputClass}
-          placeholder="전화번호를 입력하세요 (예: 01012345678)"
+          placeholder="전화번호를 입력하세요"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           autoComplete="off"
@@ -170,29 +152,23 @@ const PasswordFind = () => {
               onChange={(e) => setVerificationCode(e.target.value)}
               autoComplete="off"
             />
-            {!isVerificationSent ? (
-              <button
-                className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium"
-                onClick={handleVerificationSend}
-                disabled={sendSMSMutation.isPending || !phoneNumber.trim()}
-              >
-                {sendSMSMutation.isPending ? '발송 중...' : '인증하기'}
-              </button>
-            ) : (
-              <button
-                className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
-                  isVerified
-                    ? 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
-                    : 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
-                }`}
-                onClick={handleVerifyCode}
-                disabled={!verificationCode.trim() || isVerified}
-              >
-                {isVerified ? '인증완료' : '확인'}
-              </button>
-            )}
+            <button
+              className={`bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium disabled:bg-gray-300 disabled:text-gray-500 disabled:!cursor-not-allowed`}
+              onClick={handleVerificationSend}
+              disabled={
+                sendSMSMutation.isPending ||
+                !phoneNumber.trim() ||
+                isVerificationSent
+              }
+            >
+              {sendSMSMutation.isPending
+                ? '발송 중...'
+                : isVerificationSent
+                  ? '전송완료'
+                  : '인증번호 전송'}
+            </button>
           </div>
-          {isVerificationSent && !isVerified && (
+          {isVerificationSent && (
             <div className="w-[29.4rem] mb-4 flex flex-col items-end mt-[0.8rem]">
               <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
                 {isKakaoUser
@@ -201,7 +177,7 @@ const PasswordFind = () => {
               </p>
               {!isKakaoUser && (
                 <button
-                  className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
+                  className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
                   onClick={handleVerificationSend}
                   disabled={sendSMSMutation.isPending}
                 >
@@ -216,7 +192,13 @@ const PasswordFind = () => {
 
         <NextButton
           onClick={handleNext}
-          disabled={verifyPasswordResetMutation.isPending || !isVerified}
+          disabled={
+            verifyPasswordResetMutation.isPending ||
+            !userId.trim() ||
+            !phoneNumber.trim() ||
+            !verificationCode.trim() ||
+            !isVerificationSent
+          }
         >
           {verifyPasswordResetMutation.isPending ? '인증 중...' : '인증 완료'}
         </NextButton>
@@ -224,7 +206,7 @@ const PasswordFind = () => {
     );
   }
 
-  // 2단계: 비밀번호 재설정
+  // 2단계: 비밀번호 재설정 (reset 단계의 NextButton 수정)
   if (step === 'reset') {
     return (
       <div>

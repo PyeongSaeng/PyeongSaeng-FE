@@ -12,27 +12,14 @@ const IdFind = () => {
   const [showResult, setShowResult] = useState(false);
   const [idFindResult, setIdFindResult] = useState<IdFindResult | null>(null);
   const [isVerificationSent, setIsVerificationSent] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
   const [isKakaoUser, setIsKakaoUser] = useState(false);
 
   const sendSMSMutation = useSendAccountSMS();
   const findUsernameMutation = useFindUsername();
 
-  const state = {
-    phone: phoneNumber,
-    smsCode: verificationCode,
-  };
-
-  const handleSendVerification = () => {
+  const handleVerificationSend = () => {
     if (!phoneNumber.trim()) {
       alert('전화번호를 입력해주세요.');
-      return;
-    }
-
-    // 전화번호 형식 검증 (간단한 검증)
-    const phoneRegex = /^010\d{8}$/;
-    if (!phoneRegex.test(phoneNumber.replace(/-/g, ''))) {
-      alert('올바른 전화번호 형식을 입력해주세요.');
       return;
     }
 
@@ -40,29 +27,15 @@ const IdFind = () => {
       { phone: phoneNumber },
       {
         onSuccess: (data) => {
-          console.log('SMS 발송 성공:', data);
           const kakaoUser = data.result?.kakaoUser || false;
           setIsKakaoUser(kakaoUser);
           setIsVerificationSent(true);
         },
-        onError: (error) => {
-          console.error('SMS 발송 실패:', error);
+        onError: () => {
           alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
         },
       }
     );
-  };
-
-  // 가짜 인증 확인
-  const handleVerifyCode = () => {
-    if (!verificationCode.trim()) {
-      alert('인증번호를 입력해주세요.');
-      return;
-    }
-
-    setTimeout(() => {
-      setIsVerified(true);
-    }, 500);
   };
 
   const handleIdFind = () => {
@@ -71,7 +44,7 @@ const IdFind = () => {
       return;
     }
 
-    if (!isVerified) {
+    if (!isVerificationSent) {
       alert('휴대폰 인증을 완료해주세요.');
       return;
     }
@@ -153,29 +126,23 @@ const IdFind = () => {
             onChange={(e) => setVerificationCode(e.target.value)}
             autoComplete="off"
           />
-          {!isVerificationSent ? (
-            <button
-              className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium"
-              onClick={handleSendVerification}
-              disabled={sendSMSMutation.isPending || !state.phone}
-            >
-              {sendSMSMutation.isPending ? '발송 중...' : '인증하기'}
-            </button>
-          ) : (
-            <button
-              className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
-                isVerified
-                  ? 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
-                  : 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
-              }`}
-              onClick={handleVerifyCode}
-              disabled={!state.smsCode || isVerified}
-            >
-              {isVerified ? '인증완료' : '확인'}
-            </button>
-          )}
+          <button
+            className={`bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium disabled:bg-gray-300 disabled:text-gray-500 disabled:!cursor-not-allowed`}
+            onClick={handleVerificationSend}
+            disabled={
+              sendSMSMutation.isPending ||
+              !phoneNumber.trim() ||
+              isVerificationSent
+            }
+          >
+            {sendSMSMutation.isPending
+              ? '발송 중...'
+              : isVerificationSent
+                ? '전송완료'
+                : '인증번호 전송'}
+          </button>
         </div>
-        {isVerificationSent && !isVerified && (
+        {isVerificationSent && (
           <div className="w-[29.4rem] mb-4 flex flex-col items-end mt-[0.8rem]">
             <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
               {isKakaoUser
@@ -185,7 +152,7 @@ const IdFind = () => {
             {!isKakaoUser && (
               <button
                 className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
-                onClick={handleSendVerification}
+                onClick={handleVerificationSend}
                 disabled={sendSMSMutation.isPending}
               >
                 {sendSMSMutation.isPending ? '재전송 중...' : '인증번호 재전송'}
@@ -197,7 +164,7 @@ const IdFind = () => {
 
       <NextButton
         onClick={handleIdFind}
-        disabled={findUsernameMutation.isPending || !isVerified}
+        disabled={findUsernameMutation.isPending}
       >
         {findUsernameMutation.isPending ? '찾는 중...' : '인증 완료'}
       </NextButton>

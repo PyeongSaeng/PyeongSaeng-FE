@@ -118,7 +118,9 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
             onClick={handleSendVerification}
             disabled={sendVerificationMutation.isPending || !state.phone}
           >
-            {sendVerificationMutation.isPending ? '발송 중...' : '인증하기'}
+            {sendVerificationMutation.isPending
+              ? '발송 중...'
+              : '인증번호 전송'}
           </button>
         ) : (
           <button
