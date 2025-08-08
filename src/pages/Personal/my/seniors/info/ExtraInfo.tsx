@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
+import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
 
 const questions = [
   'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',
@@ -23,6 +25,20 @@ interface OutletContextType {
 
 const ExtraInfo = () => {
   const { answers } = useOutletContext<OutletContextType>();
+  const [info, setInfo] = useState();
+  const [error, setError] = useState();
+
+  // api 구현 안됨 + 시니어 아이디 넣기
+  useEffect(() => {
+    getSeniorBasicInfo(`/api/seniors/${18}/questions`)
+      .then((data) => setInfo(data))
+      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+  }, []);
+
+  useEffect(() => {
+    console.log(info);
+  }, [info]);
+
   return (
     <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
       <div className="h-[450px] overflow-y-scroll scrollbar-hide">
