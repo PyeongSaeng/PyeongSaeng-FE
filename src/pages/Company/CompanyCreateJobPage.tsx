@@ -12,7 +12,6 @@ interface Props {
 export default function CompanyCreateJobPage({ onNext }: Props) {
     const userToken = localStorage.getItem("accessToken");
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imageFileName, setImageFileName] = useState<string | null>(null);
     const { uploadImage } = useImageUpload();
     const [dragging, setDragging] = useState(false);
     const { postJob } = useJobPost(userToken!);
@@ -36,6 +35,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
     });
     // 이미지 파일 선택 핸들러
     const handleFileSelect = async (file: File) => {
+        setImageFile(file);
         const res = await uploadImage(file);
         if (res) {
             setForm(prev => ({
@@ -48,7 +48,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     }
                 ]
             }));
-            setImageFileName(file.name);
         }
     };
 
@@ -84,7 +83,7 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
         }
         try {
             await postJob(form);
-            onNext(); // 여기서만 호출
+            onNext();
         } catch (e) {
             alert("등록에 실패했습니다!");
         }
@@ -106,11 +105,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                         onFileSelect={handleFileSelect}
                         className="text-[#0D29B7]"
                         onDragStateChange={setDragging} />
-                    {imageFileName && (
-                        <div className="mt-2 text-xs text-gray-500">
-                            {imageFileName}
-                        </div>
-                    )}
                 </div>
             </div >
             {/* 근무지 주소 */}

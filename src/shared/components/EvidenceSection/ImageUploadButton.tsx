@@ -69,7 +69,7 @@ export default function ImageUploadButton({ imageFile, onFileSelect, className, 
       {/* 미리보기 또는 업로드 버튼 UI 추가한거임*/}
       {imageFile ? (
         <div className="flex flex-col items-center">
-          <span className="text-[16px] font-medium text-gray-600 truncate max-w-[200px]">{imageFile.name}</span>
+          <span className="text-[16px] font-bold text-[var(--main-blue)] truncate max-w-[150px]">{imageFile.name}</span>
         </div>
       ) : (
         <div className="flex flex-col items-center-2">
