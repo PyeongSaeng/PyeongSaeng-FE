@@ -7,7 +7,8 @@ import CompanyCreateFormPage from "./CompanyCreateFormPage";
 const CompanyJobListPage = () => {
 
     const [step, setStep] = useState(0);
-    const { jobs, fetchJobs, loading, error } = useJobGet();
+    const token = localStorage.getItem("accessToken") ?? "";
+    const { jobs, loading, error, fetchJobs } = useJobGet(token);
 
     useEffect(() => {
         if (step === 0) fetchJobs();
@@ -40,19 +41,39 @@ const CompanyJobListPage = () => {
                                     새 신청서 추가
                                 </button>
                                 <div className="w-[323px] border-[1.3px] border-[#cccccc] mt-[10px]" />
-                                {/* 스트롤 영역 */}
-                                <div className="overflow-y-auto max-h-[520px] mt-2 w-full flex flex-col gap-6 text-[17px] items-center">
+                                <div className="overflow-y-auto max-h-[500px] mb-[36px] w-full flex flex-col items-center scrollbar-hide">
                                     {loading && <div>로딩중...</div>}
-                                    {error && <div>에러: {error.message}</div>}
-                                    {jobs.map(job => (
-                                        <div key={job.jobPostId} className="w-[301px] bg-white rounded-lg shadow-md p-3 flex flex-col items-center">
-                                            <div className="font-semibold text-[17px] mb-2 text-[#222] text-center">{job.title}</div>
-                                            <img
-                                                src={job.imageUrl}
-                                                alt={job.title}
-                                                className="w-[265px] h-[115px] object-cover rounded-md mb-2 border"
-                                            />
-                                            <div className="w-full flex gap-[13px] mt-[7px]">
+                                    {!loading && jobs.length === 0 && (
+                                        <div className="text-center text-[#A0A0A0] font-semibold py-10">
+                                            채용중인 공고가 없습니다!
+                                        </div>
+                                    )}
+                                    {/* 에러 처리 보류
+                                    {error && ()}
+                                     */}
+                                    {/* 스트롤 영역 */}
+                                    {jobs.map((job, index) => (
+                                        <div
+                                            key={job.id}
+                                            className="mt-[31px] flex flex-col items-center"
+                                        >
+                                            {/* 제목 */}
+                                            <div className="font-400 text-[16px] text-[#000000]">
+                                                {job.title}
+                                            </div>
+                                            {/* 이미지 */}
+                                            {job.images && job.images.length > 0 ? (
+                                                <img
+                                                    src={job.images[0].imageUrl}
+                                                    alt={job.images[0].originalFileName}
+                                                    className="w-[292px] h-[168px] object-cover rounded-[10px] border-[1.3px] border-[#A0A0A0]"
+                                                />
+                                            ) : (
+                                                <div className="w-[292px] h-[168px] text-[13px] bg-gray-100 rounded-[10px] border-[#A0A0A0] flex items-center justify-center text-gray-400">
+                                                    이미지 없음
+                                                </div>
+                                            )}
+                                            <div className="w-full flex gap-[13px] mt-[16px] items-center justify-center">
                                                 <button
                                                     className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-white text-[16px] font-medium text-black">
                                                     삭제
@@ -62,6 +83,9 @@ const CompanyJobListPage = () => {
                                                     수정
                                                 </button>
                                             </div>
+                                            {index !== jobs.length - 1 && (
+                                                <div className="w-[323px] border-[1.3px] border-[#cccccc] mt-[37px]" />
+                                            )}
                                         </div>
                                     ))}
                                 </div>
