@@ -24,7 +24,27 @@ export interface JobPostFormField {
   fieldName?: string;
   fieldType?: 'TEXT' | 'IMAGE';
 }
+//////////////////////////////////////////////////////
+//빈 데이터
+export type JobDraft = Partial<CreateJobDTO>;
 
+export const EMPTY_JOB_DRAFT: JobDraft = {
+  title: "",
+  address: "",
+  detailAddress: "",
+  roadAddress: "",
+  zipcode: "",
+  hourlyWage: undefined,
+  monthlySalary: null,
+  yearSalary: null,
+  description: "",
+  workingTime: "",
+  deadline: "",
+  recruitCount: 1,
+  note: "",
+  jobPostImageList: [],
+  formFieldList: [],
+} satisfies JobDraft;
 //////////////////////////////////////////////////////
 // 일자리 get DTO
 export interface JobListDTO {
@@ -43,7 +63,7 @@ export interface Result {
 }
 export interface JobPostList {
   id: number;
-  state: "RECRUITING" | "CLOSED" | string; 
+  state: "RECRUITING" | "CLOSED" | string;
   title: string;
   images: Image[];
 }

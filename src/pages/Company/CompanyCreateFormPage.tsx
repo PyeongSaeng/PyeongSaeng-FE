@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { JobDraft } from "./types/job";
 
 interface Props {
-    onBack: () => void;
+  draft: JobDraft;
+  onBack: () => void;
 }
 
 export default function CompanyCreateFormPage({ onBack }: Props) {
@@ -81,9 +83,9 @@ export default function CompanyCreateFormPage({ onBack }: Props) {
           사진 답변 항목 추가
         </button>
       </div>
-      <button 
-      onClick={onBack}
-      className="w-[294px] h-[45px] mt-[47px] mx-auto bg-[#0D29B7] text-[16px] text-white rounded-[8px] font-medium">
+      <button
+        onClick={onBack}
+        className="w-[294px] h-[45px] mt-[47px] mx-auto bg-[#0D29B7] text-[16px] text-white rounded-[8px] font-medium">
         신청서 올리기
       </button>
     </div>

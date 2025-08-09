@@ -1,17 +1,54 @@
 import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useJobGet } from "../../shared/hooks/job/useJobGet";
 import Topbar from "../../shared/components/topbar/Topbar"
 import CompanyCreateJobPage from "./CompanyCreateJobPage";
 import CompanyCreateFormPage from "./CompanyCreateFormPage";
 import { useJobDelete } from "../../shared/hooks/job/useJobDelete";
+import { EMPTY_JOB_DRAFT, JobDraft } from "./types/job";
 
 const CompanyJobListPage = () => {
 
     const [step, setStep] = useState(0);
     const token = localStorage.getItem("accessToken") ?? "";
-    const { jobs, loading, error, fetchJobs } = useJobGet(token);
+    const { jobs, loading, fetchJobs } = useJobGet(token);
     const { mutate: deleteJob, isPending } = useJobDelete(token);
     const [deletingId, setDeletingId] = useState<number | null>(null);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const [jobDraft, setJobDraft] = useState<JobDraft>(EMPTY_JOB_DRAFT);
+    useEffect(() => {
+        if (step === 0) return;
+        const href = window.location.pathname + window.location.search + window.location.hash;
+        history.pushState(null, "", href);
+
+        const handlePopState = (e: PopStateEvent) => {
+            e.preventDefault();
+
+            if (step === 2) {
+                setStep(1);
+                history.pushState(null, "", href);
+                return;
+            }
+
+            if (step === 1) {
+                const ok = confirm("채용공고 정보 입력을 취소하시겠습니까?\n작성 중인 내용은 저장되지 않을 수 있습니다.");
+                if (ok) {
+                    setJobDraft(EMPTY_JOB_DRAFT);
+                    setStep(0);
+                    navigate(".", { replace: true });
+                } else {
+                    history.pushState(null, "", href);
+                }
+                return;
+            }
+        };
+
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, [step, navigate, location.key]);
 
     const handleDelete = (id: number) => {
         if (!confirm("이 공고를 삭제할까요?")) return;
@@ -64,7 +101,7 @@ const CompanyJobListPage = () => {
                                     {loading && <div>로딩중...</div>}
                                     {!loading && jobs.length === 0 && (
                                         <div className="text-center text-[16px] text-[#A0A0A0] font-semibold py-10">
-                                            채용중인 공고가 없습니다!
+                                            채용중인 공고가 없습니다.
                                         </div>
                                     )}
                                     {/* 에러 처리 보류
@@ -116,11 +153,20 @@ const CompanyJobListPage = () => {
                                 </div>
                             </div>
                         )}
-                        {/* step === 1 : 기본 정보 입력 */}
-                        {step === 1 && <CompanyCreateJobPage onNext={() => setStep(2)} />}
+                        {step === 1 && (
+                            <CompanyCreateJobPage
+                                draft={jobDraft}
+                                onChangeDraft={setJobDraft}
+                                onNext={() => setStep(2)}
+                            />
+                        )}
 
-                        {/* step === 2 : 추가 문항 입력 */}
-                        {step === 2 && <CompanyCreateFormPage onBack={() => setStep(0)} />}
+                        {step === 2 && (
+                            <CompanyCreateFormPage
+                                draft={jobDraft}
+                                onBack={() => setStep(1)}
+                            />
+                        )}
                     </div>
                 </div>
             </Topbar>
