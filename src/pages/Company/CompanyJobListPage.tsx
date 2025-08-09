@@ -3,12 +3,31 @@ import { useJobGet } from "../../shared/hooks/job/useJobGet";
 import Topbar from "../../shared/components/topbar/Topbar"
 import CompanyCreateJobPage from "./CompanyCreateJobPage";
 import CompanyCreateFormPage from "./CompanyCreateFormPage";
+import { useJobDelete } from "../../shared/hooks/job/useJobDelete";
 
 const CompanyJobListPage = () => {
 
     const [step, setStep] = useState(0);
     const token = localStorage.getItem("accessToken") ?? "";
     const { jobs, loading, error, fetchJobs } = useJobGet(token);
+    const { mutate: deleteJob, isPending } = useJobDelete(token);
+    const [deletingId, setDeletingId] = useState<number | null>(null);
+
+    const handleDelete = (id: number) => {
+        if (!confirm("이 공고를 삭제할까요?")) return;
+        setDeletingId(id);
+
+        deleteJob(id, {
+            // 실패하면 버튼 상태 복구
+            onError: () => setDeletingId(null),
+            // 성공/실패 관계없이 목록 재동기화
+            onSettled: () => {
+                setDeletingId(null);
+                fetchJobs(); // 목록 새로고침 (useJobGet이 쿼리 무효화/갱신을 내부에서 안하면 이걸로 보완)
+            },
+        });
+    };
+
 
     useEffect(() => {
         if (step === 0) fetchJobs();
@@ -44,7 +63,7 @@ const CompanyJobListPage = () => {
                                 <div className="overflow-y-auto max-h-[500px] mb-[36px] w-full flex flex-col items-center scrollbar-hide">
                                     {loading && <div>로딩중...</div>}
                                     {!loading && jobs.length === 0 && (
-                                        <div className="text-center text-[#A0A0A0] font-semibold py-10">
+                                        <div className="text-center text-[16px] text-[#A0A0A0] font-semibold py-10">
                                             채용중인 공고가 없습니다!
                                         </div>
                                     )}
@@ -75,8 +94,14 @@ const CompanyJobListPage = () => {
                                             )}
                                             <div className="w-full flex gap-[13px] mt-[16px] items-center justify-center">
                                                 <button
-                                                    className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-white text-[16px] font-medium text-black">
-                                                    삭제
+                                                    onClick={() => handleDelete(job.id)}
+                                                    disabled={isPending && deletingId === job.id}
+                                                    className={`w-[144px] h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium
+                                                    ${isPending && deletingId === job.id
+                                                            ? "border-[#cccccc] bg-[#f5f5f5] text-[#9e9e9e] cursor-not-allowed"
+                                                            : "border-[#0D29B7] bg-white text-black hover:bg-[#DBDFF4]"}`}
+                                                >
+                                                    {isPending && deletingId === job.id ? "삭제 중…" : "삭제"}
                                                 </button>
                                                 <button
                                                     className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-[#0D29B7] text-[16px] font-medium text-white">
