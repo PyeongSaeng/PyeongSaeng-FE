@@ -29,6 +29,7 @@ import PersonalPasswordEditDone from '../pages/Personal/my/PersonalPasswordEditD
 import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
+import KakaoCallback from '../pages/Personal/KakaoCallback';
 import CareSeniorDetail from '../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
 
 const AppRoutes = () => {
@@ -94,7 +95,9 @@ const AppRoutes = () => {
         element={<CareSeniorDetail />}
       ></Route> */}
       <Route path="/personal/find-account" element={<FindAccount />}></Route>
-
+      <Route path="/auth/callback" element={<KakaoCallback />} /> {/* 로그인 */}
+      <Route path="/auth/signup/kakao" element={<KakaoCallback />} />{' '}
+      {/* 회원가입 */}
       {/* 기업버전 */}
       <Route path="/company" element={<CompanyHomePage />}></Route>
       <Route path="/company/join" element={<CompanySignin />}></Route>
@@ -103,7 +106,6 @@ const AppRoutes = () => {
         path="/company/jobs/create-form"
         element={<CompanyJobListPage />}
       ></Route>
-
       <Route
         path="/company/jobs/applications"
         element={<ApplicationsPage />}
@@ -112,7 +114,6 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:title"
         element={<ApplicationDetailPage />}
       />
-
       <Route
         path="/company/jobs/applications/:applicationId/results"
         element={<ApplicationResultsPage />}

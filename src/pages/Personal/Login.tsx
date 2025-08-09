@@ -29,6 +29,7 @@ const LoginPage = () => {
         },
         onError: (error: unknown) => {
           console.error('로그인 실패:', error);
+          alert('로그인 실패! 다시 시도해주세요.');
         },
       }
     );

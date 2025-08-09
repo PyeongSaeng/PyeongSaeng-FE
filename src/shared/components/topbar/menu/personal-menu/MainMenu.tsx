@@ -33,7 +33,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <MenuNavButton handleMenu={() => handleMenu('careMy')}>
           내 정보
         </MenuNavButton>
-        <MenuNavButton>로그아웃</MenuNavButton>
+        <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
         <MenuNavButton url="/personal/my/delete-account">
           회원탈퇴
         </MenuNavButton>

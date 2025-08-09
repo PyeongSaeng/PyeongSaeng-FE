@@ -46,8 +46,9 @@ type Step4State = {
   age: string;
   gender: string;
   phone: string;
-  address: string;
   detailAddress: string;
+  zipcode: string;
+  roadAddress: string;
   job: string;
   period: string;
 };
@@ -77,7 +78,11 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
     if (window.daum?.Postcode) {
       new window.daum.Postcode({
         oncomplete: function (data: any) {
-          setState((s) => ({ ...s, address: data.address }));
+          setState((s) => ({
+            ...s,
+            zipcode: data.zonecode,
+            roadAddress: data.roadAddress,
+          }));
         },
       }).open();
     } else {
@@ -85,6 +90,22 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
         '주소 검색 스크립트가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
       );
     }
+  };
+
+  const handleNext = () => {
+    if (
+      !state.age ||
+      !state.gender ||
+      !state.phone ||
+      !state.roadAddress ||
+      !state.job ||
+      !state.period ||
+      !state.detailAddress
+    ) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+    onNext();
   };
 
   return (
@@ -99,19 +120,28 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
         <input
           className={`${inputClass} ${state.age ? 'text-black' : 'text-[#c2c2c2]'}`}
           placeholder="어르신의 연세를 입력해주세요"
-          value={state.age}
-          onChange={(e) => setState((s) => ({ ...s, age: e.target.value }))}
+          value={state.age || ''}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === '' || /^\d+$/.test(value)) {
+              setState((s) => ({ ...s, age: value }));
+            }
+          }}
+          type="number"
+          min="1"
+          max="120"
+          autoComplete="off"
         />
         <div className="flex gap-2 w-full mb-3">
           <button
-            className={`${genderBtnClass} ${state.gender === '여성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
-            onClick={() => setState((s) => ({ ...s, gender: '여성' }))}
+            className={`${genderBtnClass} ${state.gender === 'FEMALE' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
+            onClick={() => setState((s) => ({ ...s, gender: 'FEMALE' }))}
           >
             여성
           </button>
           <button
-            className={`${genderBtnClass} ${state.gender === '남성' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
-            onClick={() => setState((s) => ({ ...s, gender: '남성' }))}
+            className={`${genderBtnClass} ${state.gender === 'MALE' ? 'border-[#08D485] text-[#08D485]' : 'text-[#c2c2c2]'}`}
+            onClick={() => setState((s) => ({ ...s, gender: 'MALE' }))}
           >
             남성
           </button>
@@ -124,12 +154,10 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
         />
         <div className="flex w-full gap-[0.5rem] mb-3">
           <input
-            className={`${selectClass} w-[18.7rem] mb-0 ${state.address ? 'text-black' : 'text-[#c2c2c2]'}`}
+            className={`${selectClass} w-[18.7rem] mb-0 ${state.roadAddress ? 'text-black' : 'text-[#c2c2c2]'}`}
             placeholder="거주지를 입력해주세요"
-            value={state.address}
-            onChange={(e) =>
-              setState((s) => ({ ...s, address: e.target.value }))
-            }
+            value={state.roadAddress}
+            readOnly
           />
           <button
             className="bg-[#08D485] w-[10rem] text-black rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem]"
@@ -254,7 +282,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
             )}
           </div>
         </div>
-        <NextButton className="!mt-[1.4rem]" onClick={onNext}>
+        <NextButton className="!mt-[1.4rem]" onClick={handleNext}>
           다음
         </NextButton>
       </div>

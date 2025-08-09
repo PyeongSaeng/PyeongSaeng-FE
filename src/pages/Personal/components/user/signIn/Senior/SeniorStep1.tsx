@@ -20,7 +20,7 @@ type SeniorStep1Props = {
 };
 
 const inputClass =
-  'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem]';
+  'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem]';
 const selectClass =
   'h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] bg-white text-[#c2c2c2] text-[1.6rem]';
 
@@ -42,7 +42,9 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
       { phone: state.phone },
       {
         onSuccess: () => {
-          alert('인증번호가 발송되었습니다.');
+          alert(
+            '인증번호가 발송되었습니다. 문자가 오지 않으면 한 번 더 눌러주세요.'
+          );
           setIsVerificationSent(true);
         },
         onError: (error: unknown) => {
@@ -66,7 +68,6 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
       },
       {
         onSuccess: () => {
-          alert('인증이 완료되었습니다.');
           setIsVerified(true);
         },
         onError: (error: unknown) => {
@@ -105,7 +106,7 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
       </div>
       <div className="w-[29.4rem] flex gap-[1.4rem] mb-3">
         <input
-          className={`w-[18.3rem] ${selectClass} mb-0 ${state.smsCode ? 'text-black' : 'text-[#c2c2c2]'}`}
+          className={`w-[18.3rem] ${selectClass} mb-0 ${state.smsCode ? 'text-black' : 'text-[#BDBDBD]'}`}
           placeholder="인증번호를 입력하세요"
           value={state.smsCode}
           onChange={(e) => setState((s) => ({ ...s, smsCode: e.target.value }))}
@@ -123,7 +124,11 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
           </button>
         ) : (
           <button
-            className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium"
+            className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
+              isVerified
+                ? 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
+                : 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
+            }`}
             onClick={handleVerifyCode}
             disabled={
               verifyCodeMutation.isPending || !state.smsCode || isVerified
@@ -133,10 +138,26 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
               ? '확인 중...'
               : isVerified
                 ? '인증완료'
-                : '인증확인'}
+                : '확인'}
           </button>
         )}
       </div>
+      {isVerificationSent && !isVerified && (
+        <div className="w-[29.4rem] mb-4 flex flex-col items-end">
+          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
+            인증번호를 받지 못한 경우 한 번 더 눌러주세요
+          </p>
+          <button
+            className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
+            onClick={handleSendVerification}
+            disabled={sendVerificationMutation.isPending}
+          >
+            {sendVerificationMutation.isPending
+              ? '재전송 중...'
+              : '인증번호 재전송'}
+          </button>
+        </div>
+      )}
       <NextButton onClick={handleNext}>다음</NextButton>
     </div>
   );

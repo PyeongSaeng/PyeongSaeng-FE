@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CareStep1 from './CareStep1';
 import CareStep2 from './CareStep2';
 import CareStep3 from './CareStep3';
@@ -17,13 +17,26 @@ import {
 
 const CareSignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [step, setStep] = useState(1);
   const [protectorId, setProtectorId] = useState<number | null>(null);
+
+  // 카카오 정보 - 보호자용
+  const [kakaoInfo, setKakaoInfo] = useState<any>(null);
+  const isFromKakao = kakaoInfo?.fromKakao || false;
 
   const protectorSignupMutation = useProtectorSignup();
   const seniorSignupMutation = useSeniorSignup();
 
-  // Step1: 보호자 본인 인증
+  // 카카오 정보 수신 처리 (보호자용)
+  useEffect(() => {
+    if (location.state?.fromKakao) {
+      setKakaoInfo(location.state);
+      console.log('보호자 카카오 정보 수신:', location.state);
+    }
+  }, [location.state]);
+
+  // Step1: 보호자 본인 인증 (카카오 정보 초기값 설정)
   const [step1State, setStep1State] = useState({
     carrier: '',
     name: '',
@@ -31,16 +44,17 @@ const CareSignIn = () => {
     smsCode: '',
   });
 
-  // Step2: 보호자 계정 정보
+  // Step2: 보호자 계정 정보 (카카오 정보 초기값 설정)
   const [step2State, setStep2State] = useState({
     id: '',
     idCheck: '',
     isIdAvailable: false,
     password: '',
     passwordConfirm: '',
+    phone: '',
   });
 
-  // Step3: 시니어 기본 정보
+  // Step3: 시니어 기본 정보 (일반 가입)
   const [step3State, setStep3State] = useState({
     name: '',
     id: '',
@@ -50,54 +64,89 @@ const CareSignIn = () => {
     passwordConfirm: '',
   });
 
-  // Step4: 시니어 상세 정보
+  // Step4: 시니어 상세 정보 (일반 가입)
   const [step4State, setStep4State] = useState({
     type: '',
     age: '',
     gender: '',
     phone: '',
-    address: '',
+    zipcode: '',
+    roadAddress: '',
     detailAddress: '',
     job: '',
     period: '',
   });
 
-  // Step5: 시니어 인증
+  // Step5: 시니어 인증 (일반 가입)
   const [step5State, setStep5State] = useState({
     carrier: '',
-    name: '',
     phone: '',
     smsCode: '',
   });
 
-  // Step2 완료 시 보호자 회원가입 진행 (84-102번째 줄 수정)
+  // 카카오 정보가 있으면 보호자 정보 업데이트
+  useEffect(() => {
+    if (isFromKakao && kakaoInfo) {
+      // Step1 - 보호자 이름 설정
+      setStep1State((prev) => ({
+        ...prev,
+        name: kakaoInfo.nickname || '',
+      }));
+
+      // Step2 - 보호자 카카오 아이디 설정
+      setStep2State((prev) => ({
+        ...prev,
+        id: kakaoInfo.kakaoId || '',
+        idCheck: kakaoInfo.kakaoId || '',
+        isIdAvailable: true,
+        password: '',
+        passwordConfirm: '',
+      }));
+
+      console.log('카카오 정보로 보호자 정보 설정:', {
+        name: kakaoInfo.nickname,
+        id: kakaoInfo.kakaoId,
+      });
+    }
+  }, [isFromKakao, kakaoInfo]);
+
+  // 카카오 사용자는 Step2의 전화번호 입력만 진행
+  useEffect(() => {
+    if (isFromKakao) {
+      setStep(2);
+    }
+  }, [isFromKakao]);
+
+  // Step2 완료 시 보호자 회원가입 진행
   const handleProtectorSignup = () => {
     const protectorData: ProtectorSignupRequest = {
-      username: step2State.idCheck,
-      password: step2State.password,
-      name: step1State.name,
-      phone: step1State.phone,
-      providerType: null,
-      providerUserId: null,
+      username: isFromKakao ? kakaoInfo.kakaoId : step2State.idCheck,
+      password: isFromKakao ? null : step2State.password,
+      name: isFromKakao ? kakaoInfo.nickname : step1State.name,
+      phone: step2State.phone,
+      providerType: isFromKakao ? 'KAKAO' : null,
+      providerUserId: isFromKakao ? parseInt(kakaoInfo.kakaoId) || null : null,
     };
+
+    console.log('보호자 가입 데이터:', protectorData);
 
     protectorSignupMutation.mutate(protectorData, {
       onSuccess: (data) => {
-        console.log('보호자 회원가입 성공:', data);
-
-        // 서버에서 protectorId 받아서 저장
         const receivedProtectorId = data.result?.userId;
 
         if (receivedProtectorId) {
           setProtectorId(receivedProtectorId);
-          console.log('✅ protectorId 저장됨:', receivedProtectorId);
+          console.log('protectorId 저장됨:', receivedProtectorId);
           setStep(3);
         } else {
           console.error('protectorId를 찾을 수 없음:', data);
+          alert('보호자 정보 저장에 실패했습니다.');
         }
       },
-      onError: (error) => {
-        console.error('보호자 회원가입 실패:', error);
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message || '보호자 회원가입에 실패했습니다.';
+        alert(errorMessage);
       },
     });
   };
@@ -116,6 +165,15 @@ const CareSignIn = () => {
     return jobMap[job] || 'ETC';
   };
 
+  // 성별 매핑 함수
+  const mapGenderToEnum = (gender: string): Gender => {
+    const genderMap: Record<string, Gender> = {
+      남성: 'MALE',
+      여성: 'FEMALE',
+    };
+    return genderMap[gender] || 'MALE';
+  };
+
   // 경력 기간 매핑 함수
   const mapPeriodToEnum = (period: string): ExperiencePeriod => {
     const periodMap: Record<string, ExperiencePeriod> = {
@@ -129,10 +187,37 @@ const CareSignIn = () => {
     return periodMap[period] || 'LESS_THAN_6_MONTHS';
   };
 
-  // Step5 완료 시 시니어 회원가입
+  // // 디버깅용 useEffect
+  // useEffect(() => {
+  //   if (step === 5) {
+  //     console.log('Step1:', step1State);
+  //     console.log('Step2:', step2State);
+  //     console.log('Step3:', step3State);
+  //     console.log('Step4:', step4State);
+  //     console.log('ProtectorId:', protectorId);
+  //     console.log('카카오 정보:', kakaoInfo);
+  //   }
+  // }, [
+  //   step,
+  //   step1State,
+  //   step2State,
+  //   step3State,
+  //   step4State,
+  //   protectorId,
+  //   kakaoInfo,
+  // ]);
+
+  // Step5 완료 시 시니어 회원가입 (일반 가입만)
   const handleSeniorSignup = () => {
     if (!protectorId) {
       alert('보호자 정보가 없습니다. 다시 시도해주세요.');
+      return;
+    }
+
+    // 나이 검증 추가
+    const parsedAge = parseInt(step4State.age);
+    if (isNaN(parsedAge) || parsedAge <= 0) {
+      alert('올바른 나이를 입력해주세요.');
       return;
     }
 
@@ -140,40 +225,46 @@ const CareSignIn = () => {
       username: step3State.id,
       password: step3State.password,
       name: step3State.name,
-      age: parseInt(step4State.age),
-      gender: step4State.gender as Gender,
+      age: parsedAge,
+      gender: mapGenderToEnum(step4State.gender),
       phoneNum: step4State.phone,
-      zipcode: '',
-      roadAddress: step4State.address,
-      detailAddress: step4State.detailAddress || undefined,
+      zipcode: step4State.zipcode,
+      roadAddress: step4State.roadAddress,
+      detailAddress: step4State.detailAddress || '',
       job: mapJobToEnum(step4State.job),
       experiencePeriod: mapPeriodToEnum(step4State.period),
 
       // 보호자 연결 정보
       protectorId: protectorId,
-      relation: '모녀', // 임시 값 (서버 수정 후 제거)
 
-      // 소셜 로그인 관련
+      // 시니어는 일반 가입
       providerType: null,
       providerUserId: null,
     };
 
+    console.log('시니어 가입 데이터:', seniorData);
+
     seniorSignupMutation.mutate(seniorData, {
-      onSuccess: (data) => {
-        console.log('시니어 회원가입 성공:', data);
-        alert('보호자 및 어르신 회원가입이 모두 완료되었습니다.');
+      onSuccess: () => {
+        if (isFromKakao) {
+          alert('카카오 보호자 및 어르신 회원가입이 모두 완료되었습니다!');
+        } else {
+          alert('보호자 및 어르신 회원가입이 모두 완료되었습니다.');
+        }
         navigate('/personal/login');
       },
-      onError: (error) => {
+      onError: (error: any) => {
         console.error('시니어 회원가입 실패:', error);
-        alert('회원가입 중 오류가 발생했습니다.');
+        const errorMessage =
+          error.response?.data?.message || '시니어 회원가입에 실패했습니다.';
+        alert(errorMessage);
       },
     });
   };
 
   return (
     <TopbarForLogin>
-      {step === 1 && (
+      {step === 1 && !isFromKakao && (
         <CareStep1
           state={step1State}
           setState={setStep1State}
@@ -185,6 +276,7 @@ const CareSignIn = () => {
           state={step2State}
           setState={setStep2State}
           onNext={handleProtectorSignup}
+          isFromKakao={isFromKakao}
         />
       )}
       {step === 3 && (
