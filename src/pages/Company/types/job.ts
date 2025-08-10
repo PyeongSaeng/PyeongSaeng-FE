@@ -14,16 +14,22 @@ export interface CreateJobDTO {
   recruitCount: number;
   note?: string;
   jobPostImageList?: JobPostImage[];
-  formFieldList?: JobPostFormField[];
+  formFieldList: JobPostFormField[];
 }
 export interface JobPostImage {
   keyName?: string;
   originalFileName?: string;
 }
 export interface JobPostFormField {
-  fieldName?: string;
-  fieldType?: 'TEXT' | 'IMAGE';
+  fieldName: string;
+  fieldType: 'TEXT' | 'IMAGE';
 }
+export const BASE_FORM_FIELDS: JobPostFormField[] = [
+  { fieldName: '성함', fieldType: 'TEXT' },
+  { fieldName: '연세', fieldType: 'TEXT' },
+  { fieldName: '거주지', fieldType: 'TEXT' },
+  { fieldName: '전화번호', fieldType: 'TEXT' },
+];
 //////////////////////////////////////////////////////
 //빈 데이터
 export type JobDraft = Partial<CreateJobDTO>;
@@ -43,7 +49,7 @@ export const EMPTY_JOB_DRAFT: JobDraft = {
   recruitCount: 1,
   note: "",
   jobPostImageList: [],
-  formFieldList: [],
+  formFieldList: BASE_FORM_FIELDS,
 } satisfies JobDraft;
 //////////////////////////////////////////////////////
 // 일자리 get DTO
