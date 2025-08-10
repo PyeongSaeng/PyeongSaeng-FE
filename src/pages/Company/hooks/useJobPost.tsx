@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { CreateJobDTO } from "../../../pages/Company/types/job";
+import { CreateJobDTO } from "../types/job";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
