@@ -5,6 +5,7 @@ import {
   JobTypeLabel,
   ExperiencePeriodLabel,
 } from '../../../types/userInfo';
+import spinner from '../../../../../shared/assets/spinner.gif';
 
 const BasicInfo = () => {
   const [info, setSenior] = useState<Info | null>(null);
@@ -15,10 +16,6 @@ const BasicInfo = () => {
       .then((data) => setSenior(data.result as Info))
       .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
   }, []);
-
-  useEffect(() => {
-    console.log(info);
-  }, [info]);
 
   const infoData = useMemo(() => {
     if (!info) return [];
@@ -39,12 +36,17 @@ const BasicInfo = () => {
     ];
   }, [info]);
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  // 디테일 필요
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
 
   if (!info) {
-    return <div>불러오는 중...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <img src={spinner} alt="로딩 스피너" />
+      </div>
+    );
   }
 
   return (

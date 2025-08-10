@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
+import axiosInstance from '../../../../../shared/apis/axiosInstance';
+import { Info } from '../../../types/userInfo';
 
 const SeniorInfo = () => {
   const [answers, setAnswers] = useState<(string | null)[]>([
@@ -14,31 +16,11 @@ const SeniorInfo = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+
   const [btn, setBtn] = useState<'수정' | '저장'>('수정');
+  const [changes, setChanges] = useState<Partial<Info> | null>();
 
-  const handleNavigateEdit = () => {
-    const currentPath = location.pathname.split('/').pop();
-
-    if (currentPath === 'basic') {
-      navigate('/personal/my/info/basic/edit');
-    } else if (currentPath === 'extra') {
-      navigate('/personal/my/info/extra/edit');
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const pathArr = location.pathname.split('/');
-    const lastPath = pathArr[pathArr.length - 1];
-    const prevPath = pathArr[pathArr.length - 2];
-
-    if (lastPath === 'edit' && prevPath === 'basic') {
-      navigate('/personal/my/info/basic');
-    } else if (lastPath === 'edit' && prevPath === 'extra') {
-      navigate('/personal/my/info/extra');
-    }
-  };
+  const isEdit = location.pathname.endsWith('/edit');
 
   useEffect(() => {
     const currentPath = location.pathname.split('/').pop();
@@ -50,10 +32,41 @@ const SeniorInfo = () => {
     }
   }, [location.pathname]);
 
+  const handleNavigateEdit = () => {
+    const last = location.pathname.split('/').pop();
+    if (last === 'basic') navigate('/personal/my/info/basic/edit');
+    else if (last === 'extra') navigate('/personal/my/info/extra/edit');
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isEdit) return;
+
+    const pathArr = location.pathname.split('/');
+    const lastPath = pathArr[pathArr.length - 1];
+    const prevPath = pathArr[pathArr.length - 2];
+
+    try {
+      await axiosInstance.patch('/api/user/senior/me', changes);
+      if (lastPath === 'edit' && prevPath === 'basic') {
+        navigate('/personal/my/info/basic');
+      } else if (lastPath === 'edit' && prevPath === 'extra') {
+        navigate('/personal/my/info/extra');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('저장에 실패했습니다.');
+    }
+  };
+
   return (
     <div>
       <Topbar>
-        <form onSubmit={handleSubmit} className="flex flex-col items-center">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col items-center"
+        >
           <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px]">
             개인정보
           </div>
@@ -78,7 +91,10 @@ const SeniorInfo = () => {
             </NavLink>
           </div>
           <div className="h-[466px]">
-            <Outlet context={{ answers, setAnswers }} key={location.pathname} />
+            <Outlet
+              context={{ answers, setAnswers, setChanges }}
+              key={location.pathname}
+            />
           </div>
           <button
             type={btn === '수정' ? 'button' : 'submit'}

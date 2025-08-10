@@ -1,17 +1,20 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Info } from '../../../types/userInfo';
 import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
 import { JobTypeLabel, ExperiencePeriodLabel } from '../../../types/userInfo';
-import axiosInstance from '../../../../../shared/apis/axiosInstance';
+import {
+  formatPhone,
+  normalizePhone,
+  diff,
+} from '../../../../../shared/utils/userInfoUtils';
+import spinner from '../../../../../shared/assets/spinner.gif';
 
-// 나중에 유틸로 옮기기
-const formatPhone = (v: string) =>
-  v.replace(/\D/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-const normalizePhone = (v: string) => v.replace(/\D/g, '');
+type OutletCtx = { setChanges: (changes: Partial<Info>) => void };
 
 const BasicInfoEdit = () => {
   const navigate = useNavigate();
+  const { setChanges } = useOutletContext<OutletCtx>();
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string | null>();
@@ -50,26 +53,23 @@ const BasicInfoEdit = () => {
     setEditedInfo((prev) => (prev ? { ...prev, [key]: value } : prev));
   }
 
-  function diff<T extends object>(prev: T, curr: T): Partial<T> {
-    const out: Partial<T> = {};
-    (Object.keys(curr) as (keyof T)[]).forEach((k) => {
-      if (!Object.is(curr[k], prev[k])) {
-        out[k] = curr[k]; // 타입 안전
-      }
-    });
-    return out;
-  }
-
-  // 사용
-  function handleSave() {
+  useEffect(() => {
     if (!originalInfo || !editedInfo) return;
     const changes = diff(originalInfo, editedInfo);
-    if (Object.keys(changes).length === 0) return;
+    setChanges(changes);
+  }, [originalInfo, editedInfo, setChanges]);
 
-    axiosInstance
-      .patch('/api/user/senior/me', changes)
-      .then(() => alert('저장 완료'))
-      .catch(() => alert('저장 실패'));
+  // 디테일 필요
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
+
+  if (!originalInfo) {
+    return (
+      <div className="flex justify-center items-center">
+        <img src={spinner} alt="로딩 스피너" />
+      </div>
+    );
   }
 
   // 주소 검색 기능 구현 필요
@@ -105,15 +105,15 @@ const BasicInfoEdit = () => {
                   <div className="flex jusity-between gap-[4px]">
                     <input
                       className="w-[146px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
-                      value={
-                        editedInfo?.roadAddress ?? ''
-                        // .length > 9 ? value.slice(0, 9) + '...' : value
-                      }
+                      value={editedInfo?.roadAddress ?? ''}
                       onChange={(e) =>
                         handleChange('roadAddress', e.target.value)
                       }
                     />
-                    <button className="w-[50px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[14px] font-[Pretendard JP]">
+                    <button
+                      type="button"
+                      className="w-[50px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[14px] font-[Pretendard JP]"
+                    >
                       검색
                     </button>
                   </div>
@@ -148,18 +148,18 @@ const BasicInfoEdit = () => {
                 label === '직무' ? (
                   <select
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px]"
-                    value={editedInfo?.phone ?? ''}
+                    value={editedInfo?.job ?? ''}
                     onChange={(e) =>
                       handleChange('job', e.target.value as Info['job'])
                     }
                   >
-                    <option value="주부">주부</option>
-                    <option value="자영업">회사원</option>
-                    <option value="직장인">공무원</option>
-                    <option value="전문직">전문직</option>
-                    <option value="예술가">예술가</option>
-                    <option value="사업가">사업가</option>
-                    <option value="기타">기타</option>
+                    <option value="HOUSEWIFE">주부</option>
+                    <option value="EMPLOYEE">회사원</option>
+                    <option value="PUBLIC_OFFICER">공무원</option>
+                    <option value="PROFESSIONAL">전문직</option>
+                    <option value="ARTIST">예술가</option>
+                    <option value="BUSINESS_OWNER">사업가</option>
+                    <option value="ECT">기타</option>
                   </select>
                 ) : label === '기간' ? (
                   <select
@@ -172,12 +172,12 @@ const BasicInfoEdit = () => {
                       )
                     }
                   >
-                    <option value="6개월 미만">6개월 미만</option>
-                    <option value="6개월~1년">6개월~1년</option>
-                    <option value="1~3년">1~3년</option>
-                    <option value="3~5년">3~5년</option>
-                    <option value="5~10년">5~10년</option>
-                    <option value="10년 이상">10년 이상</option>
+                    <option value="LESS_THAN_6_MONTHS">6개월 미만</option>
+                    <option value="SIX_MONTHS_TO_1_YEAR">6개월~1년</option>
+                    <option value="ONE_TO_THREE_YEARS">1~3년</option>
+                    <option value="THREE_TO_FIVE_YEARS">3~5년</option>
+                    <option value="FIVE_TO_TEN_YEARS">5~10년</option>
+                    <option value="OVER_TEN_YEARS">10년 이상</option>
                   </select>
                 ) : (
                   // 나머지 뷰 전용
