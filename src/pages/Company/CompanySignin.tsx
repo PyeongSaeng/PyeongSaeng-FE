@@ -27,18 +27,20 @@ const CompanySignin = () => {
     isIdAvailable: false,
   });
 
+  // 불필요한 상태 제거
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [showBusinessNumberErrorModal, setShowBusinessNumberErrorModal] =
     useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [usernameCheckResult, setUsernameCheckResult] = useState<
+    'available' | 'unavailable' | null
+  >(null);
 
   // hooks
   const companySignupMutation = useCompanySignup();
   const checkUsernameMutation = useCheckCompanyUsername();
   const sendVerificationCodeMutation = useSendCompanyVerificationCode();
 
-  // 비밀번호 확인 검증 (간단한 일치 여부만)
+  // 비밀번호 확인 검증
   const passwordsMatch =
     state.password &&
     state.passwordConfirm &&
@@ -46,16 +48,15 @@ const CompanySignin = () => {
   const passwordMismatch =
     state.passwordConfirm && state.password !== state.passwordConfirm;
 
-  // 메시지 초기화
+  // 메시지 초기화 함수
   const clearMessages = () => {
-    setSuccessMessage('');
-    setErrorMessage('');
+    setUsernameCheckResult(null);
   };
 
-  // 인증번호 발송
+  // 인증번호 발송 함수
   const handleSendVerificationCode = () => {
     if (!state.phone) {
-      setErrorMessage('전화번호를 입력해주세요.');
+      alert('전화번호를 입력해주세요.');
       return;
     }
 
@@ -63,45 +64,53 @@ const CompanySignin = () => {
     sendVerificationCodeMutation.mutate(state.phone, {
       onSuccess: () => {
         setIsVerificationSent(true);
-        setSuccessMessage('인증번호가 발송되었습니다.');
+        alert('인증번호가 발송되었습니다.');
       },
       onError: (error: any) => {
         const errorMsg =
           error.response?.data?.message ||
           '인증번호 발송 중 오류가 발생했습니다.';
-        setErrorMessage(errorMsg);
+        alert(errorMsg);
       },
     });
   };
 
-  // 아이디 중복 확인
+  // 아이디 중복 확인 함수
   const handleCheckUsername = () => {
     if (!state.username) {
-      setErrorMessage('아이디를 입력해주세요.');
+      alert('아이디를 입력해주세요.');
       return;
     }
 
     clearMessages();
+
     checkUsernameMutation.mutate(state.username, {
       onSuccess: (data) => {
-        if (data.isAvailable) {
+        const resultMessage = data?.result || '';
+        const isAvailable =
+          resultMessage.includes('사용 가능한') ||
+          resultMessage.includes('사용가능한');
+
+        if (isAvailable) {
           setState((s) => ({ ...s, isIdAvailable: true }));
-          setSuccessMessage('사용 가능한 아이디입니다.');
+          setUsernameCheckResult('available');
         } else {
           setState((s) => ({ ...s, isIdAvailable: false }));
-          setErrorMessage('이미 사용중인 아이디입니다.');
+          setUsernameCheckResult('unavailable');
         }
       },
       onError: (error: any) => {
+        setState((s) => ({ ...s, isIdAvailable: false }));
+        setUsernameCheckResult('unavailable');
         const errorMsg =
           error.response?.data?.message ||
           '아이디 중복 확인 중 오류가 발생했습니다.';
-        setErrorMessage(errorMsg);
+        alert(errorMsg);
       },
     });
   };
 
-  // 회원가입 완료
+  // 회원가입 완료 함수에서 성공 메시지 처리
   const handleCompleteSignIn = () => {
     clearMessages();
 
@@ -116,22 +125,22 @@ const CompanySignin = () => {
       !state.passwordConfirm ||
       !state.verificationCode
     ) {
-      setErrorMessage('모든 필드를 입력해주세요.');
+      alert('모든 필드를 입력해주세요.');
       return;
     }
 
     if (!isVerificationSent) {
-      setErrorMessage('인증번호를 발송해주세요.');
+      alert('인증번호를 발송해주세요.');
       return;
     }
 
     if (!state.isIdAvailable) {
-      setErrorMessage('아이디 중복 확인을 완료해주세요.');
+      alert('아이디 중복 확인을 완료해주세요.');
       return;
     }
 
     if (!passwordsMatch) {
-      setErrorMessage('비밀번호가 일치하지 않습니다.');
+      alert('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -150,15 +159,10 @@ const CompanySignin = () => {
 
     companySignupMutation.mutate(signupData, {
       onSuccess: () => {
-        setSuccessMessage(
-          '회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.'
-        );
-        setTimeout(() => {
-          navigate('/company/login');
-        }, 2000);
+        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+        navigate('/company/login');
       },
       onError: (error: any) => {
-        // 사업자 등록번호 오류 처리
         if (
           error.response?.data?.message?.includes('사업자 등록번호') ||
           error.response?.status === 400
@@ -167,7 +171,7 @@ const CompanySignin = () => {
         } else {
           const errorMsg =
             error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
-          setErrorMessage(errorMsg);
+          alert(errorMsg);
         }
       },
     });
@@ -176,21 +180,7 @@ const CompanySignin = () => {
   return (
     <TopbarForLogin>
       <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
-        {/* 성공/에러 메시지 */}
-        {(successMessage || errorMessage) && (
-          <div className="w-[29.4rem] mb-4">
-            {successMessage && (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-center">
-                {successMessage}
-              </div>
-            )}
-            {errorMessage && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-center">
-                {errorMessage}
-              </div>
-            )}
-          </div>
-        )}
+        {/* 성공/에러 메시지 영역 완전 제거 */}
 
         <div className="w-[29.4rem]">
           {/* 사업자명 */}
@@ -242,7 +232,7 @@ const CompanySignin = () => {
                 !state.phone.trim() ||
                 isVerificationSent
               }
-              className="bg-[#08D485] w-[10.3rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium h-[4.5rem] text-center whitespace-nowrap disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+              className="bg-[#0D29B7] w-[10.3rem] text-white rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium h-[4.5rem] text-center whitespace-nowrap disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               {sendVerificationCodeMutation.isPending
                 ? '발송중...'
@@ -255,7 +245,7 @@ const CompanySignin = () => {
           {/* 재전송 버튼 영역 */}
           {isVerificationSent && (
             <div className="w-full mb-4 flex flex-col items-end mt-[0.8rem]">
-              <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
+              <p className="text-[#0D29B7] text-[1.4rem] font-medium mb-2 text-right">
                 인증번호를 받지 못한 경우 한 번 더 눌러주세요
               </p>
               <button
@@ -341,6 +331,7 @@ const CompanySignin = () => {
                   username: e.target.value,
                   isIdAvailable: false,
                 }));
+                setUsernameCheckResult(null);
                 clearMessages();
               }}
             />
@@ -352,6 +343,18 @@ const CompanySignin = () => {
               {checkUsernameMutation.isPending ? '확인중...' : '확인'}
             </button>
           </div>
+
+          {/* 아이디 중복 확인 결과 메시지 */}
+          {usernameCheckResult === 'available' && (
+            <div className="text-[#08D485] text-[1.4rem] mb-[2.2rem] mt-[0.5rem] ml-[1rem]">
+              사용 가능한 아이디입니다
+            </div>
+          )}
+          {usernameCheckResult === 'unavailable' && (
+            <div className="text-red-500 text-[1.4rem] mb-[2.2rem] mt-[0.5rem] ml-[1rem]">
+              이미 사용중인 아이디입니다
+            </div>
+          )}
 
           {/* 비밀번호 */}
           <div className="w-full text-left text-[#747474] font-semibold text-[1.6rem] mb-[1rem] mt-[2.8rem]">
