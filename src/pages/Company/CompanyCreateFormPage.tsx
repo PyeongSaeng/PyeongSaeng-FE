@@ -127,7 +127,7 @@ export default function CompanyCreateFormPage({
         </button>
       </div>
 
-      <div className="mt-[24px] mb-[24px] flex gap-[13px] px-[17px]">
+      <div className="mt-[47px] mb-[24px] flex gap-[13px] px-[17px]">
         <button
           onClick={onBack}
           className="flex-1 h-[45px] border border-[#0D29B7] rounded-[8px] text-[16px] font-medium text-[#000000] bg-white"

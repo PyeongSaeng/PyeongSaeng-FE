@@ -5,7 +5,7 @@ import { BASE_FORM_FIELDS, CreateJobDTO, EMPTY_JOB_DRAFT, JobDraft, JobPostFormF
 type Step = 0 | 1 | 2;
 
 export function useCompanyJobFlow(token: string) {
-  const { createJob, isPending: submitting } = useJobPost(token); // 이름은 프로젝트에 맞춰
+  const { postJob: createJob, loading: submitting } = useJobPost(token);
   const [step, setStep] = useState<Step>(0);
   const [draft, setDraft] = useState<JobDraft>(() => {
     const saved = localStorage.getItem("jobDraft");
