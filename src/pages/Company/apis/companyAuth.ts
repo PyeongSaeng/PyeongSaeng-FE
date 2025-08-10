@@ -26,3 +26,9 @@ export const sendCompanyVerificationCode = async (phone: string) => {
   });
   return response.data;
 };
+
+// 로그아웃 
+export const logoutCompany = async () => {
+  const response = await axiosInstance.post('/api/companies/logout');
+  return response.data;
+};

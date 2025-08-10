@@ -25,7 +25,7 @@ const MainMenu = () => {
           신청 결과 입력
         </MenuNavButton>
         <MenuNavButton url="/company/my">내 기업 정보</MenuNavButton>
-        <MenuNavButton>로그아웃</MenuNavButton>
+        <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
         <MenuNavButton url="/company/my/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>
