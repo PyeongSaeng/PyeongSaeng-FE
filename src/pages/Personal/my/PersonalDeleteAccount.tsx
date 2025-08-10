@@ -1,20 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../shared/components/topbar/Topbar';
+import axiosInstance from '../../../shared/apis/axiosInstance';
 
 const PersonalDeleteAccount = () => {
   const [value, setValue] = useState('');
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setValue(e.target.value.trim());
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (value === '탈퇴하겠습니다') {
-      e.preventDefault();
-      // post
-      navigate('/personal/my/delete-account/done');
+      try {
+        setSubmitting(true);
+        const res = await axiosInstance.delete('/api/user/withdraw', {
+          data: { confirmed: true },
+        });
+        console.log(res);
+        alert(res.data.message);
+        navigate('/personal/my/delete-account/done');
+      } catch (error) {
+        console.error('회원 탈퇴 실패', error);
+        alert('탈퇴에 실패했습니다. 다시 시도해주세요.');
+      } finally {
+        setSubmitting(false);
+      }
+    } else {
+      alert('문구를 바르게 입력해주세요');
     }
   };
 
@@ -45,7 +62,7 @@ const PersonalDeleteAccount = () => {
               type="submit"
               className="w-[293px] h-[45px] bg-[#08D485] rounded-[8px] text-black font-[500]"
             >
-              회원탈퇴하기
+              {submitting ? '탈퇴 진행 중...' : '회원탈퇴하기'}
             </button>
           </form>
         </div>

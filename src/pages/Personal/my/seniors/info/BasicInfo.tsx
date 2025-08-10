@@ -1,52 +1,61 @@
-type info = {
-  id: number;
-  username: string;
-  name: string;
-  phone: string;
-  age: number;
-  password: string;
-  roadAddress: string;
-  detailAddress: string;
-  job: string;
-  experincePeriod: string;
-};
-
-const dummyInfo: info = {
-  id: 1,
-  username: '김영희',
-  name: 'youngid',
-  phone: '010-0000-0000',
-  age: 63,
-  password: '1234',
-  roadAddress: '대지로 49',
-  detailAddress: '203동 105호',
-  job: '주부',
-  experincePeriod: '10년 이상',
-};
-
-const infoData = [
-  { label: '이름', value: dummyInfo.name },
-  { label: 'id', value: dummyInfo.name },
-  { label: '비밀번호', value: '수정화면에서 변경하세요' },
-  { label: '나이', value: dummyInfo.age },
-  { label: '연락처', value: dummyInfo.phone },
-  {
-    label: '거주지',
-    value: dummyInfo.roadAddress,
-  },
-  { label: '', value: dummyInfo.detailAddress },
-  { label: '직무', value: dummyInfo.job },
-  { label: '기간', value: dummyInfo.experincePeriod },
-];
+import { useEffect, useMemo, useState } from 'react';
+import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
+import {
+  Info,
+  JobTypeLabel,
+  ExperiencePeriodLabel,
+} from '../../../types/userInfo';
+import spinner from '../../../../../shared/assets/spinner.gif';
 
 const BasicInfo = () => {
+  const [info, setSenior] = useState<Info | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getSeniorBasicInfo('/api/user/senior/me')
+      .then((data) => setSenior(data.result as Info))
+      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+  }, []);
+
+  const infoData = useMemo(() => {
+    if (!info) return [];
+    return [
+      { label: '이름', value: info.name },
+      { label: 'id', value: info.username },
+      { label: '비밀번호', value: '수정화면에서 변경하세요' },
+      { label: '나이', value: String(info.age) },
+      {
+        label: '연락처',
+        value: info.phone
+          .replace(/[^0-9]/g, '')
+          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+      },
+      { label: '거주지', value: `${info.roadAddress}\n${info.detailAddress}` },
+      { label: '직무', value: JobTypeLabel[info.job] },
+      { label: '기간', value: ExperiencePeriodLabel[info.experiencePeriod] },
+    ];
+  }, [info]);
+
+  // 디테일 필요
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
+
+  if (!info) {
+    return (
+      <div className="flex justify-center items-center">
+        <img src={spinner} alt="로딩 스피너" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col justify-center items-center text-[16px] font-[Pretendard] font-[500]">
+    <div className="h-full flex flex-col justify-center items-center text-[16px] font-[Pretendard] font-[500]">
       <div className="py-[6px]">
         {infoData.map(({ label, value }) => (
           <div
             key={label}
-            className="w-full flex justify-center text-black leading-[2.8]"
+            className="w-full flex justify-center text-black leading-[3]"
           >
             <span className="w-[140px] pl-[30px] flex justify-end items-center text-[18px] text-[#414141]">
               {label}
@@ -56,11 +65,19 @@ const BasicInfo = () => {
                 <div className="w-[200px] h-[40px] rounded-[8px] border-[1px] border-[#E1E1E1] text-[14px] text-center">
                   {value}
                 </div>
+              ) : label === '나이' ? (
+                value + '세'
               ) : typeof value === 'string' && value.includes('\n') ? (
                 <div className="text-center leading-tight">
-                  {value.split('\n').map((line, idx) => (
-                    <p key={idx}>{line}</p>
-                  ))}
+                  {value.split('\n').map((line, idx) => {
+                    const maxLength = 14;
+                    const displayText =
+                      line.length > maxLength
+                        ? line.slice(0, maxLength) + ' ...'
+                        : line;
+
+                    return <p key={idx}>{displayText}</p>;
+                  })}
                 </div>
               ) : (
                 value
