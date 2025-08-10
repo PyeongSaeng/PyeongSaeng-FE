@@ -1,3 +1,10 @@
+// 로그인
+export interface CompanyLoginRequest {
+  username: string;
+  password: string;
+}
+
+// 회원가입
 export interface CompanySigninRequest {
   businessNo: string;      // 사업자 등록 번호
   username: string;       

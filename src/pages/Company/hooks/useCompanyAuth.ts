@@ -1,10 +1,29 @@
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { 
   signupCompany, 
   checkCompanyUsername, 
-  sendCompanyVerificationCode
+  sendCompanyVerificationCode,
+  loginCompany
 } from '../apis/companyAuth';
-import { CompanySigninRequest } from '../types/auth';
+import { CompanySigninRequest, CompanyLoginRequest } from '../types/auth';
+
+// 기업 로그인 
+export const useCompanyLogin = () => {
+  const navigate = useNavigate();
+  
+  return useMutation({
+    mutationFn: (data: CompanyLoginRequest) => loginCompany(data),
+    onSuccess: (data) => {
+      console.log('기업 로그인 성공:', data);
+      // 로그인 성공 시 홈으로 이동
+      navigate('/company');
+    },
+    onError: (error: any) => {
+      console.error('기업 로그인 실패:', error);
+    },
+  });
+};
 
 // 기업 회원가입 hook
 export const useCompanySignup = () => {

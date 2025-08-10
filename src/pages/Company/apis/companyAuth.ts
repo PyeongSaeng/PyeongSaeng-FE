@@ -1,5 +1,11 @@
 import axiosInstance from '../../../shared/apis/axiosInstance';
-import { CompanySigninRequest } from '../types/auth';
+import { CompanySigninRequest, CompanyLoginRequest } from '../types/auth';
+
+// 기업 로그인
+export const loginCompany = async (data: CompanyLoginRequest) => {
+  const response = await axiosInstance.post('/api/companies/login', data);
+  return response.data;
+};
 
 // 기업 회원가입
 export const signupCompany = async (data: CompanySigninRequest) => {
