@@ -60,3 +60,10 @@ export interface updateSeniorData {
   currentPassword?: string;
   newPassword?: string;
 }
+
+// 비밀번호 변경
+export type passwordUpdate = {
+  passwordChangeRequested: boolean;
+  currentPassword: string;
+  newPassword: string;
+};

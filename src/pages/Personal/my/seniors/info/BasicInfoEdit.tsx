@@ -49,9 +49,9 @@ const BasicInfoEdit = () => {
     ];
   }, [editedInfo]);
 
-  function handleChange<K extends keyof Info>(key: K, value: Info[K]) {
+  const handleChange = <K extends keyof Info>(key: K, value: Info[K]) => {
     setEditedInfo((prev) => (prev ? { ...prev, [key]: value } : prev));
-  }
+  };
 
   useEffect(() => {
     if (!originalInfo || !editedInfo) return;

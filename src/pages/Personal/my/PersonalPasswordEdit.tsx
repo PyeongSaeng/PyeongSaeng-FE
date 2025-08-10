@@ -1,18 +1,48 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import clsx from 'clsx';
 import Topbar from '../../../shared/components/topbar/Topbar';
+import axiosInstance from '../../../shared/apis/axiosInstance';
+import { passwordUpdate } from '../types/userInfo';
 
 const PersonalPasswordEdit = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FocusEvent<HTMLFormElement>) => {
+  const isMatch = newPassword === confirmPassword;
+  const isFilled =
+    currentPassword.trim() && newPassword.trim() && confirmPassword.trim();
+  const canSubmit = !!isFilled && isMatch && !submitting;
+
+  const handleSubmit = async (e: React.FocusEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate('/personal/my/info/basic/edit/password/done');
+
+    if (!canSubmit) return;
+
+    try {
+      const changes: passwordUpdate = {
+        passwordChangeRequested: true,
+        currentPassword: currentPassword.trim(),
+        newPassword: newPassword.trim(),
+      };
+      console.log(changes);
+
+      await axiosInstance.patch('/api/user/senior/me', changes);
+      navigate('/personal/my/info/basic/edit/password/done');
+    } catch (err) {
+      console.error('비밀번호 변경 실패', err);
+      const error = err as AxiosError<{ message?: string }>;
+      if (error.response?.status === 400) {
+        alert('현재 비밀번호가 올바르지 않습니다');
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -51,9 +81,7 @@ const PersonalPasswordEdit = () => {
                 ></input>
                 <span
                   className={clsx(
-                    newPassword === confirmPassword
-                      ? 'text-white'
-                      : 'text-[#FF0004]',
+                    isMatch ? 'text-white' : 'text-[#FF0004]',
                     'self-end text-[14px] py-[4px]'
                   )}
                 >
@@ -61,8 +89,11 @@ const PersonalPasswordEdit = () => {
                 </span>
               </div>
             </div>
-            <button className="w-[293px] h-[45px] rounded-[8px] bg-[#08D485]">
-              저장
+            <button
+              type="submit"
+              className="w-[293px] h-[45px] rounded-[8px] bg-[#08D485]"
+            >
+              {submitting ? '저장 중...' : '저장'}
             </button>
           </form>
         </div>
