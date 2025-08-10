@@ -6,14 +6,21 @@ interface Props {
   onFileSelect: (file: File) => void;
   className?: string;
   onDragStateChange?: (dragging: boolean) => void;
+  fallbackName?: string;          
 }
 
-export default function ImageUploadButton({ imageFile, onFileSelect, className, onDragStateChange }: Props) {
+export default function ImageUploadButton({
+  imageFile,
+  onFileSelect,
+  className,
+  onDragStateChange,
+  fallbackName,                    
+}: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const setDraggingState = (state: boolean) => {
     setDragging(state);
-    if (onDragStateChange) onDragStateChange(state);
+    onDragStateChange?.(state);
   };
   usePasteUpload(onFileSelect);
 
@@ -22,9 +29,7 @@ export default function ImageUploadButton({ imageFile, onFileSelect, className, 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      onFileSelect(file);
-    }
+    if (file && file.type.startsWith('image/')) onFileSelect(file);
     setDragging(false);
   };
 
@@ -42,42 +47,39 @@ export default function ImageUploadButton({ imageFile, onFileSelect, className, 
     if (file) onFileSelect(file);
   };
 
+  const displayName = imageFile?.name || fallbackName || '';
+
   return (
     <div
+      role="button"
+      aria-label="이미지 업로드"
       className={`
-        w-full h-full
-        flex flex-col items-center justify-center
-        rounded-[8px]
-        border
-        ${className ? className : ''}
-        transition-all duration-150
-        cursor-pointer
+        w-full h-full flex flex-col items-center justify-center
+        rounded-[8px] border transition-all duration-150 cursor-pointer
+        ${dragging ? 'border-blue-400 bg-blue-50' : ''}
+        ${className ?? ''}
       `}
       tabIndex={0}
       onClick={handleButtonClick}
-      onDragOver={e => {
-        e.preventDefault();
-        setDraggingState(true);
-      }}
+      onDragOver={e => { e.preventDefault(); setDraggingState(true); }}
       onDragLeave={() => setDraggingState(false)}
       onDrop={handleDrop}
       onPaste={handlePaste}
-      style={{
-        userSelect: "none",
-      }}
+      style={{ userSelect: 'none' }}
     >
-      {/* 미리보기 또는 업로드 버튼 UI 추가한거임*/}
-      {imageFile ? (
+      {displayName ? (
         <div className="flex flex-col items-center">
-          <span className="text-[16px] font-bold text-[var(--main-blue)] truncate max-w-[150px]">{imageFile.name}</span>
+          <span className="text-[16px] font-bold text-[var(--main-blue)] truncate max-w-[150px]">
+            {displayName}
+          </span>
         </div>
       ) : (
-        <div className="flex flex-col items-center-2">
+        <div className="flex flex-col items-center">
           <span className="text-[16px] font-medium">이미지를 첨부하세요.</span>
         </div>
       )}
+
       <input
-        id="fileUpload"
         type="file"
         accept="image/*"
         className="hidden"
