@@ -28,7 +28,9 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         </MenuNavButton>
         <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
-        <MenuNavButton url="/personal/my/info/extra">질문답변</MenuNavButton>
+        <MenuNavButton url="/personal/senior-my/info/extra">
+          질문답변
+        </MenuNavButton>
         <MenuNavButton
           handleMenu={() =>
             handleMenu(myMenu === 'SENIOR' ? 'seniorMy' : 'careMy')
@@ -37,9 +39,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
           내 정보
         </MenuNavButton>
         <MenuNavButton>로그아웃</MenuNavButton>
-        <MenuNavButton url="/personal/my/delete-account">
-          회원탈퇴
-        </MenuNavButton>
+        <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>
   );

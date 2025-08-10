@@ -53,7 +53,7 @@ const PersonalDeleteAccount = () => {
           >
             <input
               type="text"
-              className="w-[294px] h-[45px] px-[16px] py-[13px] border-[1px] border-[#E1E1E1] rounded-[8px] font-[pretendard] font-[500] placeholder:text-[#C2C2C2]"
+              className="w-[294px] h-[45px] px-[16px] py-[13px] border-[1px] border-[#E1E1E1] rounded-[8px] font-[pretendard] font-[500] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
               placeholder="탈퇴하겠습니다"
               value={value}
               onChange={handleChange}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
-import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
+import { getSeniorBasicInfo } from '../../../../../shared/apis/my/seniorMy';
 
 const questions = [
   'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',

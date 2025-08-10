@@ -3,7 +3,7 @@ import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
 import MainMenu from './MainMenu';
 import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
-import CareSeniors from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniors';
+import CareSeniors from './CareSeniors';
 import CareSeniorDetail from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
 
 type MenuType =
@@ -43,7 +43,7 @@ const PersonalMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white">
+        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[704px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             {currentMenu !== 'main' ? (
               <IoChevronBackOutline size={27} onClick={goBack} />

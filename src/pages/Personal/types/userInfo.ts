@@ -1,3 +1,4 @@
+// 시니어
 export type Info = {
   id: number;
   username: string;
@@ -60,6 +61,16 @@ export interface updateSeniorData {
   currentPassword?: string;
   newPassword?: string;
 }
+
+// 보호자
+export type CareInfo = {
+  id: number;
+  username: string;
+  name: string;
+  phone: string;
+};
+
+// 공통
 
 // 비밀번호 변경
 export type passwordUpdate = {

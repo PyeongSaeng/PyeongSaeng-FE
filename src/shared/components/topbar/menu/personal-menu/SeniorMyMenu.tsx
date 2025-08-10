@@ -7,13 +7,13 @@ const SeniorMyMenu = ({ goNext }: { goNext: (menu: any) => void }) => {
         내 정보
       </div>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="/personal/my/applied-results">
+        <MenuNavButton url="/personal/senior-my/applied-results">
           신청 결과
         </MenuNavButton>
-        <MenuNavButton url="/personal/my/info/basic">개인정보</MenuNavButton>
-        <MenuNavButton url="/personal/my/delete-account">
-          회원탈퇴
+        <MenuNavButton url="/personal/senior-my/info/basic">
+          개인정보
         </MenuNavButton>
+        <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>
   );

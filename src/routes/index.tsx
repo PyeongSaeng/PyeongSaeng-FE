@@ -31,6 +31,8 @@ import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 import KakaoCallback from '../pages/Personal/KakaoCallback';
 import CareSeniorDetail from '../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
+import CareInfo from '../pages/Personal/my/cares/info/CareInfo';
+import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 
 const AppRoutes = () => {
   return (
@@ -61,33 +63,40 @@ const AppRoutes = () => {
       <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
       <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
       <Route
-        path="/personal/my/applied-results"
+        path="/personal/senior-my/applied-results"
         element={<ApplyResults />}
       ></Route>
       <Route
-        path="/personal/my/applied-results/:appliedId"
+        path="/personal/senior-my/applied-results/:appliedId"
         element={<ApplyDetail />}
       ></Route>
-      <Route path="/personal/my/info" element={<SeniorInfo />}>
+      {/* 시니어 마이메뉴 */}
+      <Route path="/personal/senior-my/info" element={<SeniorInfo />}>
         <Route path="basic" element={<BasicInfo />}></Route>
         <Route path="extra" element={<ExtraInfo />}></Route>
         <Route path="basic/edit" element={<BasicInfoEdit />}></Route>
         <Route path="extra/edit" element={<ExtraInfoEdit />}></Route>
       </Route>
+      {/* 보호자 마이메뉴 */}
+      <Route path="/personal/care-my/info" element={<CareInfo />}></Route>
       <Route
-        path="/personal/my/info/basic/edit/password"
+        path="/personal/care-my/info/edit"
+        element={<CareInfoEdit />}
+      ></Route>
+      <Route
+        path="/personal/password-edit"
         element={<PersonalPasswordEdit />}
       ></Route>
       <Route
-        path="/personal/my/info/basic/edit/password/done"
+        path="/personal/password-edit/done"
         element={<PersonalPasswordEditDone />}
       ></Route>
       <Route
-        path="/personal/my/delete-account"
+        path="/personal/delete-account"
         element={<PersonalDeleteAccount />}
       ></Route>
       <Route
-        path="/personal/my/delete-account/done"
+        path="/personal/delete-account/done"
         element={<PersonalDeleteAccountDone />}
       ></Route>
       {/* <Route

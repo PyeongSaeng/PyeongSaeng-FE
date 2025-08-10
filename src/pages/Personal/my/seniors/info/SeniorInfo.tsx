@@ -54,8 +54,8 @@ const SeniorInfo = () => {
         navigate('/personal/my/info/extra');
       }
     } catch (err) {
-      console.error(err);
-      alert('저장에 실패했습니다.');
+      console.error('시니어 정보 수정 실패: ', err);
+      alert('정보 수정에 실패했습니다.');
     }
   };
 

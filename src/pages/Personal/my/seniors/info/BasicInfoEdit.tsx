@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Info } from '../../../types/userInfo';
-import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
+import { getSeniorBasicInfo } from '../../../../../shared/apis/my/seniorMy';
 import { JobTypeLabel, ExperiencePeriodLabel } from '../../../types/userInfo';
 import {
   formatPhone,
@@ -10,11 +10,11 @@ import {
 } from '../../../../../shared/utils/userInfoUtils';
 import spinner from '../../../../../shared/assets/spinner.gif';
 
-type OutletCtx = { setChanges: (changes: Partial<Info>) => void };
+type OutletContext = { setChanges: (changes: Partial<Info>) => void };
 
 const BasicInfoEdit = () => {
   const navigate = useNavigate();
-  const { setChanges } = useOutletContext<OutletCtx>();
+  const { setChanges } = useOutletContext<OutletContext>();
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string | null>();
@@ -91,9 +91,7 @@ const BasicInfoEdit = () => {
                   <button
                     type="button"
                     className="w-[200px] h-[40px] rounded-[8px] bg-[#08D485] text-[16px] text-white"
-                    onClick={() =>
-                      navigate('/personal/my/info/basic/edit/password')
-                    }
+                    onClick={() => navigate('/personal/password-edit')}
                   >
                     수정
                   </button>
@@ -118,7 +116,7 @@ const BasicInfoEdit = () => {
                   </div>
                 ) : label === '연락처' ? (
                   <input
-                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
+                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                     value={
                       isPhoneEditing
                         ? (editedInfo?.phone ?? '')
@@ -137,7 +135,7 @@ const BasicInfoEdit = () => {
                   />
                 ) : label === '상세주소' ? (
                   <input
-                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
+                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                     value={editedInfo?.detailAddress ?? ''}
                     onChange={(e) =>
                       handleChange('detailAddress', e.target.value)
@@ -146,7 +144,7 @@ const BasicInfoEdit = () => {
                 ) : // 드롭다운메뉴 사용파트
                 label === '직무' ? (
                   <select
-                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black"
+                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black focus:outline-black"
                     value={editedInfo?.job ?? ''}
                     onChange={(e) =>
                       handleChange('job', e.target.value as Info['job'])
@@ -162,7 +160,7 @@ const BasicInfoEdit = () => {
                   </select>
                 ) : label === '기간' ? (
                   <select
-                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black"
+                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black focus:outline-black"
                     value={editedInfo?.experiencePeriod}
                     onChange={(e) =>
                       handleChange(
