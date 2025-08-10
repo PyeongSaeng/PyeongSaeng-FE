@@ -24,29 +24,57 @@ export interface JobPostFormField {
   fieldName?: string;
   fieldType?: 'TEXT' | 'IMAGE';
 }
-
 //////////////////////////////////////////////////////
-// 일자리 get 요청 타입 이걸로 가져다 쓰면됨 목록 조회
-export interface JobPost {
-  jobPostId: number;    //jobPostId!!로 변경
-  title: string;
-  imageUrl: string;     
-  companyName: string;
-  address: string;
-  deadline: string;     // "2025-08-31"
-  createdAt: string;    // "2025-07-25T10:00:00"
-}
-//전체 일자리 get 요정
-export interface JobListResponse {
+//빈 데이터
+export type JobDraft = Partial<CreateJobDTO>;
+
+export const EMPTY_JOB_DRAFT: JobDraft = {
+  title: "",
+  address: "",
+  detailAddress: "",
+  roadAddress: "",
+  zipcode: "",
+  hourlyWage: undefined,
+  monthlySalary: null,
+  yearSalary: null,
+  description: "",
+  workingTime: "",
+  deadline: "",
+  recruitCount: 1,
+  note: "",
+  jobPostImageList: [],
+  formFieldList: [],
+} satisfies JobDraft;
+//////////////////////////////////////////////////////
+// 일자리 get DTO
+export interface JobListDTO {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: {
-    jobPostList: JobPost[];
-    listSize: number;
-    totalPage: number;
-    totalElements: number;
-    isFirst: boolean;
-    isLast: boolean;
-  }
+  result: Result;
 }
+export interface Result {
+  jobPostList: JobPostList[];
+  listSize: number;
+  totalPage: number;
+  totalElements: number;
+  isFirst: boolean;
+  isLast: boolean;
+}
+export interface JobPostList {
+  id: number;
+  state: "RECRUITING" | "CLOSED" | string;
+  title: string;
+  images: Image[];
+}
+export interface Image {
+  jobPostId: number;
+  keyName: string;
+  imageUrl: string;
+  originalFileName: string;
+}
+
+
+
+
+

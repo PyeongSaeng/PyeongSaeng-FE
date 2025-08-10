@@ -1,15 +1,17 @@
 import { useState } from "react";
 import ImageUploadButton from "../../shared/components/EvidenceSection/ImageUploadButton";
 import AddressSearchInput from "../../shared/components/AddressSearchInput";
-import { CreateJobDTO } from "./types/job";
+import { CreateJobDTO, JobDraft } from "./types/job";
 import { useJobPost } from "../../shared/hooks/job/useJobPost";
 import { useImageUpload } from "../../shared/hooks/useImageUpload";
 
 interface Props {
+    draft: JobDraft;
+    onChangeDraft: (next: JobDraft) => void;
     onNext: () => void;
 }
 
-export default function CompanyCreateJobPage({ onNext }: Props) {
+export default function CompanyCreateJobPage({ draft, onChangeDraft, onNext }: Props) {
     const userToken = localStorage.getItem("accessToken");
     const [imageFile, setImageFile] = useState<File | null>(null);
     const { uploadImage } = useImageUpload();
@@ -33,23 +35,20 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
         jobPostImageList: [],
         formFieldList: []
     });
-    // 이미지 파일 선택 핸들러
+
     const handleFileSelect = async (file: File) => {
         setImageFile(file);
         const res = await uploadImage(file);
         if (res) {
-            setForm(prev => ({
-                ...prev,
+            onChangeDraft({
+                ...draft,
                 jobPostImageList: [
-                    ...(prev.jobPostImageList ?? []),
-                    {
-                        keyName: res.keyName,
-                        originalFileName: file.name
-                    }
-                ]
-            }));
+                    ...(draft.jobPostImageList ?? []),
+                    { keyName: res.keyName, originalFileName: file.name },
+                ],
+            });
         }
-    };
+    }
 
 
     const handleSubmit = async () => {
@@ -168,7 +167,6 @@ export default function CompanyCreateJobPage({ onNext }: Props) {
                     className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center px-auto text-[#000000] placeholder:text-[#c2c2c2] placeholder:text-[16px]"
                 />
             </div>
-
             {/* 신청서 양식 작성 버튼 */}
             <button
                 onClick={handleSubmit}
