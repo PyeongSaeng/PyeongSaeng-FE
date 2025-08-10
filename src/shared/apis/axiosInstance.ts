@@ -39,8 +39,8 @@ axiosInstance.interceptors.response.use(
         console.error('accessToken을 찾을 수 없음:', response.data);
       }
 
-      // role 저장 
-      if (role) {
+      // role 저장 - SENIOR, PROTECTOR만 저장
+      if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
     }
@@ -48,12 +48,13 @@ axiosInstance.interceptors.response.use(
     // OAuth 토큰 교환 시에도 동일하게 처리
     if (response.config.url?.includes('/token/exchange')) {
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
-      const role = response.data.result?.role; // 카카오 로그인도 role 저장
+      const role = response.data.result?.role;
       
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
       }
-      if (role) {
+      // SENIOR, PROTECTOR만 저장
+      if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
     }
@@ -67,7 +68,8 @@ axiosInstance.interceptors.response.use(
         localStorage.setItem('accessToken', accessToken);
         console.log('카카오 회원가입 Token 저장됨');
       }
-      if (role) {
+      // SENIOR, PROTECTOR만 저장
+      if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
         console.log('카카오 회원가입 Role 저장됨:', role);
       }
