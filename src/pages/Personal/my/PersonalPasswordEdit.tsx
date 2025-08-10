@@ -24,6 +24,7 @@ const PersonalPasswordEdit = () => {
     e.preventDefault();
 
     if (!canSubmit) return;
+    setSubmitting(true);
 
     try {
       const changes: passwordUpdate = {
@@ -64,6 +65,7 @@ const PersonalPasswordEdit = () => {
                 className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
                 placeholder="현재 비밀번호를 입력해주세요"
                 onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
               ></input>
               <input
                 type="password"
@@ -71,6 +73,7 @@ const PersonalPasswordEdit = () => {
                 className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
                 placeholder="새로운 비밀번호를 입력해주세요"
                 onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
               ></input>
               <div className="flex flex-col">
                 <input
@@ -79,6 +82,7 @@ const PersonalPasswordEdit = () => {
                   className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
                   placeholder="새로운 비밀번호를 다시 입력해주세요"
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
                 ></input>
                 <span
                   className={clsx(
