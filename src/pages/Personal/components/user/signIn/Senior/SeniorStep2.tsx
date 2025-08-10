@@ -7,8 +7,8 @@ type Step2State = {
   id: string;
   idCheck: string;
   isIdAvailable: boolean;
-  password: string;
-  passwordConfirm: string;
+  password: string | null;
+  passwordConfirm: string | null;
 };
 
 type SeniorStep2Props = {
@@ -47,8 +47,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
           setUsernameMessage('이미 사용 중인 아이디입니다.');
         }
       },
-      onError: (error: unknown) => {
-        console.error('아이디 확인 실패:', error);
+      onError: () => {
         setHasChecked(true);
         setState((s) => ({ ...s, isIdAvailable: false }));
         setUsernameMessage('이미 사용 중인 아이디입니다.');
@@ -64,7 +63,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
   };
 
   const handleNext = () => {
-    if (!state.password || !state.passwordConfirm) {
+    if (!state.idCheck || !state.password || !state.passwordConfirm) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
@@ -120,7 +119,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
           className={`${inputClass} ${state.password ? 'text-black' : 'text-[#C2C2C2]'}`}
           placeholder="비밀번호를 입력해주세요"
           type="password"
-          value={state.password}
+          value={state.password || ''}
           onChange={(e) =>
             setState((s) => ({ ...s, password: e.target.value }))
           }
@@ -129,7 +128,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
           className={`${inputClass} ${state.passwordConfirm ? 'text-black' : 'text-[#C2C2C2]'}`}
           placeholder="비밀번호를 다시 입력해주세요"
           type="password"
-          value={state.passwordConfirm}
+          value={state.passwordConfirm || ''}
           onChange={(e) =>
             setState((s) => ({ ...s, passwordConfirm: e.target.value }))
           }

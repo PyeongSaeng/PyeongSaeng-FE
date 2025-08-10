@@ -25,7 +25,7 @@ const NextButton = ({
       bg-[#08D485]
       text-black text-[1.6rem] font-medium
       transition mt-[3.7rem]
-      disabled:bg-[#DAF4EA] disabled:text-[#222] disabled:cursor-not-allowed
+      disabled:bg-[#DAF4EA] disabled:text-[#222] !disabled:cursor-not-allowed
       ${className ?? ''}
     `}
   >

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SeniorStep1 from './SeniorStep1';
 import SeniorStep2 from './SeniorStep2';
 import SeniorStep3 from './SeniorStep3';
@@ -14,22 +14,27 @@ import {
 
 const SeniorSignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [step, setStep] = useState(1);
   const signupMutation = useSeniorSignup();
 
+  // 카카오에서 온 정보 추출
+  const kakaoInfo = location.state;
+  const isFromKakao = kakaoInfo?.fromKakao || false;
+
   const [step1State, setStep1State] = useState({
     carrier: '',
-    name: '',
+    name: isFromKakao ? kakaoInfo?.nickname || '' : '',
     phone: '',
     smsCode: '',
   });
 
   const [step2State, setStep2State] = useState({
-    id: '',
-    idCheck: '',
-    isIdAvailable: false,
-    password: '',
-    passwordConfirm: '',
+    id: isFromKakao ? kakaoInfo?.kakaoId || '' : '',
+    idCheck: isFromKakao ? kakaoInfo?.kakaoId || '' : '',
+    isIdAvailable: isFromKakao,
+    password: isFromKakao ? null : '',
+    passwordConfirm: isFromKakao ? null : '',
   });
 
   const [step3State, setStep3State] = useState({
@@ -37,13 +42,21 @@ const SeniorSignIn = () => {
     age: '',
     gender: '',
     phone: '',
-    address: '',
     detailAddress: '',
     job: '',
     period: '',
     zipcode: '',
     roadAddress: '',
   });
+
+  // Gender 매핑 함수
+  const mapGenderToEnum = (gender: string): Gender => {
+    const genderMap: Record<string, Gender> = {
+      MALE: 'MALE',
+      FEMALE: 'FEMALE',
+    };
+    return genderMap[gender] || 'MALE';
+  };
 
   // 직업 매핑 함수
   const mapJobToEnum = (job: string): Job => {
@@ -72,54 +85,65 @@ const SeniorSignIn = () => {
     return periodMap[period] || 'LESS_THAN_6_MONTHS';
   };
 
+  // 카카오 사용자인 경우 Step 3부터 시작
+  useEffect(() => {
+    if (isFromKakao) {
+      setStep(3);
+    }
+  }, [isFromKakao]);
+
   const handleSubmit = () => {
-    const signupData: SeniorSignupRequest = {
-      username: step2State.id,
-      password: step2State.password,
+    console.log('카카오 사용자 여부:', isFromKakao);
+
+    const seniorData: SeniorSignupRequest = {
+      username: isFromKakao ? kakaoInfo.kakaoId : step2State.id,
+      password: isFromKakao ? null : step2State.password,
       name: step1State.name,
       age: parseInt(step3State.age),
-      gender: step3State.gender as Gender,
-      phoneNum: step1State.phone,
+      gender: mapGenderToEnum(step3State.gender),
+      phoneNum: step3State.phone,
       zipcode: step3State.zipcode,
       roadAddress: step3State.roadAddress,
-      detailAddress: step3State.detailAddress || undefined,
+      detailAddress: step3State.detailAddress,
       job: mapJobToEnum(step3State.job),
       experiencePeriod: mapPeriodToEnum(step3State.period),
-
-      // 보호자 연결 없음
       protectorId: null,
-      relation: undefined,
 
-      // 일반 회원가입
-      providerType: null,
-      providerUserId: null,
+      providerType: isFromKakao ? 'KAKAO' : null,
+      // kakaoId를 number로 변환 또는 null 처리
+      providerUserId: isFromKakao ? parseInt(kakaoInfo.kakaoId) || null : null,
     };
 
-    console.log('전송할 회원가입 데이터:', signupData);
+    console.log('전송할 데이터:', seniorData);
 
-    signupMutation.mutate(signupData, {
-      onSuccess: (data: unknown) => {
-        console.log('회원가입 성공:', data);
-        alert('회원가입이 완료되었습니다!');
-        navigate('/personal/login');
+    signupMutation.mutate(seniorData, {
+      onSuccess: () => {
+        alert(
+          isFromKakao
+            ? '카카오 회원가입이 완료되었습니다!'
+            : '회원가입이 완료되었습니다!'
+        );
+        navigate('/', { replace: true });
       },
-      onError: (error: unknown) => {
-        console.error('회원가입 오류:', error);
-        alert('회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      onError: (error: any) => {
+        console.error('시니어 회원가입 실패:', error);
+        alert('회원가입에 실패했습니다. 다시 시도해주세요.');
       },
     });
   };
 
   return (
-    <TopbarForLogin>
-      {step === 1 && (
+    <div>
+      <TopbarForLogin />
+
+      {step === 1 && !isFromKakao && (
         <SeniorStep1
           state={step1State}
           setState={setStep1State}
           onNext={() => setStep(2)}
         />
       )}
-      {step === 2 && (
+      {step === 2 && !isFromKakao && (
         <SeniorStep2
           state={step2State}
           setState={setStep2State}
@@ -131,10 +155,10 @@ const SeniorSignIn = () => {
           state={step3State}
           setState={setStep3State}
           onSubmit={handleSubmit}
-          isLoading={signupMutation.isPending}
+          isFromKakao={isFromKakao}
         />
       )}
-    </TopbarForLogin>
+    </div>
   );
 };
 

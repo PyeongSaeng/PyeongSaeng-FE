@@ -104,8 +104,7 @@ const BasicInfoEdit = () => {
                 label === '거주지' ? (
                   <div className="flex jusity-between gap-[4px]">
                     <input
-                      className="w-[146px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
-                      value={editedInfo?.roadAddress ?? ''}
+                      className="w-[146px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
                       onChange={(e) =>
                         handleChange('roadAddress', e.target.value)
                       }
@@ -119,7 +118,7 @@ const BasicInfoEdit = () => {
                   </div>
                 ) : label === '연락처' ? (
                   <input
-                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
+                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
                     value={
                       isPhoneEditing
                         ? (editedInfo?.phone ?? '')
@@ -138,7 +137,7 @@ const BasicInfoEdit = () => {
                   />
                 ) : label === '상세주소' ? (
                   <input
-                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px]"
+                    className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
                     value={editedInfo?.detailAddress ?? ''}
                     onChange={(e) =>
                       handleChange('detailAddress', e.target.value)
@@ -147,7 +146,7 @@ const BasicInfoEdit = () => {
                 ) : // 드롭다운메뉴 사용파트
                 label === '직무' ? (
                   <select
-                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px]"
+                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black"
                     value={editedInfo?.job ?? ''}
                     onChange={(e) =>
                       handleChange('job', e.target.value as Info['job'])
@@ -163,7 +162,7 @@ const BasicInfoEdit = () => {
                   </select>
                 ) : label === '기간' ? (
                   <select
-                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px]"
+                    className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black"
                     value={editedInfo?.experiencePeriod}
                     onChange={(e) =>
                       handleChange(

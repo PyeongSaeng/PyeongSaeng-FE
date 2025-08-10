@@ -41,7 +41,9 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
       { phone: state.phone },
       {
         onSuccess: () => {
-          alert('인증번호가 발송되었습니다.');
+          alert(
+            '인증번호가 발송되었습니다. 문자가 오지 않으면 한 번 더 눌러주세요.'
+          );
           setIsVerificationSent(true);
         },
         onError: (error) => {
@@ -65,7 +67,6 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
       },
       {
         onSuccess: () => {
-          alert('인증이 완료되었습니다.');
           setIsVerified(true);
         },
         onError: (error) => {
@@ -117,11 +118,17 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
             onClick={handleSendVerification}
             disabled={sendVerificationMutation.isPending || !state.phone}
           >
-            {sendVerificationMutation.isPending ? '발송 중...' : '인증하기'}
+            {sendVerificationMutation.isPending
+              ? '발송 중...'
+              : '인증번호 전송'}
           </button>
         ) : (
           <button
-            className="bg-[#08D485] w-[9.6rem] text-black rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium"
+            className={`w-[9.6rem] rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium transition-all duration-200 ${
+              isVerified
+                ? 'bg-[#ECF6F2] text-black border-[1.3px] border-[#08D485]'
+                : 'bg-[#08D485] text-black hover:bg-[#07C078] active:bg-[#06B56D]'
+            }`}
             onClick={handleVerifyCode}
             disabled={
               verifyCodeMutation.isPending || !state.smsCode || isVerified
@@ -135,6 +142,22 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
           </button>
         )}
       </div>
+      {isVerificationSent && !isVerified && (
+        <div className="w-[29.4rem] mb-4 flex flex-col items-end">
+          <p className="text-[#08D485] text-[1.4rem] font-medium mb-2 text-right">
+            인증번호를 받지 못한 경우 한 번 더 눌러주세요
+          </p>
+          <button
+            className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium"
+            onClick={handleSendVerification}
+            disabled={sendVerificationMutation.isPending}
+          >
+            {sendVerificationMutation.isPending
+              ? '재전송 중...'
+              : '인증번호 재전송'}
+          </button>
+        </div>
+      )}
       <NextButton onClick={handleNext}>다음</NextButton>
     </div>
   );

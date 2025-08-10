@@ -110,7 +110,7 @@ const JobDraftsPage = () => {
                                     </div>
                                     <div
                                         className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
-                                        ${isSelected ? "border-[#08D485] bg-[#ECF6F2]" : "border-[#A4A4A4] bg-white"}
+                                        ${isSelected ? "border-[#08D485] bg-[#ECF6F2]" : "border-[#08D485] bg-white"}
                                         `}
                                         onClick={() => setSelectedJobId(isSelected ? null : job.jobId)}
                                     >

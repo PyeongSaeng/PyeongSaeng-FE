@@ -6,10 +6,12 @@ import Topbar from '../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 import { passwordUpdate } from '../types/userInfo';
 
+
 const PersonalPasswordEdit = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -43,6 +45,7 @@ const PersonalPasswordEdit = () => {
     } finally {
       setSubmitting(false);
     }
+
   };
 
   return (
@@ -94,6 +97,7 @@ const PersonalPasswordEdit = () => {
               className="w-[293px] h-[45px] rounded-[8px] bg-[#08D485]"
             >
               {submitting ? '저장 중...' : '저장'}
+
             </button>
           </form>
         </div>
