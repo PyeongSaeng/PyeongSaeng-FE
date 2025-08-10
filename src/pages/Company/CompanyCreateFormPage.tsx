@@ -83,23 +83,23 @@ export default function CompanyCreateFormPage({
         {/* 입력창 */}
         {isInputVisible && (
           <div className="flex flex-col gap-[6px] mt-[12px]">
-            <div className="flex items-center gap-[10px]">
+            <div className="flex items-center gap-[18px]">
               <span className="text-[24px] text-medium">{nextIndex}</span>
               <input
                 type="text"
-                placeholder="여기에 질문 라벨을 입력하세요"
+                placeholder="여기에 입력하세요"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && canAdd && handleAddField()}
-                className="flex-1 w-[260px] px-[16px] h-[45px] border border-[#c2c2c2] rounded-[8px] text-[#000000] placeholder:text-[#c2c2c2] text-[16px] text-medium"
+                className="flex-1 w-[260px] px-[16px] h-[45px] border-[1px] border-[#c2c2c2] rounded-[8px] text-[#000000] placeholder:text-[#c2c2c2] text-[16px] text-medium"
               />
             </div>
             {error && <p className="text-xs text-red-500">{error}</p>}
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-[14px]">
               <button
                 disabled={!canAdd}
                 onClick={handleAddField}
-                className={`w-[84px] h-[45px] rounded-[8px] text-[16px] text-medium
+                className={`w-[144px] h-[45px] rounded-[8px] text-[16px] text-medium
                   ${canAdd ? "bg-[#0D29B7] text-[#f1f1f1]" : "bg-gray-200 text-gray-500 cursor-not-allowed"}`}
               >
                 추가
