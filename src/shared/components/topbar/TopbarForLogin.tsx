@@ -8,9 +8,13 @@ import CompanyMenu from './menu/company-menu/CompanyMenu';
 
 interface TopbarForLoginProps {
   children?: ReactNode;
+  showToggle?: boolean; // 토글바 표시 여부
 }
 
-const TopbarForLogin = ({ children }: TopbarForLoginProps) => {
+const TopbarForLogin = ({
+  children,
+  showToggle = true,
+}: TopbarForLoginProps) => {
   const location = useLocation();
 
   const version: 'personal' | 'company' = location.pathname.startsWith(
@@ -26,8 +30,6 @@ const TopbarForLogin = ({ children }: TopbarForLoginProps) => {
         <div className="flex justify-center">
           <div className="w-[318px] flex justify-between items-center bt-[2px] p-[4px]">
             <div className="relative">
-              {/* {version === 'personal' ? <PersonalMenu /> : <CompanyMenu />}
-              {version === 'personal' ? <QuestionButton /> : ''} */}
               {version === 'personal' ? (
                 <div className="flex justify-around items-start gap-[21px] opacity-0 pointer-events-none">
                   <PersonalMenu />
@@ -39,9 +41,12 @@ const TopbarForLogin = ({ children }: TopbarForLoginProps) => {
                 </div>
               )}
             </div>
-            <div>
-              <ToggleButton />
-            </div>
+            {/* 토글바 조건부 렌더링 */}
+            {showToggle && (
+              <div>
+                <ToggleButton />
+              </div>
+            )}
           </div>
         </div>
       </div>
