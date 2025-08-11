@@ -85,6 +85,7 @@ const IdFind = () => {
   const inputClass =
     'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-[2.1rem] bg-white placeholder-[#c2c2c2] text-[1.6rem]';
 
+  // 아이디 찾기 결과 표시
   if (showResult && idFindResult) {
     return (
       <div className="flex flex-col items-center mb-[3.1rem]">
