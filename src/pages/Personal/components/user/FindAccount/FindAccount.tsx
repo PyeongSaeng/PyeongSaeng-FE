@@ -10,7 +10,7 @@ const FindAccount = () => {
 
   return (
     <TopbarForLogin showToggle={false}>
-      <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
+      <div className="flex flex-col items-center w-full px-[3.3rem]">
         <div className="w-[29.4rem]">
           {/* 헤더 */}
           <div className="text-center mb-[3.1rem]">
