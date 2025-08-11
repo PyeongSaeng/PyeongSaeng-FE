@@ -30,9 +30,9 @@ import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 import KakaoCallback from '../pages/Personal/KakaoCallback';
-import CareSeniorDetail from '../shared/components/topbar/menu/personal-menu/LinkedSeniorDetail';
 import CareInfo from '../pages/Personal/my/cares/info/CareInfo';
 import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
+import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
 
 const AppRoutes = () => {
   return (
@@ -84,6 +84,10 @@ const AppRoutes = () => {
         element={<CareInfoEdit />}
       ></Route>
       <Route
+        path="/personal/care-my/link-seniors"
+        element={<LinkingSenior />}
+      ></Route>
+      <Route
         path="/personal/password-edit"
         element={<PersonalPasswordEdit />}
       ></Route>
@@ -99,10 +103,6 @@ const AppRoutes = () => {
         path="/personal/delete-account/done"
         element={<PersonalDeleteAccountDone />}
       ></Route>
-      {/* <Route
-        path="/personal/care-my/seniors/:seniorId"
-        element={<CareSeniorDetail />}
-      ></Route> */}
       <Route path="/personal/find-account" element={<FindAccount />}></Route>
       <Route path="/auth/callback" element={<KakaoCallback />} /> {/* 로그인 */}
       <Route path="/auth/signup/kakao" element={<KakaoCallback />} />{' '}

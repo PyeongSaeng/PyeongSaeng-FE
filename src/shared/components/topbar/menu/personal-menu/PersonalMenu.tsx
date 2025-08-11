@@ -3,8 +3,8 @@ import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
 import MainMenu from './MainMenu';
 import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
-import LinkedSeniors from './LinkedSeniors';
 import LinkedSeniorDetail from './LinkedSeniorDetail';
+import LinkedSeniorList from './LinkedSeniorList';
 
 type MenuType =
   | 'main'
@@ -59,7 +59,7 @@ const PersonalMenu = () => {
             <SeniorMyMenu goNext={goToMyMenu} />
           )}
           {currentMenu.menu === 'linkedSeniors' && (
-            <LinkedSeniors goNext={goToMyMenu} />
+            <LinkedSeniorList goNext={goToMyMenu} />
           )}
           {currentMenu.menu === 'linkedSeniorDetail' && (
             <LinkedSeniorDetail

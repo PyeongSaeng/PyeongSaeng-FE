@@ -5,7 +5,7 @@ import { LinkedSenior } from '../../../../../pages/Personal/types/userInfo';
 import { getLinkedSeniorList } from '../../../../../pages/Personal/apis/my/seniorMy';
 import spinner from '../../../../assets/spinner.gif';
 
-const LinkedSeniors = ({
+const LinkedSeniorList = ({
   goNext,
 }: {
   goNext: (menu: any, seniorId: number) => void;
@@ -69,7 +69,10 @@ const LinkedSeniors = ({
         ))}
         <div className="flex justify-center items-center gap-[10px] text-[16px]">
           <IoAddOutline size={22} />
-          <button className="pt-[4px]" onClick={() => navigate('')}>
+          <button
+            className="pt-[4px]"
+            onClick={() => navigate('/personal/care-my/link-seniors')}
+          >
             추가하기
           </button>
         </div>
@@ -81,4 +84,4 @@ const LinkedSeniors = ({
   );
 };
 
-export default LinkedSeniors;
+export default LinkedSeniorList;
