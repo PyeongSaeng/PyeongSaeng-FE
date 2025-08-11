@@ -1,29 +1,104 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NextButton from '../../../Personal/components/user/signIn/NextButton';
+import {
+  useSendCompanyVerificationCode,
+  useVerifyPasswordReset,
+  useResetPassword,
+} from '../../hooks/useCompanyAuth';
 
 type PasswordStep = 'input' | 'reset' | 'complete';
 
 const PasswordFind = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<PasswordStep>('input');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [userId, setUserId] = useState('');
+  const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
 
-  const handleNext = () => {
-    if (step === 'input') {
-      setStep('reset');
-    } else if (step === 'reset') {
-      setStep('complete');
-    }
-  };
+  // hooks
+  const sendVerificationCodeMutation = useSendCompanyVerificationCode();
+  const verifyPasswordResetMutation = useVerifyPasswordReset();
+  const resetPasswordMutation = useResetPassword();
 
   const handleVerificationSend = () => {
-    // 인증번호 전송 로직
-    console.log('인증번호 전송');
+    if (!phone.trim()) {
+      alert('전화번호를 입력해주세요.');
+      return;
+    }
+
+    sendVerificationCodeMutation.mutate(phone, {
+      onSuccess: () => {
+        setIsVerificationSent(true);
+        alert('인증번호가 발송되었습니다.');
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message ||
+          '인증번호 발송 중 오류가 발생했습니다.';
+        alert(errorMessage);
+      },
+    });
+  };
+
+  const handleVerifyAndNext = () => {
+    if (!username.trim() || !phone.trim() || !verificationCode.trim()) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    if (!isVerificationSent) {
+      alert('인증번호를 발송해주세요.');
+      return;
+    }
+
+    const verifyData = {
+      username: username.trim(),
+      phone: phone.trim(),
+      verificationCode: verificationCode.trim(),
+    };
+
+    verifyPasswordResetMutation.mutate(verifyData, {
+      onSuccess: () => {
+        setStep('reset');
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message || '인증에 실패했습니다.';
+        alert(errorMessage);
+      },
+    });
+  };
+
+  const handlePasswordReset = () => {
+    if (!newPassword.trim() || !confirmPassword.trim()) {
+      alert('새 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    const resetData = {
+      username: username.trim(),
+      newPassword: newPassword.trim(),
+    };
+
+    resetPasswordMutation.mutate(resetData, {
+      onSuccess: () => {
+        setStep('complete');
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message || '비밀번호 재설정에 실패했습니다.';
+        alert(errorMessage);
+      },
+    });
   };
 
   const handleGoToLogin = () => {
@@ -33,22 +108,24 @@ const PasswordFind = () => {
   const inputClass =
     'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-[2.1rem] bg-white placeholder-[#c2c2c2] text-[1.6rem]';
 
-  // 1단계: 아이디 입력
+  // 1단계: 아이디 입력 및 인증
   if (step === 'input') {
     return (
       <div>
         <input
           className={inputClass}
           placeholder="아이디를 입력하세요"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoComplete="off"
         />
 
         <input
           className={inputClass}
           placeholder="전화번호를 입력하세요"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          autoComplete="off"
         />
 
         <div className="mb-[5.9rem]">
@@ -61,18 +138,50 @@ const PasswordFind = () => {
               placeholder="인증번호를 입력하세요"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
+              autoComplete="off"
             />
             <button
-              className="bg-[#0D29B7] w-[9.6rem] text-white rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium whitespace-nowrap"
+              className="bg-[#0D29B7] w-[9.6rem] text-white rounded-[8px] py-[1.2rem] text-[1.4rem] font-medium whitespace-nowrap disabled:bg-gray-300 disabled:text-gray-500"
               onClick={handleVerificationSend}
+              disabled={
+                sendVerificationCodeMutation.isPending ||
+                !phone.trim() ||
+                isVerificationSent
+              }
             >
-              인증번호 전송
+              {sendVerificationCodeMutation.isPending
+                ? '발송중...'
+                : isVerificationSent
+                  ? '전송완료'
+                  : '인증번호 전송'}
             </button>
           </div>
+
+          {/* 재전송 버튼 영역 */}
+          {isVerificationSent && (
+            <div className="w-full mb-4 flex flex-col items-end mt-[0.8rem]">
+              <p className="text-[#0D29B7] text-[1.4rem] font-medium mb-2 text-right">
+                인증번호를 받지 못한 경우 한 번 더 눌러주세요
+              </p>
+              <button
+                className="bg-gray-200 text-gray-700 rounded-[6px] px-[1.2rem] py-[0.8rem] text-[1.2rem] font-medium disabled:opacity-50"
+                onClick={handleVerificationSend}
+                disabled={sendVerificationCodeMutation.isPending}
+              >
+                {sendVerificationCodeMutation.isPending
+                  ? '재전송 중...'
+                  : '인증번호 재전송'}
+              </button>
+            </div>
+          )}
         </div>
 
-        <NextButton className="!bg-[#0D29B7] text-white" onClick={handleNext}>
-          인증 완료
+        <NextButton
+          className="!bg-[#0D29B7] text-white"
+          onClick={handleVerifyAndNext}
+          disabled={verifyPasswordResetMutation.isPending}
+        >
+          {verifyPasswordResetMutation.isPending ? '인증 중...' : '인증 완료'}
         </NextButton>
       </div>
     );
@@ -91,20 +200,24 @@ const PasswordFind = () => {
             className={inputClass}
             placeholder="새로운 비밀번호를 입력하세요"
             type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
           />
           <input
             className={inputClass}
             placeholder="비밀번호를 다시 입력해주세요"
             type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
 
-        <NextButton className="!bg-[#0D29B7] text-white" onClick={handleNext}>
-          저장
+        <NextButton
+          className="!bg-[#0D29B7] text-white"
+          onClick={handlePasswordReset}
+          disabled={resetPasswordMutation.isPending}
+        >
+          {resetPasswordMutation.isPending ? '저장 중...' : '저장'}
         </NextButton>
       </div>
     );
