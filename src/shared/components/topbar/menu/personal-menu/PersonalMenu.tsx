@@ -3,22 +3,24 @@ import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
 import MainMenu from './MainMenu';
 import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
-import CareSeniors from './CareSeniors';
-import CareSeniorDetail from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
+import LinkedSeniors from './LinkedSeniors';
+import LinkedSeniorDetail from './LinkedSeniorDetail';
 
 type MenuType =
   | 'main'
   | 'seniorMy'
   | 'careMy'
-  | 'careSeniors'
-  | 'careSeniorDetail';
+  | 'linkedSeniors'
+  | 'linkedSeniorDetail';
+
+type MenuState = { menu: MenuType; seniorId?: number };
 
 const PersonalMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [menuStack, setMenuStack] = useState<MenuType[]>(['main']);
+  const [menuStack, setMenuStack] = useState<MenuState[]>([{ menu: 'main' }]);
 
-  const goToMyMenu = (menu: MenuType) => {
-    setMenuStack((prev) => [...prev, menu]);
+  const goToMyMenu = (menu: MenuType, seniorId?: number) => {
+    setMenuStack((prev) => [...prev, { menu, seniorId }]);
   };
 
   const goBack = () => {
@@ -27,7 +29,7 @@ const PersonalMenu = () => {
 
   const closeMenu = () => {
     setIsOpen(false);
-    setMenuStack(['main']);
+    setMenuStack([{ menu: 'main' }]);
   };
 
   const currentMenu = menuStack[menuStack.length - 1];
@@ -45,18 +47,24 @@ const PersonalMenu = () => {
       {isOpen && (
         <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[704px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
-            {currentMenu !== 'main' ? (
+            {currentMenu.menu !== 'main' ? (
               <IoChevronBackOutline size={27} onClick={goBack} />
             ) : (
               <IoClose size={27} onClick={closeMenu} />
             )}
           </div>
-          {currentMenu === 'main' && <MainMenu handleMenu={goToMyMenu} />}
-          {currentMenu === 'careMy' && <CareMyMenu goNext={goToMyMenu} />}
-          {currentMenu === 'seniorMy' && <SeniorMyMenu goNext={goToMyMenu} />}
-          {currentMenu === 'careSeniors' && <CareSeniors goNext={goToMyMenu} />}
-          {currentMenu === 'careSeniorDetail' && (
-            <CareSeniorDetail goNext={goToMyMenu} />
+          {currentMenu.menu === 'main' && <MainMenu handleMenu={goToMyMenu} />}
+          {currentMenu.menu === 'careMy' && <CareMyMenu goNext={goToMyMenu} />}
+          {currentMenu.menu === 'seniorMy' && (
+            <SeniorMyMenu goNext={goToMyMenu} />
+          )}
+          {currentMenu.menu === 'linkedSeniors' && (
+            <LinkedSeniors goNext={goToMyMenu} />
+          )}
+          {currentMenu.menu === 'linkedSeniorDetail' && (
+            <LinkedSeniorDetail
+              seniorId={menuStack[menuStack.length - 1].seniorId || 0}
+            />
           )}
         </div>
       )}

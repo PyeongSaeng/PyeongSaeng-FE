@@ -2,7 +2,12 @@ import { IoChevronForward } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import MenuNavButton from '../MenuNavButton';
 
-type MenuType = 'main' | 'seniorMy' | 'careMy' | 'careSeniors';
+type MenuType =
+  | 'main'
+  | 'seniorMy'
+  | 'careMy'
+  | 'linkedSeniors'
+  | 'linkedSeniorDetail';
 
 interface MainMenuProps {
   handleMenu: (menu: MenuType) => void;

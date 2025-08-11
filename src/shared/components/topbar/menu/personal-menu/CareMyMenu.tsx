@@ -7,7 +7,7 @@ const CareMyMenu = ({ goNext }: { goNext: (menu: any) => void }) => {
         내 정보
       </div>
       <div className="flex flex-col items-start gap-[23px] text-[16px] py-[30px]">
-        <button onClick={() => goNext('careSeniors')}>
+        <button onClick={() => goNext('linkedSeniors')}>
           {'케어 중인 어르신 >'}
         </button>
         <MenuNavButton url="personal/care-my/info">개인정보</MenuNavButton>

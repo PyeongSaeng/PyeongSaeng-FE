@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
-import { getCareBasicInfo } from '../../../../../shared/apis/my/careMy';
+import { getCareBasicInfo } from '../../../apis/my/careMy';
 import { CareInfo as Info } from '../../../types/userInfo';
 
 const CareInfo = () => {

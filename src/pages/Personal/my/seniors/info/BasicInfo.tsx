@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getSeniorBasicInfo } from '../../../../../shared/apis/my/seniorMy';
+import { getSeniorBasicInfo } from '../../../apis/my/seniorMy';
 import {
   Info,
   JobTypeLabel,

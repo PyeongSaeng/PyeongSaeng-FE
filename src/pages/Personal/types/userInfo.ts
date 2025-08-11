@@ -70,6 +70,12 @@ export type CareInfo = {
   phone: string;
 };
 
+export type LinkedSenior = {
+  seniorId: number;
+  seniorName: string;
+  seniorPhone: string;
+};
+
 // 공통
 
 // 비밀번호 변경

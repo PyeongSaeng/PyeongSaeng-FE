@@ -30,7 +30,7 @@ import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 import KakaoCallback from '../pages/Personal/KakaoCallback';
-import CareSeniorDetail from '../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
+import CareSeniorDetail from '../shared/components/topbar/menu/personal-menu/LinkedSeniorDetail';
 import CareInfo from '../pages/Personal/my/cares/info/CareInfo';
 import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 
@@ -100,7 +100,7 @@ const AppRoutes = () => {
         element={<PersonalDeleteAccountDone />}
       ></Route>
       {/* <Route
-        path="/personal/my/seniors/:seniorId"
+        path="/personal/care-my/seniors/:seniorId"
         element={<CareSeniorDetail />}
       ></Route> */}
       <Route path="/personal/find-account" element={<FindAccount />}></Route>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Info } from '../../../types/userInfo';
-import { getSeniorBasicInfo } from '../../../../../shared/apis/my/seniorMy';
+import { getSeniorBasicInfo } from '../../../apis/my/seniorMy';
 import { JobTypeLabel, ExperiencePeriodLabel } from '../../../types/userInfo';
 import {
   formatPhone,

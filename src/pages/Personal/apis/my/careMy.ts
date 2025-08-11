@@ -1,4 +1,4 @@
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '../../../../shared/apis/axiosInstance';
 
 // 보호자 기본정보 조회
 export const getCareBasicInfo = async (endpoint: string) => {
