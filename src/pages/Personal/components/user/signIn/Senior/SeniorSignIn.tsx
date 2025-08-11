@@ -134,7 +134,7 @@ const SeniorSignIn = () => {
 
   return (
     <div>
-      <TopbarForLogin />
+      <TopbarForLogin showToggle={false} />
 
       {step === 1 && !isFromKakao && (
         <SeniorStep1

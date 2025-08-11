@@ -263,7 +263,7 @@ const CareSignIn = () => {
   };
 
   return (
-    <TopbarForLogin>
+    <TopbarForLogin showToggle={false}>
       {step === 1 && !isFromKakao && (
         <CareStep1
           state={step1State}
