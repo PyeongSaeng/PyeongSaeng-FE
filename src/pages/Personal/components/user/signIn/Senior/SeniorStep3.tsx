@@ -119,7 +119,7 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
   };
 
   return (
-    <div className="px-[2rem] pt-[2rem] pb-[4rem] min-h-screen bg-white">
+    <div className="px-[2rem] pt-[2rem] pb-[10rem] min-h-screen bg-white">
       <SignUpHeader title="구직자 정보 입력" />
 
       {isFromKakao && (
@@ -267,7 +267,7 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
         </div>
 
         {/* 경력 기간 선택 */}
-        <div className="flex gap-[6.5rem] w-full">
+        <div className="flex gap-[6.5rem] w-full mb-[8rem]">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             기간
           </div>

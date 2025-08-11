@@ -110,7 +110,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
 
   return (
     <div
-      className={`flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem] ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
+      className={`flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem] pb-[10rem] ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
     >
       <SignUpHeader title="구직자 정보 입력" />
       <div className="w-[29.4rem] flex flex-col items-center gap-[1rem]">
