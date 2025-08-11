@@ -9,7 +9,7 @@ const CompanyFindAccount = () => {
   const [activeTab, setActiveTab] = useState<TabType>('id');
 
   return (
-    <TopbarForLogin>
+    <TopbarForLogin showToggle={false}>
       <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
         <div className="w-[29.4rem]">
           {/* 헤더 */}

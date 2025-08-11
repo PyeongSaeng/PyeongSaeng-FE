@@ -178,7 +178,7 @@ const CompanySignin = () => {
   };
 
   return (
-    <TopbarForLogin>
+    <TopbarForLogin showToggle={false}>
       <div className="flex flex-col items-center w-full pt-8 px-[3.3rem]">
         {/* 성공/에러 메시지 영역 완전 제거 */}
 
