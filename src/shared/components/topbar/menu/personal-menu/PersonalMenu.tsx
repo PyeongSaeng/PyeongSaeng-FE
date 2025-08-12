@@ -5,6 +5,7 @@ import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
 import LinkedSeniorDetail from './LinkedSeniorDetail';
 import LinkedSeniorList from './LinkedSeniorList';
+import { LinkedSenior } from '../../../../../pages/Personal/types/userInfo';
 
 type MenuType =
   | 'main'
@@ -13,14 +14,14 @@ type MenuType =
   | 'linkedSeniors'
   | 'linkedSeniorDetail';
 
-type MenuState = { menu: MenuType; seniorId?: number };
+type MenuState = { menu: MenuType; seniorData?: LinkedSenior };
 
 const PersonalMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [menuStack, setMenuStack] = useState<MenuState[]>([{ menu: 'main' }]);
 
-  const goToMyMenu = (menu: MenuType, seniorId?: number) => {
-    setMenuStack((prev) => [...prev, { menu, seniorId }]);
+  const goToMyMenu = (menu: MenuType, seniorData?: LinkedSenior) => {
+    setMenuStack((prev) => [...prev, { menu, seniorData }]);
   };
 
   const goBack = () => {
@@ -63,7 +64,7 @@ const PersonalMenu = () => {
           )}
           {currentMenu.menu === 'linkedSeniorDetail' && (
             <LinkedSeniorDetail
-              seniorId={menuStack[menuStack.length - 1].seniorId || 0}
+              seniorData={menuStack[menuStack.length - 1].seniorData || null}
             />
           )}
         </div>

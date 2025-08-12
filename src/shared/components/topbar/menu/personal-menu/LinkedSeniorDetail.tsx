@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LinkedSenior } from '../../../../../pages/Personal/types/userInfo';
 
 interface LinkedSeniorDetailProps {
-  seniorId: number;
+  seniorData: LinkedSenior | null;
 }
 
-const LinkedSeniorDetail = ({ seniorId }: LinkedSeniorDetailProps) => {
+const LinkedSeniorDetail = ({ seniorData }: LinkedSeniorDetailProps) => {
   const navigate = useNavigate();
 
   return (
@@ -14,7 +14,7 @@ const LinkedSeniorDetail = ({ seniorId }: LinkedSeniorDetailProps) => {
         내 정보
       </div>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <div className="text-[24px]">{seniorId}</div>
+        <div className="text-[24px]">{seniorData?.seniorName}</div>
         <button onClick={() => navigate('/personal/my/info/extra')}>
           신청 결과
         </button>

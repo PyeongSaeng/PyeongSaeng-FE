@@ -3,12 +3,12 @@ import { IoAddOutline, IoChevronForward } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import { LinkedSenior } from '../../../../../pages/Personal/types/userInfo';
 import { getLinkedSeniorList } from '../../../../../pages/Personal/apis/my/seniorMy';
-import spinner from '../../../../assets/spinner.gif';
+import Loading from '../../../Loading';
 
 const LinkedSeniorList = ({
   goNext,
 }: {
-  goNext: (menu: any, seniorId: number) => void;
+  goNext: (menu: any, seniorData: LinkedSenior) => void;
 }) => {
   const navigate = useNavigate();
 
@@ -35,15 +35,7 @@ const LinkedSeniorList = ({
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <img
-          className="w-[50px] h-[50px] transform translate-y-[-80px]"
-          src={spinner}
-          alt="로딩 중..."
-        />
-      </div>
-    );
+    return <Loading />;
   }
 
   // if (error) {
@@ -59,7 +51,7 @@ const LinkedSeniorList = ({
         {linkedSeniors?.map((senior) => (
           <button
             key={senior.seniorId}
-            onClick={() => goNext('linkedSeniorDetail', senior.seniorId)}
+            onClick={() => goNext('linkedSeniorDetail', senior)}
           >
             <div className="flex justify-center items-center gap-[10px] text-[16px]">
               {`${senior.seniorName} 님`}
