@@ -1,7 +1,22 @@
+import { useEffect, useState } from 'react';
+import { usePopularJobs } from '../hooks/usePopularJobs';
 import HomeTopButton from '../../../shared/components/buttons/HomeTopButton';
 import dummy1 from '../../../shared/assets/popular-dummy1.png';
 
 const HomeAfterLogin = () => {
+  const token = localStorage.getItem("accessToken") ?? undefined;
+  const [page] = useState(1);
+  const { jobs, fetchPopular, loading, error } = usePopularJobs(token);
+
+  useEffect(() => {
+    fetchPopular(page);
+  }, [fetchPopular, page]);
+
+  const handleImgError: React.ReactEventHandler<HTMLImageElement> = (e) => {
+    e.currentTarget.src = dummy1;
+    e.currentTarget.onerror = null;
+  };
+  
   return (
     <div className="flex justify-center font-[pretendard] text-[16px]">
       <div className="flex flex-col justify-center items-center">
@@ -44,22 +59,38 @@ const HomeAfterLogin = () => {
             이번 주 지원이 많은 공고
           </span>
           <div className="h-[348px] overflow-y-scroll scrollbar-hide">
-            <div className="w-[298px] h-[196px] mt-[2px] mb-[17px] flex flex-col items-center justify-center gap-[12px] rounded-[13px] border-[1px] border-[#D3D3D3]">
-              <span>죽전 2동 행정복지센터 미화원</span>
-              <img
-                className="rounded-[8px] border-[1px] border-[#A4A4A4]"
-                src={dummy1}
-                alt="더미1"
-              />
-            </div>
-            <div className="w-[298px] h-[196px] mb-[17px] flex flex-col items-center justify-center gap-[12px] rounded-[13px] border-[1px] border-[#D3D3D3]">
-              <span>죽전 2동 행정복지센터 미화원</span>
-              <img
-                className="rounded-[8px] border-[1px] border-[#A4A4A4]"
-                src={dummy1}
-                alt="더미1"
-              />
-            </div>
+            {loading && (
+              <>
+                <div className="w-[298px] h-[196px] mb-[17px] rounded-[13px] border-[1px] border-[#D3D3D3] animate-pulse" />
+                <div className="w-[298px] h-[196px] mb-[17px] rounded-[13px] border-[1px] border-[#D3D3D3] animate-pulse" />
+              </>
+            )}
+
+            {error && !loading && (
+              <div className="text-[14px] text-[#ff4d4f] mt-[8px] w-[298px]">인기 공고를 불러오지 못했어요.</div>
+            )}
+
+            {!loading && !error && jobs.length === 0 && (
+              <div className="text-[14px] text-[#888] mt-[8px] w-[298px]">표시할 공고가 없습니다.</div>
+            )}
+
+            {!loading && !error &&
+              jobs.map(job => (
+                <div
+                  key={job.id}
+                  className="w-[298px] h-[196px] mb-[17px] flex flex-col items-center justify-center gap-[12px] rounded-[13px] border-[1px] border-[#D3D3D3]"
+                >
+                  <span className="px-[10px] text-center text-[14px] font-medium">
+                    {job.roadAddress}
+                  </span>
+                  <img
+                    className="rounded-[8px] border-[1px] border-[#A4A4A4] max-h-[128px] max-w-[268px] object-cover"
+                    src={job.images?.[0]?.imageUrl ?? dummy1}
+                    alt={job.title}
+                    onError={handleImgError}
+                  />
+                </div>
+              ))}
           </div>
         </div>
       </div>

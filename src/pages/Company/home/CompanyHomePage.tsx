@@ -6,8 +6,11 @@ const CompanyHomePage = () => {
   return (
     <div>
       <Topbar>
-        <HomeBeforeLogin />
-        {/* <HomeAfterLogin /> */}
+        {localStorage.getItem('accessToken') ? (
+          <HomeAfterLogin />
+        ) : (
+          <HomeBeforeLogin />
+        )}
       </Topbar>
     </div>
   );
