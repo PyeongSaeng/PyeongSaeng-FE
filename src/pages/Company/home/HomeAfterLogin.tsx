@@ -18,7 +18,7 @@ const HomeAfterLogin = () => {
   };
   
   return (
-    <div className="flex justify-center font-[pretendard] text-[16px]">
+    <div className="flex justify-center text-[16px]">
       <div className="flex flex-col justify-center items-center">
         <div className="py-[16px]">
           <div className="flex gap-[4px]">
@@ -67,11 +67,11 @@ const HomeAfterLogin = () => {
             )}
 
             {error && !loading && (
-              <div className="text-[14px] text-[#ff4d4f] mt-[8px] w-[298px]">인기 공고를 불러오지 못했어요.</div>
+              <div className="text-[16px] text-[#ff4d4f] mt-[8px] w-[298px]">인기 공고를 불러오지 못했어요.</div>
             )}
 
             {!loading && !error && jobs.length === 0 && (
-              <div className="text-[14px] text-[#888] mt-[8px] w-[298px]">표시할 공고가 없습니다.</div>
+              <div className="text-[16px] text-[#707070] mt-[35px] w-[298px] ">표시할 공고가 없습니다. <br/> 새로운 공고를 추가해주세요!</div>
             )}
 
             {!loading && !error &&
