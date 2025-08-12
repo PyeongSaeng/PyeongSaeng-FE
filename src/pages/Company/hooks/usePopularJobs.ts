@@ -22,7 +22,7 @@ export function usePopularJobs(token?: string) {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get<JobListDTO>(`${baseURL}/api/jobposts/popular`, {
+      const res = await axios.get<JobListDTO>(`${baseURL}/api/job/companies/me/posts/popularity`, {
         params: { page },
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
