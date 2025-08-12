@@ -10,9 +10,9 @@ const CareMyMenu = ({ goNext }: { goNext: (menu: any) => void }) => {
         <button onClick={() => goNext('linkedSeniors')}>
           {'케어 중인 어르신 >'}
         </button>
-        <MenuNavButton url="personal/care-my/info">개인정보</MenuNavButton>
+        <MenuNavButton url="/personal/care-my/info">개인정보</MenuNavButton>
         <MenuNavButton url="">로그아웃</MenuNavButton>
-        <MenuNavButton url="/my/delete-account">회원탈퇴</MenuNavButton>
+        <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>
   );

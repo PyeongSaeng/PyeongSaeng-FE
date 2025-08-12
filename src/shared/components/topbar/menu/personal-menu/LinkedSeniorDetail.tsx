@@ -22,7 +22,11 @@ const LinkedSeniorDetail = ({
           <div className="flex flex-col items-start gap-[23px] text-[16px]">
             <div className="text-[24px]">{seniorData?.seniorName}</div>
             <button
-              onClick={() => navigate('/personal/care-my/application-results')}
+              onClick={() =>
+                navigate('/personal/care-my/application-results', {
+                  state: { seniorData },
+                })
+              }
             >
               신청 결과
             </button>

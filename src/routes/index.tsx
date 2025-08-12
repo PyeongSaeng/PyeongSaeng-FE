@@ -33,6 +33,8 @@ import KakaoCallback from '../pages/Personal/KakaoCallback';
 import CareInfo from '../pages/Personal/my/cares/info/CareInfo';
 import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
+import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
+import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
 
 const AppRoutes = () => {
   return (
@@ -133,7 +135,14 @@ const AppRoutes = () => {
         element={<ApplicationResultsPage />}
       ></Route>
       <Route path="/company/my" element={<></>}></Route>
-      <Route path="/company/my/delete-account" element={<></>}></Route>
+      <Route
+        path="/company/delete-account"
+        element={<CompanyDeleteAccount />}
+      ></Route>
+      <Route
+        path="/company/delete-account/done"
+        element={<CompanyDeleteAccountDone />}
+      ></Route>
       <Route
         path="/company/find-account"
         element={<CompanyFindAccount />}
