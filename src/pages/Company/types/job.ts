@@ -71,6 +71,8 @@ export interface JobPostList {
   id: number;
   state: "RECRUITING" | "CLOSED" | string;
   title: string;
+  roadAddress: string,
+  description: string,
   images: Image[];
 }
 export interface Image {

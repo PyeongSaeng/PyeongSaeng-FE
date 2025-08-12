@@ -18,10 +18,16 @@ export default function CompanyCreateFormPage({
   onSubmit,
   submitting = false,
 }: Props) {
-  // 1) 초깃값은 draft에서 "한 번만" 복원 (watch 안 함)
+  // 1) 초깃값은 draft에서 "한 번만" 복원 (watch 안 함) 문자 정규화
   const [fields, setFields] = useState<JobPostFormField[]>(() => {
     const all = (draft.formFieldList ?? BASE_FORM_FIELDS) as JobPostFormField[];
-    return all.slice(BASE_FORM_FIELDS.length).filter(f => !!f.fieldName);
+    return all
+      .slice(BASE_FORM_FIELDS.length)
+      .filter(f => !!f.fieldName)
+      .map(f => ({
+        fieldName: f.fieldName!,
+        fieldType: (String(f.fieldType || "TEXT").toUpperCase() as "TEXT" | "IMAGE"),
+      }));
   });
 
   const [inputValue, setInputValue] = useState("");

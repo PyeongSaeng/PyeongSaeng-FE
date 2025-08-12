@@ -1,4 +1,3 @@
-// src/pages/company/CompanyJobListPage.tsx
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Topbar from "../../shared/components/topbar/Topbar";
@@ -194,7 +193,7 @@ export default function CompanyJobListPage() {
                                     <div key={job.id} className="mt-[31px] flex flex-col items-center">
                                         {/* 제목 */}
                                         <div className="font-400 text-[16px] text-[#000000]">
-                                            {job.title}
+                                            {job.roadAddress}
                                         </div>
 
                                         {/* 이미지 */}
@@ -216,7 +215,7 @@ export default function CompanyJobListPage() {
                                                 onClick={() => handleDelete(job.id)}
                                                 disabled={deleting && deletingId === job.id}
                                                 className={`w-[144px] h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium
-                          ${deleting && deletingId === job.id
+                                                ${deleting && deletingId === job.id
                                                         ? "border-[#cccccc] bg-[#f5f5f5] text-[#9e9e9e] cursor-not-allowed"
                                                         : "border-[#0D29B7] bg-white text-black hover:bg-[#DBDFF4]"}`}
                                             >
