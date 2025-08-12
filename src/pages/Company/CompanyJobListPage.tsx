@@ -1,4 +1,3 @@
-// src/pages/company/CompanyJobListPage.tsx
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Topbar from "../../shared/components/topbar/Topbar";

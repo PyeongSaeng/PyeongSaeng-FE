@@ -1,9 +1,10 @@
-import { ReactNode } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 
 interface HomeTopButtonProps {
   children: ReactNode;
   bgColor: 'green' | 'blue';
   textColor: 'white' | 'black';
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 const bgColorMap = {
@@ -20,10 +21,12 @@ const HomeTopButton = ({
   children,
   bgColor,
   textColor,
+  ...rest
 }: HomeTopButtonProps) => {
   return (
     <button
       className={`flex justify-center items-center w-[102px] h-[65px] rounded-[8px] px-[12px] text-[16px] ${bgColorMap[bgColor]} ${textColorMap[textColor]}`}
+      {...rest}
     >
       {children}
     </button>
