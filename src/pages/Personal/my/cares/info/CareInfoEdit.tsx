@@ -8,8 +8,8 @@ import {
   normalizePhone,
 } from '../../../../../shared/utils/userInfoUtils';
 import { diff } from '../../../../../shared/utils/userInfoUtils';
-import spinner from '../../../../../shared/assets/spinner.gif';
 import axiosInstance from '../../../../../shared/apis/axiosInstance';
+import Loading from '../../../../../shared/components/Loading';
 
 const CareInfoEdit = () => {
   const navigate = useNavigate();
@@ -74,11 +74,7 @@ const CareInfoEdit = () => {
   // }
 
   if (!originalInfo) {
-    return (
-      <div className="flex justify-center items-center">
-        <img src={spinner} alt="로딩 스피너" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

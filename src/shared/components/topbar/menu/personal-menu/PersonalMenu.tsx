@@ -60,11 +60,12 @@ const PersonalMenu = () => {
             <SeniorMyMenu goNext={goToMyMenu} />
           )}
           {currentMenu.menu === 'linkedSeniors' && (
-            <LinkedSeniorList goNext={goToMyMenu} />
+            <LinkedSeniorList goNext={goToMyMenu} goBack={goBack} />
           )}
           {currentMenu.menu === 'linkedSeniorDetail' && (
             <LinkedSeniorDetail
               seniorData={menuStack[menuStack.length - 1].seniorData || null}
+              goBack={goBack}
             />
           )}
         </div>

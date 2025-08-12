@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
-import { getSeniorBasicInfo } from '../../../apis/my/seniorMy';
+import { getSeniorData } from '../../../apis/my/seniorMy';
 
 const questions = [
   'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',
@@ -30,7 +30,7 @@ const ExtraInfo = () => {
 
   // api 구현 안됨 + 시니어 아이디 넣기
   useEffect(() => {
-    getSeniorBasicInfo(`/api/seniors/${18}/questions`)
+    getSeniorData(`/api/seniors/${18}/questions`)
       .then((data) => setInfo(data))
       .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
   }, []);

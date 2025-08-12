@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Info } from '../../../types/userInfo';
-import { getSeniorBasicInfo } from '../../../apis/my/seniorMy';
+import { getSeniorData } from '../../../apis/my/seniorMy';
 import { JobTypeLabel, ExperiencePeriodLabel } from '../../../types/userInfo';
 import {
   formatPhone,
   normalizePhone,
   diff,
 } from '../../../../../shared/utils/userInfoUtils';
-import spinner from '../../../../../shared/assets/spinner.gif';
+import Loading from '../../../../../shared/components/Loading';
 
 type OutletContext = { setChanges: (changes: Partial<Info>) => void };
 
@@ -21,7 +21,7 @@ const BasicInfoEdit = () => {
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
 
   useEffect(() => {
-    getSeniorBasicInfo('/api/user/senior/me')
+    getSeniorData('/api/user/senior/me')
       .then((data) => {
         const me = data.result as Info;
         setOriginalInfo(me);
@@ -65,11 +65,7 @@ const BasicInfoEdit = () => {
   // }
 
   if (!originalInfo) {
-    return (
-      <div className="flex justify-center items-center">
-        <img src={spinner} alt="로딩 스피너" />
-      </div>
-    );
+    return <Loading />;
   }
 
   // 주소 검색 기능 구현 필요

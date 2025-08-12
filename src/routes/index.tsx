@@ -88,6 +88,11 @@ const AppRoutes = () => {
         element={<LinkingSenior />}
       ></Route>
       <Route
+        path="/personal/care-my/application-results"
+        element={<ApplyResults />}
+      ></Route>
+      {/* <Route path="/personal/care-my/extra" element={<></>}></Route> */}
+      <Route
         path="/personal/password-edit"
         element={<PersonalPasswordEdit />}
       ></Route>
