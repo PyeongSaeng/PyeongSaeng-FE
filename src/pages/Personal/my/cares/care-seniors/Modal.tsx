@@ -14,7 +14,7 @@ const Modal = ({ children, setModal }: ModalProps) => {
           <IoClose size={24} />
         </button>
       </div>
-      <div className="w-[full] h-[full] flex flex-col justify-center items-center">
+      <div className="w-full h-full flex flex-col items-center pt-[20px]">
         {children}
       </div>
     </div>

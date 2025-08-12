@@ -57,11 +57,11 @@ const LinkedSeniorList = ({
       </div>
       <div className="flex flex-col items-start gap-[23px] text-[16px] font-[400] border-b-[1.3px] border-[#CCCCCC] pt-[30px] pb-[20px]">
         {linkedSeniors?.map((senior) => (
-          <button onClick={() => goNext('linkedSeniorDetail', senior.seniorId)}>
-            <div
-              key={senior.seniorId}
-              className="flex justify-center items-center gap-[10px] text-[16px]"
-            >
+          <button
+            key={senior.seniorId}
+            onClick={() => goNext('linkedSeniorDetail', senior.seniorId)}
+          >
+            <div className="flex justify-center items-center gap-[10px] text-[16px]">
               {`${senior.seniorName} 님`}
               <IoChevronForward />
             </div>
