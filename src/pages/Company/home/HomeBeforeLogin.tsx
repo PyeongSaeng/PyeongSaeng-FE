@@ -4,7 +4,7 @@ import dummy1 from '../../../shared/assets/popular-dummy1.png';
 const HomeBeforeLogin = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex justify-center font-[pretendard] text-[16px]">
+    <div className="flex justify-center text-[16px]">
       <div>
         <div className="w-[298px] h-[180px] mt-[16px] mb-[40px] flex flex-col items-center justify-center gap-[27px] rounded-[13px] border-[1px] border-[#D3D3D3]">
           <div className="flex flex-col items-center">

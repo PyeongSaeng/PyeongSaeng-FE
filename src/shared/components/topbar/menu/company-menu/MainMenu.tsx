@@ -26,6 +26,12 @@ const MainMenu = ({ goNext }: MainMenuProps) => {
           받은 신청서
         </MenuNavButton>
         <button onClick={goNext}>내 기업 정보</button>
+        <MenuNavButton url="/company/jobs/application/results">
+          신청 결과 입력
+        </MenuNavButton>
+        <MenuNavButton url="/company/my">내 기업 정보</MenuNavButton>
+        <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
+        <MenuNavButton url="/company/my/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>
   );

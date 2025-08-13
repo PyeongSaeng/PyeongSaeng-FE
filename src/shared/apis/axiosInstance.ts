@@ -26,8 +26,8 @@ axiosInstance.interceptors.request.use(
 // 응답 인터셉터 - 토큰 저장 및 만료 처리 (28-42번째 줄 수정)
 axiosInstance.interceptors.response.use(
   (response) => {
-    // 로그인 성공 시 accessToken과 role 저장
-    if (response.config.url?.includes('/auth/login')) {
+    // 로그인 성공 시 accessToken과 role 저장 (개인 + 기업 로그인)
+    if (response.config.url?.includes('/auth/login') || response.config.url?.includes('/companies/login')) {
       
       // result 안에 accessToken이 있는지 확인
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
@@ -39,8 +39,8 @@ axiosInstance.interceptors.response.use(
         console.error('accessToken을 찾을 수 없음:', response.data);
       }
 
-      // role 저장 
-      if (role) {
+      // role 저장 - SENIOR, PROTECTOR만 저장 (기업 로그인은 role 저장하지 않음)
+      if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
     }
@@ -48,12 +48,13 @@ axiosInstance.interceptors.response.use(
     // OAuth 토큰 교환 시에도 동일하게 처리
     if (response.config.url?.includes('/token/exchange')) {
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
-      const role = response.data.result?.role; // 카카오 로그인도 role 저장
+      const role = response.data.result?.role;
       
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
       }
-      if (role) {
+      // SENIOR, PROTECTOR만 저장
+      if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
     }
@@ -67,7 +68,8 @@ axiosInstance.interceptors.response.use(
         localStorage.setItem('accessToken', accessToken);
         console.log('카카오 회원가입 Token 저장됨');
       }
-      if (role) {
+      // SENIOR, PROTECTOR만 저장
+      if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
         console.log('카카오 회원가입 Role 저장됨:', role);
       }
@@ -76,6 +78,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   
+  // 에러 처리
   async (error: AxiosError<any>) => {
     const originalRequest = error.config as AxiosRequestConfig & {
       _retry?: boolean;

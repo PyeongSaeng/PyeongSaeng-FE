@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLogout } from '../../../../pages/Personal/hooks/useLogout';
+import { useLogout } from '../../../../shared/hooks/useLogout';
 
 interface MenuButtonProps {
   children: ReactNode;
