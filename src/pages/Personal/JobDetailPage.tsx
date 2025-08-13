@@ -3,7 +3,7 @@ import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
 
 const JobDetailPage = () => {
-    
+
     const { jobId } = useParams();
     const navigate = useNavigate();
     const jobPostId = Number(jobId);
@@ -53,15 +53,29 @@ const JobDetailPage = () => {
                         />
                     </div>
                     {/* 정보 카드 */}
-                    <div className="w-[297px] px-[17px] py-[10px] mt-[22px] border-[1.3px] border-[var(--main-green)] rounded-[13px] bg-white text-[14px] font-normal text-[var(--gray-800)]">
-                        <p className="text-[16px] font-semibold text-[var(--gray-800)] mb-[10px]">
+                    {/* 정보 카드 */}
+                    <div className="w-[297px] px-[17px] py-[17px] mt-[19px] border-[1.3px] border-[var(--main-green)] rounded-[13px] bg-white text-[14px] font-normal text-[var(--gray-800)]">
+                        <p className="text-[16px] font-semibold text-[var(--gray-800)] mb-[22px]">
                             {job.title}
                         </p>
-                        <p>거리: {job.travelTime}</p>
-                        <p>시급: {job.hourlyWage?.toLocaleString()}원</p>
-                        <p>근무시간: {job.workingTime}</p>
-                        <p>월급: {job.monthlySalary ? `${job.monthlySalary.toLocaleString()}원` : '-'}</p>
+                        <div className="flex justify-between mb-1">
+                            <span>거리</span>
+                            <span>{job.travelTime}</span>
+                        </div>
+                        <div className="flex justify-between mb-1">
+                            <span>시급</span>
+                            <span>{job.hourlyWage?.toLocaleString()}원</span>
+                        </div>
+                        <div className="flex justify-between mb-1">
+                            <span>근무시간</span>
+                            <span>{job.workingTime}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>월급</span>
+                            <span>{job.monthlySalary ? `${job.monthlySalary.toLocaleString()}원` : '-'}</span>
+                        </div>
                     </div>
+
                     {/* 하단 버튼 */}
                     <div className="w-[301px] flex gap-[13px] mt-[36px]">
                         <button
