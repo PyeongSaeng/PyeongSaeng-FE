@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
-import { useRecommendedJobs } from './hooks/useRecommendedJobs';
+import { useRecommendedJobs } from './hooks/useRecommend';
 
 const JobRecommendationPage = () => {
   const navigate = useNavigate();
