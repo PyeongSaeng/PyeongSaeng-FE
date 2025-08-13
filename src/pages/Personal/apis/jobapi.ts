@@ -25,6 +25,6 @@ async function getResult<T>(url: string, params?: Record<string, any>) {
 
 //맞춤 채용공고 추천
 export function apiGetRecommendations(userId: number) {
-  return getResult<JobRecommendation[]>("/job/recommendations", { userId });
+  return getResult<JobRecommendation[]>("/api/job/recommendations", { userId });
 }
 
