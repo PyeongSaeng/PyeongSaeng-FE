@@ -1,9 +1,26 @@
 import { useState } from 'react';
 import { IoClose, IoMenu } from 'react-icons/io5';
 import MainMenu from './MainMenu';
+import CompanyMyMenu from './CompanyMyMenu';
+
+type MenuType = 'my' | 'main';
 
 const CompanyMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [menu, setMenu] = useState<'my' | 'main'>('main');
+
+  const goToMyMenu = () => {
+    setMenu('my');
+  };
+
+  const goBack = () => {
+    setMenu('main');
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
+    setMenu('main');
+  };
 
   return (
     <>
@@ -18,9 +35,10 @@ const CompanyMenu = () => {
       {isOpen && (
         <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
-            <IoClose size={27} onClick={() => setIsOpen(false)} />
+            <IoClose size={27} onClick={closeMenu} />
           </div>
-          <MainMenu />
+          {menu === 'main' && <MainMenu goNext={goToMyMenu} />}
+          {menu === 'my' && <CompanyMyMenu />}
         </div>
       )}
     </>
