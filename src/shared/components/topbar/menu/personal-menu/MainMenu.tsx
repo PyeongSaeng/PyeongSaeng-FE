@@ -17,14 +17,21 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
   const navigate = useNavigate();
 
   const myMenu = localStorage.getItem('userRole');
+  const accessToken = localStorage.getItem('accessToken');
 
   return (
     <div className="px-[8px]">
       <button
         className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]"
-        onClick={() => navigate('/personal/login')}
+        onClick={() => {
+          accessToken
+            ? navigate('/personal/login')
+            : myMenu === 'SENIOR'
+              ? navigate('/personal/senior-my/info/basic')
+              : navigate('/personal/care-my/info');
+        }}
       >
-        {localStorage.getItem('accessToken') ? '안녕하세요' : '로그인 하세요'}
+        {accessToken ? '안녕하세요' : '로그인 하세요'}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">

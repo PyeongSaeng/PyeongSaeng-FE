@@ -21,7 +21,6 @@ const PersonalDeleteAccount = () => {
         const res = await axiosInstance.delete('/api/user/withdraw', {
           data: { confirmed: true },
         });
-        console.log(res);
         alert(res.data.message);
         navigate('/personal/my/delete-account/done');
       } catch (error) {
