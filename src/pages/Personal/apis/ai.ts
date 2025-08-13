@@ -6,7 +6,6 @@ import {
   ResGenerateAnswer,
 } from '../types/ai';
 
-// 키워드 추천 생성
 export const postGenerateKeywords = async (
   body: ReqGenerateKeywords
 ): Promise<ResGenerateKeywords['result']> => {
@@ -17,7 +16,6 @@ export const postGenerateKeywords = async (
   return data.result;
 };
 
-// 문장 자동 생성
 export const postGenerateAnswer = async (
   body: ReqGenerateAnswer
 ): Promise<ResGenerateAnswer['result']> => {

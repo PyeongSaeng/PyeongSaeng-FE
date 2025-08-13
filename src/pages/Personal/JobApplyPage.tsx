@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -8,44 +8,34 @@ import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormS
 import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
-
 import { postGenerateKeywords, postGenerateAnswer } from './apis/ai';
 import { postApplicationDirect } from './apis/applications';
-import { postUploadImage } from './apis/files';
+import { uploadFileAndGetKey } from './apis/files';
 import type { QAOption } from './types/ai';
 import type { FieldAndAnswer } from './types/applications';
 
-// ===  실제 값으로 교체 ===
-const JOB_POST_ID = 1; // 백엔드가 준 공고 ID
-const FORMFIELD_ID_MOTIVATION = 1; // "지원동기" 필드 ID
-const FORMFIELD_ID_CERT = 2; // "자격증 이미지" 필드 ID
-
 export default function JobApplyPage() {
   const navigate = useNavigate();
-  const hasExtraQuestions = true;
+  const { jobId } = useParams<{ jobId: string }>();
 
-  // 31(choice) → 32(scaffold) → 33(final) → evidence → complete
+  const parsedJobId = Number(jobId || '1');
+
+  const motivationFieldId = 1;
+  const certFieldId = 2;
+  const hasExtraQuestions = true;
   const [step, setStep] = useState<
     'basic' | 'choice' | 'scaffold' | 'final' | 'evidence' | 'complete'
   >(hasExtraQuestions ? 'choice' : 'basic');
-
-  // 31
-  const [selected, setSelected] = useState(''); // 사용자가 선택한 옵션
+  const [selected, setSelected] = useState('');
   const MAIN_QUESTION = '지원 동기가 무엇인가요?';
 
-  // 32
   const [scaffoldText, setScaffoldText] = useState('');
   const [personalInput, setPersonalInput] = useState('');
   const [isLoadingScaffold, setIsLoadingScaffold] = useState(false);
   const [scaffoldError, setScaffoldError] = useState<string | null>(null);
-
-  // 33
   const [finalText, setFinalText] = useState('');
-
-  // 파일 업로드
   const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null);
 
-  // 예시 인적정보
   const info = useMemo(
     () => ({
       name: '김순자',
@@ -58,7 +48,13 @@ export default function JobApplyPage() {
     []
   );
 
-  // 새로고침 이탈 방지
+  useEffect(() => {
+    if (!parsedJobId || Number.isNaN(parsedJobId)) {
+      alert('유효하지 않은 채용공고 경로입니다.');
+      navigate('/personal');
+    }
+  }, [parsedJobId, navigate]);
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (step !== 'complete') {
@@ -70,7 +66,6 @@ export default function JobApplyPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [step]);
 
-  // 31 → 32 (스웨거 스펙 맞춤)
   const handleChoiceSubmit = async () => {
     if (!selected.trim()) return alert('답변을 선택해 주세요.');
     setStep('scaffold');
@@ -79,24 +74,17 @@ export default function JobApplyPage() {
     setScaffoldText('');
 
     try {
-      // answers: [{question, option}]
       const qa: QAOption[] = [{ question: MAIN_QUESTION, option: selected }];
-
-      // 1) 키워드 추천
       const keywords = await postGenerateKeywords({
         answers: qa,
         question: MAIN_QUESTION,
       });
       const picked = keywords?.[0] ?? selected;
-
-      // 2) 선택 키워드로 문장 자동 생성 (완성문 반환)
       const generated = await postGenerateAnswer({
         answers: qa,
         question: MAIN_QUESTION,
         selectedKeyword: picked,
       });
-
-      // "AI 틀" 대신 스웨거가 완성문을 반환하므로, 초안=완성문 개념으로 사용
       setScaffoldText(generated);
     } catch (e: any) {
       const msg =
@@ -109,59 +97,51 @@ export default function JobApplyPage() {
     }
   };
 
-  // 32 → 33 : 사용자가 개인경험을 곁들여 직접 수정하도록 이동
-  const handleAiCompose = async () => {
+  const handleAiCompose = () => {
     const base = scaffoldText.trim();
     if (!base) return alert('AI 문장을 먼저 생성해 주세요.');
-    // 경험 입력(personalInput)은 사용자가 33단계에서 직접 가필/수정하게 둡니다.
     setFinalText([base, personalInput.trim()].filter(Boolean).join('\n'));
     setStep('final');
   };
 
-  const handleGoHome = () => navigate('/personal');
-
-  // 제출(complete 전 단계에서 호출)
   const submitApplication = async () => {
-    if (!finalText.trim()) {
-      alert('완성본 문장을 확인해 주세요.');
-      return;
+    try {
+      if (!finalText.trim()) return alert('완성본 문장을 확인해 주세요.');
+      if (!uploadedImageFile) return alert('자격증 이미지를 업로드해 주세요.');
+
+      const keyName = await uploadFileAndGetKey(uploadedImageFile);
+
+      const fieldAndAnswer: FieldAndAnswer[] = [
+        {
+          formFieldId: motivationFieldId,
+          fieldType: 'TEXT',
+          answer: finalText,
+        },
+        {
+          formFieldId: certFieldId,
+          fieldType: 'IMAGE',
+          answer: [{ keyName, originalFileName: uploadedImageFile.name }],
+        },
+      ];
+
+      await postApplicationDirect({
+        jobPostId: parsedJobId,
+        applicationStatus: 'SUBMITTED',
+        fieldAndAnswer,
+      });
+
+      setStep('complete');
+    } catch (e: any) {
+      console.error('[submit error]', e?.response?.data ?? e);
+      alert(
+        e?.response?.data?.message ??
+          e?.message ??
+          '제출 중 오류가 발생했습니다.'
+      );
     }
-    if (!uploadedImageFile) {
-      alert('자격증 이미지를 업로드해 주세요.');
-      return;
-    }
-
-    // 1) 이미지 업로드 → keyName 확보
-    const keyName = await postUploadImage(uploadedImageFile);
-
-    // 2) fieldAndAnswer 구성 (스웨거 스키마)
-    const fieldAndAnswer: FieldAndAnswer[] = [
-      {
-        formFieldId: FORMFIELD_ID_MOTIVATION,
-        fieldType: 'TEXT',
-        answer: finalText,
-      },
-      {
-        formFieldId: FORMFIELD_ID_CERT,
-        fieldType: 'IMAGE',
-        answer: [
-          {
-            keyName,
-            originalFileName: uploadedImageFile.name,
-          },
-        ],
-      },
-    ];
-
-    // 3) 본인 직접 제출
-    await postApplicationDirect({
-      jobPostId: JOB_POST_ID,
-      applicationStatus: 'NON_STARTED', // 필요 시 DRAFT/SUBMITTED로 교체
-      fieldAndAnswer,
-    });
-
-    setStep('complete');
   };
+
+  const handleGoHome = () => navigate('/personal');
 
   return (
     <div className="pt-[10px] h-[740px] flex flex-col">
@@ -185,11 +165,10 @@ export default function JobApplyPage() {
             }
           />
 
-          {/* 완료 */}
           {step === 'complete' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
-              {hasExtraQuestions && !!finalText && (
+              {!!finalText && (
                 <div className="w-full border border-[#08D485] rounded-lg p-4 mt-4">
                   <h3 className="text-[16px] font-semibold mb-2">지원동기</h3>
                   <p className="text-[14px] text-[#333] whitespace-pre-wrap">
@@ -198,14 +177,11 @@ export default function JobApplyPage() {
                 </div>
               )}
               <div className="w-full pb-10">
-                <NextButton onClick={handleGoHome}>
-                  {hasExtraQuestions ? '홈으로 이동' : '홈으로'}
-                </NextButton>
+                <NextButton onClick={handleGoHome}>홈으로 이동</NextButton>
               </div>
             </>
           )}
 
-          {/* 29: 추가항목 없음 */}
           {step === 'basic' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
@@ -218,7 +194,6 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 31: 선택 */}
           {step === 'choice' && (
             <div className="w-full flex flex-col gap-4">
               <MotivationChoiceSection
@@ -236,7 +211,6 @@ export default function JobApplyPage() {
             </div>
           )}
 
-          {/* 32: AI 문장 + 경험 입력 */}
           {step === 'scaffold' && (
             <div className="w-full flex flex-col">
               <QuestionWriteFormSection
@@ -251,16 +225,12 @@ export default function JobApplyPage() {
                 onChange={() => {}}
                 readOnly
               />
-
               <QuestionWriteFormSection
                 title="관련된 경험을 입력해주세요"
                 inputValue={personalInput}
                 onChange={setPersonalInput}
                 placeholder="여기에 입력해주세요"
-                readOnly={false}
-                className="mb-0"
               />
-
               <NextButton
                 onClick={handleAiCompose}
                 disabled={isLoadingScaffold || !scaffoldText.trim()}
@@ -270,7 +240,6 @@ export default function JobApplyPage() {
             </div>
           )}
 
-          {/* 33: 완성본 수정 + 증빙 이동 */}
           {step === 'final' && (
             <>
               <QuestionWriteFormSection
@@ -278,10 +247,9 @@ export default function JobApplyPage() {
                 inputValue={finalText}
                 onChange={setFinalText}
                 placeholder="여기서 수정할 수 있어요"
-                readOnly={false}
               />
               <TwoButtonGroup
-                leftLabel="이잔"
+                leftLabel="임시저장"
                 rightLabel="다음"
                 onLeftClick={() => navigate('/personal/jobs/drafts')}
                 onRightClick={() => setStep('evidence')}
@@ -289,11 +257,10 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 증빙자료 + 실제 제출 */}
           {step === 'evidence' && (
             <EvidenceSection
               onSave={() => navigate('/personal/jobs/drafts')}
-              onSubmit={submitApplication} // ← 실제 제출!
+              onSubmit={submitApplication}
               onFileUpload={setUploadedImageFile}
             />
           )}

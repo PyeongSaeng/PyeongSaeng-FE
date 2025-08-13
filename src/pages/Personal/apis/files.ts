@@ -1,14 +1,48 @@
 import axiosInstance from '../../../shared/apis/axiosInstance';
-import { ResUploadImage } from '../types/files';
 
-// TODO: 실제 업로드 엔드포인트로 바꾸세요 (예: "/api/files/upload")
-export const postUploadImage = async (file: File): Promise<string> => {
-  const form = new FormData();
-  form.append('file', file);
-  const { data } = await axiosInstance.post<ResUploadImage>(
-    '/api/files/upload',
-    form,
-    { headers: { 'Content-Type': 'multipart/form-data' } }
+import type {
+  ReqPresignedUpload,
+  ResPresignedUpload,
+  ReqPresignedDownload,
+  ResPresignedDownload,
+} from '../types/files';
+
+/** 업로드용 Presigned URL 발급 */
+export const postPresignedUpload = async (fileName: string) => {
+  const { data } = await axiosInstance.post<ResPresignedUpload>(
+    '/api/s3/presigned/upload',
+    { fileName } as ReqPresignedUpload
   );
-  return data.result.keyName; // keyName 반환
+  // { keyName, url }
+  return data.result;
+};
+
+/** 실제 파일 PUT 업로드 */
+export const putFileToS3 = async (presignedUrl: string, file: File) => {
+  const contentType = file.type || 'application/octet-stream';
+  const res = await fetch(presignedUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': contentType },
+    body: file,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`S3 업로드 실패 (${res.status}): ${text}`);
+  }
+};
+
+/** 다운로드용 Presigned URL 발급 */
+export const getPresignedDownload = async (keyName: string) => {
+  const { data } = await axiosInstance.get<ResPresignedDownload>(
+    '/api/s3/presigned/download',
+    { params: { keyName } as ReqPresignedDownload }
+  );
+  return data.result.url;
+};
+
+/** 헬퍼: 파일 하나 업로드 → keyName 반환 */
+export const uploadFileAndGetKey = async (file: File): Promise<string> => {
+  const { keyName, url } = await postPresignedUpload(file.name);
+  await putFileToS3(url, file);
+  return keyName;
 };
