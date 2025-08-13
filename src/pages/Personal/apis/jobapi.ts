@@ -24,7 +24,11 @@ export function apiGetRecommendations(userId: number) {
 }
 // 일자리 상세조회
 export async function apiGetJobDetail(jobPostId: number) {
-  const { data } = await http.get<ApiEnvelope<JobDetail>>(`/job/posts/${jobPostId}`);
+  const { data } = await http.get<ApiEnvelope<JobDetail>>(`/api/job/posts/${jobPostId}`);
+  if (!data?.isSuccess || !data?.result) {
+    throw new Error(data?.message ?? "Failed to load job detail");
+  }
   return data.result;
 }
+
 
