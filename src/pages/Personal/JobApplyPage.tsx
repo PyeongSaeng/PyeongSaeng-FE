@@ -9,11 +9,16 @@ import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
 
-import {
-  postGenerateKeywords,
-  postGenerateAnswer,
-  postUpdateAnswer,
-} from './apis/ai';
+import { postGenerateKeywords, postGenerateAnswer } from './apis/ai';
+import { postApplicationDirect } from './apis/applications';
+import { postUploadImage } from './apis/files';
+import type { QAOption } from './types/ai';
+import type { FieldAndAnswer } from './types/applications';
+
+// ===  실제 값으로 교체 ===
+const JOB_POST_ID = 1; // 백엔드가 준 공고 ID
+const FORMFIELD_ID_MOTIVATION = 1; // "지원동기" 필드 ID
+const FORMFIELD_ID_CERT = 2; // "자격증 이미지" 필드 ID
 
 export default function JobApplyPage() {
   const navigate = useNavigate();
@@ -25,8 +30,8 @@ export default function JobApplyPage() {
   >(hasExtraQuestions ? 'choice' : 'basic');
 
   // 31
-  const [selected, setSelected] = useState('');
-  const questionId = 1;
+  const [selected, setSelected] = useState(''); // 사용자가 선택한 옵션
+  const MAIN_QUESTION = '지원 동기가 무엇인가요?';
 
   // 32
   const [scaffoldText, setScaffoldText] = useState('');
@@ -65,7 +70,7 @@ export default function JobApplyPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [step]);
 
-  // 31 → 32 : 즉시 화면 전환 + AI 호출
+  // 31 → 32 (스웨거 스펙 맞춤)
   const handleChoiceSubmit = async () => {
     if (!selected.trim()) return alert('답변을 선택해 주세요.');
     setStep('scaffold');
@@ -74,39 +79,89 @@ export default function JobApplyPage() {
     setScaffoldText('');
 
     try {
-      // 1) 키워드
-      const kw = await postGenerateKeywords({ questionId, selected });
-      const picked = kw.keywords?.[0] ?? selected;
+      // answers: [{question, option}]
+      const qa: QAOption[] = [{ question: MAIN_QUESTION, option: selected }];
 
-      // 2) 답변(틀)
-      const ans = await postGenerateAnswer({ questionId, keywords: [picked] });
-      setScaffoldText(ans.answer);
+      // 1) 키워드 추천
+      const keywords = await postGenerateKeywords({
+        answers: qa,
+        question: MAIN_QUESTION,
+      });
+      const picked = keywords?.[0] ?? selected;
+
+      // 2) 선택 키워드로 문장 자동 생성 (완성문 반환)
+      const generated = await postGenerateAnswer({
+        answers: qa,
+        question: MAIN_QUESTION,
+        selectedKeyword: picked,
+      });
+
+      // "AI 틀" 대신 스웨거가 완성문을 반환하므로, 초안=완성문 개념으로 사용
+      setScaffoldText(generated);
     } catch (e: any) {
       const msg =
-        e?.response?.data?.message ?? 'AI 생성 중 오류가 발생했습니다.';
+        e?.response?.data?.message ??
+        e?.message ??
+        'AI 생성 중 오류가 발생했습니다.';
       setScaffoldError(msg);
     } finally {
       setIsLoadingScaffold(false);
     }
   };
 
-  // 32 → 33 : 사용자 경험 반영
+  // 32 → 33 : 사용자가 개인경험을 곁들여 직접 수정하도록 이동
   const handleAiCompose = async () => {
-    try {
-      const res = await postUpdateAnswer({
-        questionId,
-        updatedInfo: personalInput.trim(),
-      });
-      setFinalText(res.answer);
-      setStep('final');
-    } catch (e: any) {
-      alert(
-        e?.response?.data?.message ?? '최종 문장 생성 중 오류가 발생했어요.'
-      );
-    }
+    const base = scaffoldText.trim();
+    if (!base) return alert('AI 문장을 먼저 생성해 주세요.');
+    // 경험 입력(personalInput)은 사용자가 33단계에서 직접 가필/수정하게 둡니다.
+    setFinalText([base, personalInput.trim()].filter(Boolean).join('\n'));
+    setStep('final');
   };
 
   const handleGoHome = () => navigate('/personal');
+
+  // 제출(complete 전 단계에서 호출)
+  const submitApplication = async () => {
+    if (!finalText.trim()) {
+      alert('완성본 문장을 확인해 주세요.');
+      return;
+    }
+    if (!uploadedImageFile) {
+      alert('자격증 이미지를 업로드해 주세요.');
+      return;
+    }
+
+    // 1) 이미지 업로드 → keyName 확보
+    const keyName = await postUploadImage(uploadedImageFile);
+
+    // 2) fieldAndAnswer 구성 (스웨거 스키마)
+    const fieldAndAnswer: FieldAndAnswer[] = [
+      {
+        formFieldId: FORMFIELD_ID_MOTIVATION,
+        fieldType: 'TEXT',
+        answer: finalText,
+      },
+      {
+        formFieldId: FORMFIELD_ID_CERT,
+        fieldType: 'IMAGE',
+        answer: [
+          {
+            keyName,
+            originalFileName: uploadedImageFile.name,
+          },
+        ],
+      },
+    ];
+
+    // 3) 본인 직접 제출
+    await postApplicationDirect({
+      jobPostId: JOB_POST_ID,
+      applicationStatus: 'NON_STARTED', // 필요 시 DRAFT/SUBMITTED로 교체
+      fieldAndAnswer,
+    });
+
+    setStep('complete');
+  };
 
   return (
     <div className="pt-[10px] h-[740px] flex flex-col">
@@ -121,9 +176,9 @@ export default function JobApplyPage() {
                 : step === 'choice'
                   ? '신청서에 추가할 항목이 있습니다.\n다음 질문에 답해 주세요.'
                   : step === 'scaffold'
-                    ? 'AI가 신청서의 틀을 잡았습니다.\n관련된 경험을 직접 입력해주세요.'
+                    ? 'AI가 신청서의 틀을 잡았습니다.\n관련된 경험을 직접 입력해 주세요.'
                     : step === 'final'
-                      ? '아래 완성본을 확인·수정해주세요.'
+                      ? 'AI는 실수할 수 있습니다.\n사실과 다른 부분을 수정해 주세요.'
                       : step === 'complete'
                         ? '신청 완료되었습니다.'
                         : ''
@@ -134,8 +189,6 @@ export default function JobApplyPage() {
           {step === 'complete' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
-
-              {/* 추가항목이 있을 때만 완성본 미리보기 노출 */}
               {hasExtraQuestions && !!finalText && (
                 <div className="w-full border border-[#08D485] rounded-lg p-4 mt-4">
                   <h3 className="text-[16px] font-semibold mb-2">지원동기</h3>
@@ -144,55 +197,6 @@ export default function JobApplyPage() {
                   </p>
                 </div>
               )}
-
-              {/* 추가항목이 있을 때만 업로드 노출 */}
-              {hasExtraQuestions && (
-                <div className="w-full mt-4">
-                  <label className="text-[14px] font-medium text-[#888] mb-1 block">
-                    사회복지 자격증 이미지{' '}
-                    <span className="text-red-500">(필수)</span>
-                  </label>
-                  <div className="flex w-full h-[4.5rem] items-center">
-                    <div className="flex items-center flex-1 border border-[#08D485] rounded-lg pl-4 pr-2 bg-white overflow-hidden h-full">
-                      <span
-                        className="flex-1 text-[14px] text-[#333] font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
-                        style={{ minWidth: 0 }}
-                      >
-                        {uploadedImageFile?.name ?? '이미지 없음'}
-                      </span>
-                      {uploadedImageFile && (
-                        <button
-                          type="button"
-                          className="text-[20px] text-[#333] ml-2 shrink-0"
-                          onClick={() => setUploadedImageFile(null)}
-                        >
-                          <img
-                            src="/icons/close_icon.svg"
-                            alt="삭제"
-                            className="w-[24px] h-[24px]"
-                          />
-                        </button>
-                      )}
-                    </div>
-                    <label className="ml-2 h-full cursor-pointer shrink-0">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          if (e.target.files?.[0])
-                            setUploadedImageFile(e.target.files[0]);
-                        }}
-                      />
-                      <div className="h-full px-8 flex items-center justify-center bg-[#08D485] text-white text-[14px] font-semibold rounded-lg">
-                        검색
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* 버튼 */}
               <div className="w-full pb-10">
                 <NextButton onClick={handleGoHome}>
                   {hasExtraQuestions ? '홈으로 이동' : '홈으로'}
@@ -201,7 +205,7 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 29: 추가항목 없음 → 확인/제출 */}
+          {/* 29: 추가항목 없음 */}
           {step === 'basic' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
@@ -218,7 +222,7 @@ export default function JobApplyPage() {
           {step === 'choice' && (
             <div className="w-full flex flex-col gap-4">
               <MotivationChoiceSection
-                question="Q1. 지원 동기가 무엇인가요?"
+                question={`Q1. ${MAIN_QUESTION}`}
                 choices={[
                   '경제적으로 도움을 얻으려고',
                   '사람들과 만나려고',
@@ -232,14 +236,14 @@ export default function JobApplyPage() {
             </div>
           )}
 
-          {/* 32: AI 틀 + 경험 입력 */}
+          {/* 32: AI 문장 + 경험 입력 */}
           {step === 'scaffold' && (
             <div className="w-full flex flex-col">
               <QuestionWriteFormSection
-                title="지원동기"
+                title="AI 생성 문장"
                 inputValue={
                   isLoadingScaffold
-                    ? 'AI가 틀을 작성 중입니다...'
+                    ? 'AI가 문장을 생성 중입니다...'
                     : scaffoldError
                       ? `[오류] ${scaffoldError}`
                       : scaffoldText
@@ -266,19 +270,18 @@ export default function JobApplyPage() {
             </div>
           )}
 
-          {/* 33: 완성본 수정 */}
+          {/* 33: 완성본 수정 + 증빙 이동 */}
           {step === 'final' && (
             <>
               <QuestionWriteFormSection
-                title="지원동기(완성본)"
+                title="지원동기"
                 inputValue={finalText}
                 onChange={setFinalText}
                 placeholder="여기서 수정할 수 있어요"
                 readOnly={false}
               />
-
               <TwoButtonGroup
-                leftLabel="임시저장"
+                leftLabel="이잔"
                 rightLabel="다음"
                 onLeftClick={() => navigate('/personal/jobs/drafts')}
                 onRightClick={() => setStep('evidence')}
@@ -286,11 +289,11 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 증빙자료 */}
+          {/* 증빙자료 + 실제 제출 */}
           {step === 'evidence' && (
             <EvidenceSection
               onSave={() => navigate('/personal/jobs/drafts')}
-              onSubmit={() => setStep('complete')}
+              onSubmit={submitApplication} // ← 실제 제출!
               onFileUpload={setUploadedImageFile}
             />
           )}
