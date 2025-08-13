@@ -9,3 +9,12 @@ export type CompanyInfo = {
   phone: string;
   status: string;
 };
+
+export type UpdateCompanyInfo = {
+  companyName: string;
+  ownerName: string;
+  phone: string;
+  currentPassword?: string;
+  newPassword?: string;
+  passwordChangeRequest?: boolean;
+};

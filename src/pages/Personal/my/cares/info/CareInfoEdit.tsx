@@ -55,7 +55,7 @@ const CareInfoEdit = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('클릭');
+
     if (!originalInfo || !editedInfo) return;
 
     try {

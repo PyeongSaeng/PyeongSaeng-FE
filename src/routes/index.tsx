@@ -37,6 +37,7 @@ import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
 import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
 import JobPostRepost from '../pages/Company/my/JobPostRepost';
 import CompanyInfo from '../pages/Company/my/CompanyInfo';
+import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
 
 const AppRoutes = () => {
   return (
@@ -138,6 +139,7 @@ const AppRoutes = () => {
       ></Route>
       <Route path="/company/my/repost" element={<JobPostRepost />}></Route>
       <Route path="/company/my/info" element={<CompanyInfo />}></Route>
+      <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>
       <Route
         path="/company/delete-account"
         element={<CompanyDeleteAccount />}

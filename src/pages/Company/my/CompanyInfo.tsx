@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../shared/components/topbar/Topbar';
 import { CompanyInfo as Info } from '../types/companyInfo';
 import { getCompanyData } from '../apis/companyMy';
+import Loading from '../../../shared/components/Loading';
 
 const CompanyInfo = () => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const CompanyInfo = () => {
       },
       {
         label: '사업자 아이디',
-        value: info.companyId,
+        value: info.username,
       },
       {
         label: '비밀번호',
@@ -57,29 +58,33 @@ const CompanyInfo = () => {
             기업 정보
           </div>
           <div className="h-[466px]">
-            <div className="h-full flex flex-col justify-start items-center text-[16px] font-[Pretendard] font-[500] font-[semibold]">
-              <div className="py-[6px]">
-                {infoData.map(({ label, value }) => {
-                  return (
-                    <div
-                      key={label}
-                      className="w-full flex justify-center text-black leading-[4.4]"
-                    >
-                      {label === '사업자 등록 번호' ? (
-                        <ViewInfoRow label={label} value={String(value)} />
-                      ) : (
-                        <ViewInfoCol label={label} value={value} />
-                      )}
-                    </div>
-                  );
-                })}
+            {!info ? (
+              <Loading />
+            ) : (
+              <div className="h-full flex flex-col justify-start items-center text-[16px] font-[Pretendard] font-[500] font-semibold">
+                <div className="py-[6px]">
+                  {infoData.map(({ label, value }) => {
+                    return (
+                      <div
+                        key={label}
+                        className="w-full flex justify-center text-black leading-[4.4]"
+                      >
+                        {label === '사업자 등록 번호' ? (
+                          <ViewInfoRow label={label} value={String(value)} />
+                        ) : (
+                          <ViewInfoCol label={label} value={value} />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <button
             type="button"
-            className="w-[309px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[45px]"
-            onClick={() => navigate('/personal/care-my/info/edit')}
+            className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[45px]"
+            onClick={() => navigate('/company/my/info/edit')}
           >
             수정
           </button>
@@ -102,35 +107,33 @@ type ViewInfoColProps = ViewInfoProps<number | string>;
 const ViewInfoCol = ({ label, value }: ViewInfoColProps) => {
   const labelSplit = label.split(' ');
   return (
-    <>
-      <span className="w-[140px] pl-[30px] flex justify-start items-center text-[18px] text-[#414141] leading-[1.4]">
+    <div className="flex w-[360px] h-[70px] px-[33px]">
+      <span className="w-[160px] flex justify-start items-center text-[16px] text-[#747474] leading-[1.4]">
         <div className="flex flex-col">
           {labelSplit.map((ls, idx) => (
             <span key={idx}>{ls}</span>
           ))}
         </div>
       </span>
-      <span className="w-full flex justify-center items-center text-[#C2C2C2]">
+      <span className="w-full flex justify-start items-center text-[#C2C2C2]">
         {label === '비밀번호' ? (
-          <div className="flex justify-center items-center w-[200px] h-[40px] rounded-[8px] border-[1px] border-[#E1E1E1] text-[14px] text-center">
+          <div className="flex justify-center items-center w-[226px] h-[45px] rounded-[8px] border-[1px] border-[#E1E1E1] text-[14px] text-center">
             {value}
           </div>
         ) : (
           value
         )}
       </span>
-    </>
+    </div>
   );
 };
 
 const ViewInfoRow = ({ label, value }: ViewInfoRowProps) => {
   const valueSplit = value.split('-');
   return (
-    <div className="w-[282px]">
-      <div className="flex justify-start text-[18px] text-[#414141] leading-[1.4]">
-        {label}
-      </div>
-      <div className="text-[#C2C2C2] flex justify-between items-center">
+    <div className="w-full h-[90px] px-[33px]">
+      <div className="text-[16px] text-[#747474] leading-[1.4]">{label}</div>
+      <div className="h-[58px] text-[#C2C2C2] flex justify-between items-center">
         <input
           className="w-[66px] h-[45px] text-center border-[1px] border-[#E1E1E1] rounded-[8px]"
           value={valueSplit[0]}

@@ -46,7 +46,7 @@ const PersonalMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[704px] bg-white">
+        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[703px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             {currentMenu.menu !== 'main' ? (
               <IoChevronBackOutline size={27} onClick={goBack} />

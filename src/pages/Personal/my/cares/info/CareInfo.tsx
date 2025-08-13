@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import { getCareBasicInfo } from '../../../apis/my/careMy';
 import { CareInfo as Info } from '../../../types/userInfo';
+import Loading from '../../../../../shared/components/Loading';
 
 const CareInfo = () => {
   const [info, setInfo] = useState<Info | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -36,6 +38,9 @@ const CareInfo = () => {
     ];
   }, [info]);
 
+  if (!info) {
+    return <Loading />;
+  }
   return (
     <div>
       <Topbar>
