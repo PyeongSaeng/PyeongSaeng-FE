@@ -21,12 +21,8 @@ const BeforeLoginMainMenu = ({ goNext }: BeforeLoginMainMenuProps) => {
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="/company/jobs/create-form">
-          신청서 입력
-        </MenuNavButton>
-        <MenuNavButton url="/company/jobs/applications">
-          받은 신청서
-        </MenuNavButton>
+        <MenuNavButton url="/company/login">신청서 입력</MenuNavButton>
+        <MenuNavButton url="/company/login">받은 신청서</MenuNavButton>
         <button onClick={goNext}>내 기업 정보</button>
       </div>
     </div>

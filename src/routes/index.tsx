@@ -35,6 +35,8 @@ import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
 import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
 import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
+import JobPostRepost from '../pages/Company/my/JobPostRepost';
+import CompanyInfo from '../pages/Company/my/CompanyInfo';
 
 const AppRoutes = () => {
   return (
@@ -134,7 +136,8 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:applicationId/results"
         element={<ApplicationResultsPage />}
       ></Route>
-      <Route path="/company/my" element={<></>}></Route>
+      <Route path="/company/my/repost" element={<JobPostRepost />}></Route>
+      <Route path="/company/my/info" element={<CompanyInfo />}></Route>
       <Route
         path="/company/delete-account"
         element={<CompanyDeleteAccount />}

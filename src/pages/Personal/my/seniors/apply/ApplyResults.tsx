@@ -4,7 +4,7 @@ import Topbar from '../../../../../shared/components/topbar/Topbar';
 import dummy1 from '../../../../../shared/assets/popular-dummy1.png';
 import { getSeniorData } from '../../../apis/my/seniorMy';
 
-type appyiedJobs = {
+type appliedJobs = {
   job: string;
   dueDate: string;
   dayOfWeek: string;
@@ -12,7 +12,7 @@ type appyiedJobs = {
   result: string;
 };
 
-const dummyApplies: appyiedJobs[] = [
+const dummyApplies: appliedJobs[] = [
   {
     job: '죽전2동 행정복지센터 미화원',
     dueDate: '7/20',
