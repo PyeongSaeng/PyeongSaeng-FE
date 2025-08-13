@@ -28,10 +28,11 @@ axiosInstance.interceptors.response.use(
   (response) => {
     // 로그인 성공 시 accessToken과 role 저장 (개인 + 기업 로그인)
     if (response.config.url?.includes('/auth/login') || response.config.url?.includes('/companies/login')) {
-      
+
       // result 안에 accessToken이 있는지 확인
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
-      const role = response.data.result?.role; 
+      const role = response.data.result?.role;
+      const user = response.data.result?.user || response.data.user;
 
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
@@ -43,13 +44,14 @@ axiosInstance.interceptors.response.use(
       if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
+      if (user) localStorage.setItem("user", JSON.stringify(user));
     }
 
     // OAuth 토큰 교환 시에도 동일하게 처리
     if (response.config.url?.includes('/token/exchange')) {
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
       const role = response.data.result?.role;
-      
+
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
       }
@@ -62,8 +64,8 @@ axiosInstance.interceptors.response.use(
     // 카카오 회원가입 성공 시에도 토큰 저장
     if (response.config.url?.includes('/auth/signup/kakao')) {
       const accessToken = response.data.result?.accessToken || response.data.accessToken;
-      const role = response.data.result?.role; 
-      
+      const role = response.data.result?.role;
+
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         console.log('카카오 회원가입 Token 저장됨');
@@ -77,7 +79,7 @@ axiosInstance.interceptors.response.use(
 
     return response;
   },
-  
+
   // 에러 처리
   async (error: AxiosError<any>) => {
     const originalRequest = error.config as AxiosRequestConfig & {
@@ -88,20 +90,20 @@ axiosInstance.interceptors.response.use(
 
     // accessToken 만료 에러 처리
     if (
-      error.response?.status === 401 && 
+      error.response?.status === 401 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
 
       try {
         console.log('[axiosInstance] 토큰 재발급 시도...');
-        
+
         // 토큰 갱신
         const response = await axiosInstance.post('/api/token/refresh', {});
 
         // 새 accessToken 저장
         const newAccessToken = response.data?.accessToken;
-        
+
         if (!newAccessToken) {
           throw new Error('새 액세스 토큰을 받지 못했습니다.');
         }
