@@ -1,12 +1,15 @@
-import React from 'react'
-import './App.css'
+import { BrowserRouter } from 'react-router-dom';
+import './App.css';
+import AppRoutes from './routes';
 
 const App = () => {
   return (
-    <div className="bg-blue-900">
-      Hello world
+    <div className="w-[360px] min-h-[740px] mx-auto shadow-xl bg-white overflow-y-auto">
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
