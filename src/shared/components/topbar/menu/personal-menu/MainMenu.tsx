@@ -50,7 +50,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         >
           내 정보
         </MenuNavButton>
-        <MenuNavButton>로그아웃</MenuNavButton>
+        <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
         <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>
