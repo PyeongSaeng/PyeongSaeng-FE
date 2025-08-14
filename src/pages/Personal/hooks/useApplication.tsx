@@ -1,25 +1,54 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiEnsureApplication, apiGetMyApplications } from "../apis/jobapi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiDeleteApplication, apiEnsureApplication, apiGetMyApplications, ApplicationItem } from "../apis/jobapi";
 
-// useEnsureApplication: 신청 생성 (작성 전 상태)
+// 일자리 신청 버튼 post
 const useEnsureApplication = () => {
   return useMutation({
     mutationFn: apiEnsureApplication,
   });
 };
 
-// useGetMyApplications: 본인 신청 내역 조회
+// 일자리 작성 여부 조회
 const useGetMyApplications = () => {
   return useQuery({
     queryKey: ["applications", "mine"],
     queryFn: apiGetMyApplications,
   });
 };
+// 일자리 삭제 낙관적 업데이트
+const useDeleteApplication = () => {
+  const queryClient = useQueryClient();
 
-// 이 파일에서 필요한 훅들을 모두 묶어 export
+  return useMutation({
+    mutationFn: apiDeleteApplication,
+    onMutate: async (applicationId: number) => {
+      await queryClient.cancelQueries({ queryKey: ["applications", "mine"] });
+
+      const previous = queryClient.getQueryData<ApplicationItem[]>(["applications", "mine"]);
+
+      queryClient.setQueryData<ApplicationItem[]>(["applications", "mine"], (old = []) =>
+        old.filter((app) => app.applicationId !== applicationId)
+      );
+
+      return { previous };
+    },
+    onError: (_err, _applicationId, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["applications", "mine"], context.previous);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["applications", "mine"] });
+    },
+  });
+};
+
+
+// 최종 export 부분
 export const useApplication = () => {
   return {
     useEnsureApplication,
     useGetMyApplications,
+    useDeleteApplication,
   };
 };
