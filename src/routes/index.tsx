@@ -38,6 +38,8 @@ import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDo
 import JobPostRepost from '../pages/Company/my/JobPostRepost';
 import CompanyInfo from '../pages/Company/my/CompanyInfo';
 import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
+import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
+import CompanyPasswordEditDone from '../pages/Company/my/CompanyPasswordEditDone';
 
 const AppRoutes = () => {
   return (
@@ -147,6 +149,14 @@ const AppRoutes = () => {
       <Route
         path="/company/delete-account/done"
         element={<CompanyDeleteAccountDone />}
+      ></Route>
+      <Route
+        path="/company/password-edit"
+        element={<CompanyPasswordEdit />}
+      ></Route>
+      <Route
+        path="/company/password-edit/done"
+        element={<CompanyPasswordEditDone />}
       ></Route>
       <Route
         path="/company/find-account"

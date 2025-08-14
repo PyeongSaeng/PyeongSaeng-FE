@@ -11,10 +11,10 @@ export type CompanyInfo = {
 };
 
 export type UpdateCompanyInfo = {
-  companyName: string;
-  ownerName: string;
-  phone: string;
+  companyName?: string;
+  ownerName?: string;
+  phone?: string;
   currentPassword?: string;
   newPassword?: string;
-  passwordChangeRequest?: boolean;
+  passwordChangeRequested?: boolean;
 };
