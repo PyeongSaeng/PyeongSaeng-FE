@@ -15,4 +15,4 @@ export interface IdFindResponse {
   success: boolean;
   data?: IdFindResult;
   message?: string;
-} 
+}

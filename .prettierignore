@@ -1,4 +1,12 @@
-node_modules
+# builds & deps
 dist
 build
-*.lock
+node_modules
+
+# lockfiles
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# etc
+coverage

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import Field from '../../shared/components/Field';
-import clsx from 'clsx';
 import {
   getApplicationDetails,
   patchApplicationStatus,
@@ -56,7 +56,7 @@ export default function ApplicationResultsPage() {
     const norm = v
       .normalize('NFKC')
       .replace(
-        /[\s\u00A0\u200B-\u200D\uFEFF.,!?:;'"`~(){}\[\]_+\-=\\/|<>@#%^&*]/g,
+        /[\s\u00A0\u200B-\u200D\uFEFF.,!?:;'"`~(){}[\]_+\-=\\/|<>@#%^&*]/g,
         ''
       )
       .toLowerCase();

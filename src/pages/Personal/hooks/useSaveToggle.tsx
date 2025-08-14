@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiSaveBookmark } from "../apis/jobapi"; 
-import { JobBookmarkResult } from "../types/jobs"; 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiSaveBookmark } from '../apis/jobapi';
+import { JobBookmarkResult } from '../types/jobs';
 
 export function useSaveToggle(jobPostId: number) {
   const queryClient = useQueryClient();
@@ -10,16 +10,16 @@ export function useSaveToggle(jobPostId: number) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["jobs", "saved"],
+        queryKey: ['jobs', 'saved'],
       });
-      
+
       queryClient.invalidateQueries({
-        queryKey: ["job", "detail", jobPostId],
+        queryKey: ['job', 'detail', jobPostId],
       });
     },
 
     onError: (error) => {
-      console.error("저장 실패:", error.message);
+      console.error('저장 실패:', error.message);
     },
   });
 }

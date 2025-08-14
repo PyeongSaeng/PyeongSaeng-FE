@@ -14,6 +14,8 @@ import Loading from '../../../../../shared/components/Loading';
 const CareInfoEdit = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  console.log(error); // error 상태 미사용 -> 추가
+
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);

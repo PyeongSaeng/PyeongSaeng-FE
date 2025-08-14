@@ -20,7 +20,7 @@ export interface IdFindResponse {
 // 계정 찾기용 SMS 발송 요청
 export interface AccountSMSRequest {
   phone: string;
-} 
+}
 
 // 비밀번호 재설정 인증 요청
 export interface VerifyPasswordResetRequest {
