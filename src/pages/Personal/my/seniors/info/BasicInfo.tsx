@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getSeniorBasicInfo } from '../../../../../shared/apis/info/seniorInfo';
+import { getSeniorData } from '../../../apis/my/seniorMy';
 import {
   Info,
   JobTypeLabel,
   ExperiencePeriodLabel,
 } from '../../../types/userInfo';
-import spinner from '../../../../../shared/assets/spinner.gif';
+import Loading from '../../../../../shared/components/Loading';
 
 const BasicInfo = () => {
-  const [info, setSenior] = useState<Info | null>(null);
+  const [info, setInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getSeniorBasicInfo('/api/user/senior/me')
-      .then((data) => setSenior(data.result as Info))
+    getSeniorData('/api/user/senior/me')
+      .then((data) => setInfo(data.result as Info))
       .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
   }, []);
 
@@ -21,7 +21,7 @@ const BasicInfo = () => {
     if (!info) return [];
     return [
       { label: '이름', value: info.name },
-      { label: 'id', value: info.username },
+      { label: '아이디', value: info.username },
       { label: '비밀번호', value: '수정화면에서 변경하세요' },
       { label: '나이', value: String(info.age) },
       {
@@ -42,11 +42,7 @@ const BasicInfo = () => {
   // }
 
   if (!info) {
-    return (
-      <div className="flex justify-center items-center">
-        <img src={spinner} alt="로딩 스피너" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

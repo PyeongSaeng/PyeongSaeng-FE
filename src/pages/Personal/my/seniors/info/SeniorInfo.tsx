@@ -34,8 +34,8 @@ const SeniorInfo = () => {
 
   const handleNavigateEdit = () => {
     const last = location.pathname.split('/').pop();
-    if (last === 'basic') navigate('/personal/my/info/basic/edit');
-    else if (last === 'extra') navigate('/personal/my/info/extra/edit');
+    if (last === 'basic') navigate('/personal/senior-my/info/basic/edit');
+    else if (last === 'extra') navigate('/personal/senior-my/info/extra/edit');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,13 +49,13 @@ const SeniorInfo = () => {
     try {
       await axiosInstance.patch('/api/user/senior/me', changes);
       if (lastPath === 'edit' && prevPath === 'basic') {
-        navigate('/personal/my/info/basic');
+        navigate('/personal/senior-my/info/basic');
       } else if (lastPath === 'edit' && prevPath === 'extra') {
-        navigate('/personal/my/info/extra');
+        navigate('/personal/senior-my/info/extra');
       }
     } catch (err) {
-      console.error(err);
-      alert('저장에 실패했습니다.');
+      console.error('시니어 정보 수정 실패: ', err);
+      alert('정보 수정에 실패했습니다.');
     }
   };
 

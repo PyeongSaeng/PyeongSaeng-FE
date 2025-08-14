@@ -6,7 +6,6 @@ import Topbar from '../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 import { passwordUpdate } from '../types/userInfo';
 
-
 const PersonalPasswordEdit = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
@@ -25,6 +24,7 @@ const PersonalPasswordEdit = () => {
     e.preventDefault();
 
     if (!canSubmit) return;
+    setSubmitting(true);
 
     try {
       const changes: passwordUpdate = {
@@ -35,7 +35,7 @@ const PersonalPasswordEdit = () => {
       console.log(changes);
 
       await axiosInstance.patch('/api/user/senior/me', changes);
-      navigate('/personal/my/info/basic/edit/password/done');
+      navigate('/personal/password-edit/done');
     } catch (err) {
       console.error('비밀번호 변경 실패', err);
       const error = err as AxiosError<{ message?: string }>;
@@ -45,7 +45,6 @@ const PersonalPasswordEdit = () => {
     } finally {
       setSubmitting(false);
     }
-
   };
 
   return (
@@ -63,24 +62,27 @@ const PersonalPasswordEdit = () => {
               <input
                 type="password"
                 value={currentPassword}
-                className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2]"
+                className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
                 placeholder="현재 비밀번호를 입력해주세요"
                 onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
               ></input>
               <input
                 type="password"
                 value={newPassword}
-                className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2]"
+                className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
                 placeholder="새로운 비밀번호를 입력해주세요"
                 onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
               ></input>
               <div className="flex flex-col">
                 <input
                   type="password"
                   value={confirmPassword}
-                  className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2]"
+                  className="w-[294px] h-[45px] px-[8px] rounded-[8px] border-[1px] border-[#E1E1E1] placeholder:text-[#C2C2C2] focus:text-black focus:outline-black"
                   placeholder="새로운 비밀번호를 다시 입력해주세요"
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
                 ></input>
                 <span
                   className={clsx(
@@ -97,7 +99,6 @@ const PersonalPasswordEdit = () => {
               className="w-[293px] h-[45px] rounded-[8px] bg-[#08D485]"
             >
               {submitting ? '저장 중...' : '저장'}
-
             </button>
           </form>
         </div>

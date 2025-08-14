@@ -1,33 +1,63 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
-import { applicationGroups } from '../../shared/constants/applicationData';
+import { getApplications } from './apis/applications';
+
+type BtnState = 'init' | 'check' | 'complete';
 
 export default function ApplicationDetailPage() {
-  const { title } = useParams();
-  const decodedTitle = decodeURIComponent(title ?? '');
-
+  const { jobPostId } = useParams<{ jobPostId: string }>();
   const navigate = useNavigate();
+  const location = useLocation() as { state?: { updatedId?: number } };
 
-  // ✅ title로 그룹 찾기
-  const group = applicationGroups.find((group) => group.title === decodedTitle);
+  const [apps, setApps] = useState<
+    Array<{
+      id: number;
+      name: string;
+      status: 'DRAFT' | 'SUBMITTED' | 'APPROVED' | 'REJECTED';
+    }>
+  >([]);
+  const [statusMap, setStatusMap] = useState<Record<number, BtnState>>({});
 
-  const [statusMap, setStatusMap] = useState<
-    Record<string, 'init' | 'check' | 'complete'>
-  >(
-    () =>
-      group?.applications.reduce(
-        (acc, app) => {
-          acc[app.id] = 'init';
-          return acc;
-        },
-        {} as Record<string, 'init' | 'check' | 'complete'>
-      ) ?? {}
-  );
+  const fetchApps = async () => {
+    if (!jobPostId) return;
+    const res = await getApplications({
+      jobPostId: Number(jobPostId),
+      page: 1,
+    });
+    const list = res.applicationList.map((a) => ({
+      id: a.applicationId,
+      name: a.applicantName,
+      status: a.applicantStatus,
+    }));
+    setApps(list);
+    const init: Record<number, BtnState> = {};
+    list.forEach((a) => {
+      init[a.id] =
+        a.status === 'APPROVED' || a.status === 'REJECTED'
+          ? 'complete'
+          : 'init';
+    });
+    setStatusMap(init);
+  };
 
-  const handleButtonClick = (id: string) => {
+  useEffect(() => {
+    fetchApps();
+  }, [jobPostId]);
+
+  // 결과 공시 후 뒤로 돌아왔을 때 즉시 complete + 리패치
+  useEffect(() => {
+    const updatedId = location.state?.updatedId;
+    if (updatedId) {
+      setStatusMap((prev) => ({ ...prev, [updatedId]: 'complete' }));
+      fetchApps();
+      navigate('.', { replace: true, state: null });
+    }
+  }, [location.state, navigate]);
+
+  const handleButtonClick = (id: number) => {
     setStatusMap((prev) => {
       const current = prev[id];
       if (current === 'init') return { ...prev, [id]: 'check' };
@@ -36,10 +66,8 @@ export default function ApplicationDetailPage() {
     });
   };
 
-  const goToResultPage = (id: string) => {
-    navigate(
-      `/company/jobs/applications/${encodeURIComponent(decodedTitle)}/results?id=${id}`
-    );
+  const goToResultPage = (id: number) => {
+    navigate(`/company/jobs/applications/${jobPostId}/results?id=${id}`);
   };
 
   return (
@@ -47,13 +75,11 @@ export default function ApplicationDetailPage() {
       <Topbar />
       <div className="flex flex-col items-center w-full max-w-[320px] self-center px-4 pt-10">
         <PageHeader title="받은 신청서" />
-        <PageHeader title={decodedTitle} />
-
+        <PageHeader title={`공고 ID ${jobPostId}`} />
         <ul className="w-full mt-6 space-y-6">
-          {group?.applications.map((app) => (
+          {apps.map((app) => (
             <li key={app.id} className="w-full">
               <div className="flex items-center justify-between">
-                {/* 이름 + 이동 */}
                 <div
                   className="flex items-center cursor-pointer"
                   onClick={() => goToResultPage(app.id)}
@@ -64,7 +90,6 @@ export default function ApplicationDetailPage() {
                   <FiChevronRight className="text-[20px] text-black ml-[12px]" />
                 </div>
 
-                {/* 버튼 상태별 렌더링 */}
                 {statusMap[app.id] === 'init' && (
                   <button
                     onClick={() => handleButtonClick(app.id)}
@@ -92,6 +117,9 @@ export default function ApplicationDetailPage() {
               </div>
             </li>
           ))}
+          {apps.length === 0 && (
+            <li className="text-sm text-[#9aa]">제출된 지원서가 없습니다.</li>
+          )}
         </ul>
       </div>
     </div>

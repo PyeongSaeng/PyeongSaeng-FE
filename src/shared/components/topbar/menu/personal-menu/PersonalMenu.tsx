@@ -3,22 +3,25 @@ import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
 import MainMenu from './MainMenu';
 import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
-import CareSeniors from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniors';
-import CareSeniorDetail from '../../../../../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
+import LinkedSeniorDetail from './LinkedSeniorDetail';
+import LinkedSeniorList from './LinkedSeniorList';
+import { LinkedSenior } from '../../../../../pages/Personal/types/userInfo';
 
 type MenuType =
   | 'main'
   | 'seniorMy'
   | 'careMy'
-  | 'careSeniors'
-  | 'careSeniorDetail';
+  | 'linkedSeniors'
+  | 'linkedSeniorDetail';
+
+type MenuState = { menu: MenuType; seniorData?: LinkedSenior };
 
 const PersonalMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [menuStack, setMenuStack] = useState<MenuType[]>(['main']);
+  const [menuStack, setMenuStack] = useState<MenuState[]>([{ menu: 'main' }]);
 
-  const goToMyMenu = (menu: MenuType) => {
-    setMenuStack((prev) => [...prev, menu]);
+  const goToMyMenu = (menu: MenuType, seniorData?: LinkedSenior) => {
+    setMenuStack((prev) => [...prev, { menu, seniorData }]);
   };
 
   const goBack = () => {
@@ -27,7 +30,7 @@ const PersonalMenu = () => {
 
   const closeMenu = () => {
     setIsOpen(false);
-    setMenuStack(['main']);
+    setMenuStack([{ menu: 'main' }]);
   };
 
   const currentMenu = menuStack[menuStack.length - 1];
@@ -43,20 +46,27 @@ const PersonalMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white">
+        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[703px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
-            {currentMenu !== 'main' ? (
+            {currentMenu.menu !== 'main' ? (
               <IoChevronBackOutline size={27} onClick={goBack} />
             ) : (
               <IoClose size={27} onClick={closeMenu} />
             )}
           </div>
-          {currentMenu === 'main' && <MainMenu handleMenu={goToMyMenu} />}
-          {currentMenu === 'careMy' && <CareMyMenu goNext={goToMyMenu} />}
-          {currentMenu === 'seniorMy' && <SeniorMyMenu goNext={goToMyMenu} />}
-          {currentMenu === 'careSeniors' && <CareSeniors goNext={goToMyMenu} />}
-          {currentMenu === 'careSeniorDetail' && (
-            <CareSeniorDetail goNext={goToMyMenu} />
+          {currentMenu.menu === 'main' && <MainMenu handleMenu={goToMyMenu} />}
+          {currentMenu.menu === 'careMy' && <CareMyMenu goNext={goToMyMenu} />}
+          {currentMenu.menu === 'seniorMy' && (
+            <SeniorMyMenu goNext={goToMyMenu} />
+          )}
+          {currentMenu.menu === 'linkedSeniors' && (
+            <LinkedSeniorList goNext={goToMyMenu} goBack={goBack} />
+          )}
+          {currentMenu.menu === 'linkedSeniorDetail' && (
+            <LinkedSeniorDetail
+              seniorData={menuStack[menuStack.length - 1].seniorData || null}
+              goBack={goBack}
+            />
           )}
         </div>
       )}
