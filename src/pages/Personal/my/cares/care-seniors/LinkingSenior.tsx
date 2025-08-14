@@ -107,12 +107,18 @@ const SearchAndLinkSenior = ({
   const [phone, setPhone] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<number | null>();
   const [seniorData, setSeniorData] = useState<{
     alreadyConnected: boolean;
     id: number;
     name: string;
     phone: string;
-  } | null>(null);
+  } | null>();
+
+  useEffect(() => {
+    console.log(seniorData);
+    // console.log(error);
+  }, [seniorData]);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -121,17 +127,14 @@ const SearchAndLinkSenior = ({
     try {
       const data = await searchSeniorByPhone({ phone: phone });
       setSeniorData(data.result);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('에러', err.response.status);
+      setError(err.response.status);
       alert('전화번호로 시니어를 찾는 데 실패하였습니다.');
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log(seniorData);
-  }, [seniorData]);
 
   const handleConnect = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
@@ -140,7 +143,6 @@ const SearchAndLinkSenior = ({
     setIsLoading(true);
 
     if (seniorData.alreadyConnected) {
-      alert('이미 연결된 시니어입니다');
       setDone(false);
       setButton({ signUpButton: false, linkingButton: false });
       return;
@@ -162,7 +164,11 @@ const SearchAndLinkSenior = ({
     }
   };
 
-  return (
+  return error === 404 ? (
+    <NoInfomation />
+  ) : seniorData?.alreadyConnected ? (
+    <AlreadyLinked />
+  ) : (
     <div className="flex flex-col justify-center items-center gap-[10px]">
       <span className="text-center text-[#747474] text-[16px] font-[Pretendard JP] font-[600]">
         {seniorData
@@ -209,6 +215,17 @@ const NoInfomation = () => {
       <img src={noInfo} alt="정보없음 svg" />
       <span className="text-[16px] text-[#747474] font-[Pretendard JP] font-[600]">
         가입하지 않은 번호입니다
+      </span>
+    </div>
+  );
+};
+
+const AlreadyLinked = () => {
+  return (
+    <div className="flex flex-col justify-center items-center gap-[16px]">
+      <img src={noInfo} alt="정보없음 svg" />
+      <span className="text-[16px] text-[#747474] font-[Pretendard JP] font-[600]">
+        이미 연결된 시니어입니다
       </span>
     </div>
   );
