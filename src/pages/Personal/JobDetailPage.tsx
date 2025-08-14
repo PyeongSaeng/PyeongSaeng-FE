@@ -13,7 +13,6 @@ const JobDetailPage = () => {
     const { data: job, isLoading, isError } = useJobDetail(jobPostId);
     const { mutate: saveJob, isPending } = useSaveToggle(jobPostId);
     const { data: savedJobs } = useShow();
-
     const isSaved = savedJobs?.some(
         (bookmark) => bookmark.jobPostDetailDTO.images[0]?.jobPostId === jobPostId
     );
@@ -90,8 +89,7 @@ const JobDetailPage = () => {
                         <button
                             onClick={handleSave}
                             disabled={isSaved || isPending}
-                            className="..."
-                        >
+                            className="w-[144px] h-[45px] border-[1.3px] border-[var(--main-green)] rounded-[8px] bg-[var(--main-green)] text-[16px] font-medium text-black">
                             {isPending ? '저장 중...' : isSaved ? '저장됨' : '저장'}
                         </button>
                     </div>
