@@ -18,7 +18,7 @@ const CompanyDeleteAccount = () => {
     if (value === '탈퇴하겠습니다') {
       try {
         setSubmitting(true);
-        const res = await axiosInstance.post('/api/companies/withdraw', {
+        await axiosInstance.post('/api/companies/withdraw', {
           confirmed: true,
         });
         alert('회원 탈퇴가 완료되었습니다. 7일 이내에 복구 가능합니다.');

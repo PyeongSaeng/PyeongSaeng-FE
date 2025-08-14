@@ -92,9 +92,10 @@ const ApplyResults = () => {
   const [applicationDetail, setApplicationDetail] =
     useState<ApplicationDetail | null>(null);
 
+  useEffect(() => {}, []);
   useEffect(() => {
     const getSeniorApplication = async () => {
-      const res = await getSeniorData('/api/applications/protector');
+      const res = await getSeniorData('/api/applications/me/submitted');
       setApplicationList(res.result);
     };
 
@@ -111,7 +112,7 @@ const ApplyResults = () => {
     try {
       getSeniorApplication();
 
-      getSeniorApplicationDetail(1, 21);
+      // getSeniorApplicationDetail(1, 21);
     } catch (err) {
       console.error(err);
     }

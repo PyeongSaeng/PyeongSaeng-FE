@@ -18,8 +18,8 @@ const CompanyInfo = () => {
   }, []);
 
   useEffect(() => {
-    console.log(info);
-  }, [info]);
+    console.log(error);
+  }, [error]);
 
   // 뷰 전용
   const infoData = useMemo(() => {
