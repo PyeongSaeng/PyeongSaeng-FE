@@ -30,7 +30,16 @@ import ApplicationsPage from '../pages/Company/ApplicationsPage';
 import ApplicationDetailPage from '../pages/Company/ApplicationDetailPage';
 import ApplicationResultsPage from '../pages/Company/ApplicationResultsPage';
 import KakaoCallback from '../pages/Personal/KakaoCallback';
-import CareSeniorDetail from '../pages/Personal/my/cares/care-seniors/CareSeniorDetail';
+import CareInfo from '../pages/Personal/my/cares/info/CareInfo';
+import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
+import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
+import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
+import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
+import JobPostRepost from '../pages/Company/my/JobPostRepost';
+import CompanyInfo from '../pages/Company/my/CompanyInfo';
+import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
+import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
+import CompanyPasswordEditDone from '../pages/Company/my/CompanyPasswordEditDone';
 
 const AppRoutes = () => {
   return (
@@ -61,39 +70,51 @@ const AppRoutes = () => {
       <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
       <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
       <Route
-        path="/personal/my/applied-results"
+        path="/personal/senior-my/applied-results"
         element={<ApplyResults />}
       ></Route>
       <Route
-        path="/personal/my/applied-results/:appliedId"
+        path="/personal/senior-my/applied-results/:appliedId"
         element={<ApplyDetail />}
       ></Route>
-      <Route path="/personal/my/info" element={<SeniorInfo />}>
+      {/* 시니어 마이메뉴 */}
+      <Route path="/personal/senior-my/info" element={<SeniorInfo />}>
         <Route path="basic" element={<BasicInfo />}></Route>
         <Route path="extra" element={<ExtraInfo />}></Route>
         <Route path="basic/edit" element={<BasicInfoEdit />}></Route>
         <Route path="extra/edit" element={<ExtraInfoEdit />}></Route>
       </Route>
+      {/* 보호자 마이메뉴 */}
+      <Route path="/personal/care-my/info" element={<CareInfo />}></Route>
       <Route
-        path="/personal/my/info/basic/edit/password"
+        path="/personal/care-my/info/edit"
+        element={<CareInfoEdit />}
+      ></Route>
+      <Route
+        path="/personal/care-my/link-seniors"
+        element={<LinkingSenior />}
+      ></Route>
+      <Route
+        path="/personal/care-my/application-results"
+        element={<ApplyResults />}
+      ></Route>
+      {/* <Route path="/personal/care-my/extra" element={<></>}></Route> */}
+      <Route
+        path="/personal/password-edit"
         element={<PersonalPasswordEdit />}
       ></Route>
       <Route
-        path="/personal/my/info/basic/edit/password/done"
+        path="/personal/password-edit/done"
         element={<PersonalPasswordEditDone />}
       ></Route>
       <Route
-        path="/personal/my/delete-account"
+        path="/personal/delete-account"
         element={<PersonalDeleteAccount />}
       ></Route>
       <Route
-        path="/personal/my/delete-account/done"
+        path="/personal/delete-account/done"
         element={<PersonalDeleteAccountDone />}
       ></Route>
-      {/* <Route
-        path="/personal/my/seniors/:seniorId"
-        element={<CareSeniorDetail />}
-      ></Route> */}
       <Route path="/personal/find-account" element={<FindAccount />}></Route>
       <Route path="/auth/callback" element={<KakaoCallback />} /> {/* 로그인 */}
       <Route path="/auth/signup/kakao" element={<KakaoCallback />} />{' '}
@@ -118,8 +139,25 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:applicationId/results"
         element={<ApplicationResultsPage />}
       ></Route>
-      <Route path="/company/my" element={<></>}></Route>
-      <Route path="/company/my/delete-account" element={<></>}></Route>
+      <Route path="/company/my/repost" element={<JobPostRepost />}></Route>
+      <Route path="/company/my/info" element={<CompanyInfo />}></Route>
+      <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>
+      <Route
+        path="/company/delete-account"
+        element={<CompanyDeleteAccount />}
+      ></Route>
+      <Route
+        path="/company/delete-account/done"
+        element={<CompanyDeleteAccountDone />}
+      ></Route>
+      <Route
+        path="/company/password-edit"
+        element={<CompanyPasswordEdit />}
+      ></Route>
+      <Route
+        path="/company/password-edit/done"
+        element={<CompanyPasswordEditDone />}
+      ></Route>
       <Route
         path="/company/find-account"
         element={<CompanyFindAccount />}

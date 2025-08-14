@@ -1,9 +1,29 @@
 import { useState } from 'react';
-import { IoClose, IoMenu } from 'react-icons/io5';
-import MainMenu from './MainMenu';
+import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
+import CompanyMyMenu from './CompanyMyMenu';
+import AfterLoginMainMenu from './AfterLoginMainMenu';
+import BeforeLoginMainMenu from './BeforeLoginMainMenu';
+
+type MenuType = 'my' | 'main';
 
 const CompanyMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [menu, setMenu] = useState<MenuType>('main');
+
+  const accessToken = localStorage.getItem('accessToken');
+
+  const goToMyMenu = () => {
+    setMenu('my');
+  };
+
+  const goBack = () => {
+    setMenu('main');
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
+    setMenu('main');
+  };
 
   return (
     <>
@@ -18,9 +38,21 @@ const CompanyMenu = () => {
       {isOpen && (
         <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
-            <IoClose size={27} onClick={() => setIsOpen(false)} />
+            {menu === 'main' ? (
+              <IoClose size={27} onClick={closeMenu} />
+            ) : (
+              <IoChevronBackOutline size={27} onClick={goBack} />
+            )}
           </div>
-          <MainMenu />
+          {accessToken ? (
+            menu === 'main' ? (
+              <AfterLoginMainMenu goNext={goToMyMenu} />
+            ) : (
+              <CompanyMyMenu />
+            )
+          ) : (
+            <BeforeLoginMainMenu goNext={goToMyMenu} />
+          )}
         </div>
       )}
     </>

@@ -4,9 +4,9 @@ import { AxiosError } from 'axios';
 import clsx from 'clsx';
 import Topbar from '../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../shared/apis/axiosInstance';
-import { passwordUpdate } from '../types/userInfo';
+import { UpdateCompanyInfo } from '../types/companyInfo';
 
-const PersonalPasswordEdit = () => {
+const CompanyPasswordEdit = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -27,15 +27,15 @@ const PersonalPasswordEdit = () => {
     setSubmitting(true);
 
     try {
-      const changes: passwordUpdate = {
+      const changes: UpdateCompanyInfo = {
         passwordChangeRequested: true,
         currentPassword: currentPassword.trim(),
         newPassword: newPassword.trim(),
       };
       console.log(changes);
 
-      await axiosInstance.patch('/api/user/senior/me', changes);
-      navigate('/personal/password-edit/done');
+      await axiosInstance.patch('/api/companies/profile', changes);
+      navigate('/company/password-edit/done');
     } catch (err) {
       console.error('비밀번호 변경 실패', err);
       const error = err as AxiosError<{ message?: string }>;
@@ -52,7 +52,7 @@ const PersonalPasswordEdit = () => {
       <Topbar>
         <div className="flex flex-col items-center text-[16px]">
           <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px]">
-            개인정보
+            기업정보
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col items-center gap-[16px] pt-[24px] pb-[50px]">
@@ -96,7 +96,7 @@ const PersonalPasswordEdit = () => {
             </div>
             <button
               type="submit"
-              className="w-[293px] h-[45px] rounded-[8px] bg-[#08D485]"
+              className="w-[293px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white"
             >
               {submitting ? '저장 중...' : '저장'}
             </button>
@@ -107,4 +107,4 @@ const PersonalPasswordEdit = () => {
   );
 };
 
-export default PersonalPasswordEdit;
+export default CompanyPasswordEdit;
