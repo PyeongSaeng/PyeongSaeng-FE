@@ -11,7 +11,7 @@ export default function ApplicationDetailPage() {
 
   const navigate = useNavigate();
 
-  // ✅ title로 그룹 찾기
+  // title로 그룹 찾기
   const group = applicationGroups.find((group) => group.title === decodedTitle);
 
   const [statusMap, setStatusMap] = useState<
