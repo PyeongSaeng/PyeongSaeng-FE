@@ -10,6 +10,8 @@ const CompanyInfo = () => {
   const [info, setInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(error); // error 상태 미사용 -> 추가
+
   // 정보 조회
   useEffect(() => {
     getCompanyData('/api/companies/profile')

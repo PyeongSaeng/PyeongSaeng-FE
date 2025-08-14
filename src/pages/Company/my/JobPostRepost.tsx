@@ -1,40 +1,40 @@
 import { useState, useEffect } from 'react';
 import Topbar from '../../../shared/components/topbar/Topbar';
-import dummy1 from '../../../shared/assets/popular-dummy1.png';
-import axiosInstance from '../../../shared/apis/axiosInstance';
+// import dummy1 from '../../../shared/assets/popular-dummy1.png';
+// import axiosInstance from '../../../shared/apis/axiosInstance';
 import { getCompanyData } from '../apis/companyMy';
 
-type appliedJobs = {
-  job: string;
-  dueDate: string;
-  dayOfWeek: string;
-  img: string;
-  result: string;
-};
+// type appliedJobs = {
+//   job: string;
+//   dueDate: string;
+//   dayOfWeek: string;
+//   img: string;
+//   result: string;
+// };
 
-const dummyApplies: appliedJobs[] = [
-  {
-    job: '죽전2동 행정복지센터 미화원',
-    dueDate: '7/20',
-    dayOfWeek: '일',
-    img: dummy1,
-    result: '합격',
-  },
-  {
-    job: '죽전도서관 사서',
-    dueDate: '7/27',
-    dayOfWeek: '일',
-    img: dummy1,
-    result: '미정',
-  },
-  {
-    job: '죽전2동 동사무소 미화',
-    dueDate: '7/27',
-    dayOfWeek: '일',
-    img: dummy1,
-    result: '불합격',
-  },
-];
+// const dummyApplies: appliedJobs[] = [
+//   {
+//     job: '죽전2동 행정복지센터 미화원',
+//     dueDate: '7/20',
+//     dayOfWeek: '일',
+//     img: dummy1,
+//     result: '합격',
+//   },
+//   {
+//     job: '죽전도서관 사서',
+//     dueDate: '7/27',
+//     dayOfWeek: '일',
+//     img: dummy1,
+//     result: '미정',
+//   },
+//   {
+//     job: '죽전2동 동사무소 미화',
+//     dueDate: '7/27',
+//     dayOfWeek: '일',
+//     img: dummy1,
+//     result: '불합격',
+//   },
+// ];
 
 const JobPostRepost = () => {
   const [jobPostList, setJobPostList] = useState();

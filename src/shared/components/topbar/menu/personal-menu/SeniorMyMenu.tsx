@@ -1,6 +1,6 @@
 import MenuNavButton from '../MenuNavButton';
 
-const SeniorMyMenu = ({ goNext }: { goNext: (menu: any) => void }) => {
+const SeniorMyMenu = () => {
   return (
     <div>
       <div className="flex justify-center text-[24px] text-black pt-[24px] pb-[10px] mb-[30px] border-b-[1.3px] border-[#CCCCCC]">

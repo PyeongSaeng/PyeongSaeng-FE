@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../shared/components/topbar/Topbar';
-import axiosInstance from '../../../shared/apis/axiosInstance';
+// import axiosInstance from '../../../shared/apis/axiosInstance';
 
 const CompanyDeleteAccount = () => {
   const [value, setValue] = useState('');
@@ -18,9 +18,9 @@ const CompanyDeleteAccount = () => {
     if (value === '탈퇴하겠습니다') {
       try {
         setSubmitting(true);
-        const res = await axiosInstance.post('/api/companies/withdraw', {
-          confirmed: true,
-        });
+        // const res = await axiosInstance.post('/api/companies/withdraw', {
+        //   confirmed: true,
+        // });
         alert('회원 탈퇴가 완료되었습니다. 7일 이내에 복구 가능합니다.');
         navigate('/company/delete-account/done');
       } catch (error) {

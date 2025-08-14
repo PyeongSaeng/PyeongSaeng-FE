@@ -6,7 +6,8 @@ import { useRecommendedJobs } from './hooks/useRecommend';
 const JobRecommendationPage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const { jobs, isLoading, isError, refetch } = useRecommendedJobs();
+  const { jobs, isLoading, isError } = useRecommendedJobs();
+  // const { jobs, isLoading, isError, refetch } = useRecommendedJobs();
 
   // 검색어 필터링 (디바운스 + memoized)
   const [kw, setKw] = useState('');
