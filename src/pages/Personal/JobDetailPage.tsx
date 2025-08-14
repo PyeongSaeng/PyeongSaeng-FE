@@ -1,25 +1,28 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
-
+import { useSaveToggle } from './hooks/useSaveToggle';
+import { useShow } from './hooks/useShow';
 const JobDetailPage = () => {
 
     const { jobId } = useParams();
     const navigate = useNavigate();
     const jobPostId = Number(jobId);
 
-    const { data: job, isLoading, isError } = useJobDetail(jobPostId);
 
-    const saved: number[] = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-    const isSaved = saved.includes(jobPostId);
+    const { data: job, isLoading, isError } = useJobDetail(jobPostId);
+    const { mutate: saveJob, isPending } = useSaveToggle(jobPostId);
+    const { data: savedJobs } = useShow();
+    const isSaved = savedJobs?.some(
+        (bookmark) => bookmark.jobPostDetailDTO.images[0]?.jobPostId === jobPostId
+    );
 
     const handleSave = () => {
         if (!isSaved) {
-            const updated = [...saved, jobPostId];
-            localStorage.setItem('savedJobs', JSON.stringify(updated));
-            navigate('/personal/jobs/saved');
+            saveJob();
         }
     };
+
     if (isLoading) return <div className="p-4">로딩 중...</div>;
     if (isError || !job) {
         return (
@@ -52,7 +55,7 @@ const JobDetailPage = () => {
                             className="w-full h-full object-cover"
                         />
                     </div>
-                    {/* 정보 카드 */}
+
                     {/* 정보 카드 */}
                     <div className="w-[297px] px-[17px] py-[17px] mt-[19px] border-[1.3px] border-[var(--main-green)] rounded-[13px] bg-white text-[14px] font-normal text-[var(--gray-800)]">
                         <p className="text-[16px] font-semibold text-[var(--gray-800)] mb-[22px]">
@@ -85,9 +88,9 @@ const JobDetailPage = () => {
                         </button>
                         <button
                             onClick={handleSave}
-                            disabled={isSaved}
+                            disabled={isSaved || isPending}
                             className="w-[144px] h-[45px] border-[1.3px] border-[var(--main-green)] rounded-[8px] bg-[var(--main-green)] text-[16px] font-medium text-black">
-                            {isSaved ? '저장됨' : '저장'}
+                            {isPending ? '저장 중...' : isSaved ? '저장됨' : '저장'}
                         </button>
                     </div>
                 </div>

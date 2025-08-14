@@ -1,5 +1,6 @@
 import axios from "axios";
-import { ApiEnvelope, JobRecommendation, JobDetail } from "../types/jobs";
+import { ApiEnvelope, JobRecommendation, JobDetail, JobBookmarkResult, BookmarkedJobsResponse } from "../types/jobs";
+import axiosInstance from "../../../shared/apis/axiosInstance";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 // axios 인스턴스 생성
@@ -30,5 +31,25 @@ export async function apiGetJobDetail(jobPostId: number) {
   }
   return data.result;
 }
-
+// 일자리 저장토글 
+export const apiSaveBookmark = async (jobPostId: number) => {
+  const res = await axiosInstance.post<ApiEnvelope<JobBookmarkResult>>(
+    `/api/bookmarks/${jobPostId}`
+  );
+  return res.data.result;
+};
+// 일자리 저장 
+export const apiGetSavedJobs = async () => {
+  const res = await axiosInstance.get<ApiEnvelope<BookmarkedJobsResponse>>(
+    "/api/bookmarks/mine"
+  );
+  return res.data.result.bookmarkSummaryDTOList;
+};
+// 일자리 삭제 
+export const apiDeleteBookmark = async (jobPostId: number) => {
+  const res = await axiosInstance.delete<ApiEnvelope<string>>(
+    `/api/bookmarks/${jobPostId}`
+  );
+  return res.data.result;
+};
 
