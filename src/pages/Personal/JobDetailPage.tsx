@@ -1,29 +1,26 @@
-import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
 import { useSaveToggle } from './hooks/useSaveToggle';
-
+import { useShow } from './hooks/useShow';
 const JobDetailPage = () => {
 
     const { jobId } = useParams();
     const navigate = useNavigate();
     const jobPostId = Number(jobId);
-    const { mutate: saveJob, isPending } = useSaveToggle(jobPostId);
+
 
     const { data: job, isLoading, isError } = useJobDetail(jobPostId);
+    const { mutate: saveJob, isPending } = useSaveToggle(jobPostId);
+    const { data: savedJobs } = useShow();
 
-    const saved: number[] = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-    const isSaved = saved.includes(jobPostId);
-    const [savedState, setSavedState] = useState(isSaved);
+    const isSaved = savedJobs?.some(
+        (bookmark) => bookmark.jobPostDetailDTO.images[0]?.jobPostId === jobPostId
+    );
 
     const handleSave = () => {
-        if (!savedState) {
-            saveJob(undefined, {
-                onSuccess: () => {
-                    setSavedState(true);
-                },
-            });
+        if (!isSaved) {
+            saveJob();
         }
     };
 
@@ -93,8 +90,9 @@ const JobDetailPage = () => {
                         <button
                             onClick={handleSave}
                             disabled={isSaved || isPending}
-                            className="w-[144px] h-[45px] border-[1.3px] border-[var(--main-green)] rounded-[8px] bg-[var(--main-green)] text-[16px] font-medium text-black">
-                            {isPending ? '저장 중...' : savedState ? '저장됨' : '저장'}
+                            className="..."
+                        >
+                            {isPending ? '저장 중...' : isSaved ? '저장됨' : '저장'}
                         </button>
                     </div>
                 </div>
