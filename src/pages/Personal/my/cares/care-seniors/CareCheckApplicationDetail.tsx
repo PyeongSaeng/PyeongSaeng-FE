@@ -45,7 +45,9 @@ const motivation: Tmotivation = {
     '경제적으로 자립하여 손주에게 맛있는 것도 사주고 싶은 마음에, 건강한 몸으로 즐겁게 일하고자 지원했습니다.',
 };
 
-const ApplyDetail = () => {
+const CareCheckApplicationDetail = () => {
+  const [seniorInfo, setSeniorInfo] = useState();
+
   const [fileName, setFileName] = useState<string | null>('');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,4 +173,4 @@ const ApplyDetail = () => {
   );
 };
 
-export default ApplyDetail;
+export default CareCheckApplicationDetail;

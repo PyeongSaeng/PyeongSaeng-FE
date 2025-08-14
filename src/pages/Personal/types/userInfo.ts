@@ -76,6 +76,44 @@ export type LinkedSenior = {
   seniorPhone: string;
 };
 
+export type Image = {
+  imageId: number;
+  keyName: string;
+  imageUrl: string;
+  originalFileName: string;
+};
+
+export enum applicationStatus {
+  SUBMITTED = '미정',
+  APPROVED = '합격',
+  REJECTED = '불합',
+}
+
+export type ApplicationType = {
+  applicationId: number;
+  title: string;
+  deadline: string;
+  applicationStatus: 'SUBMITTED' | 'APPROVED' | 'REJECTED';
+  images: Image[];
+};
+
+export type ApplicationDetail = {
+  title: string;
+  address: string;
+  detailAddress: string;
+  roadAddress: string;
+  zipcode: string;
+  hourlyWage: number | null;
+  yearSalary: number | null;
+  description: string;
+  workingTime: string;
+  deadline: string;
+  recruitCount: number;
+  note: string;
+  images: Image[];
+  travelTime: string;
+};
+
 // 공통
 
 // 비밀번호 변경
