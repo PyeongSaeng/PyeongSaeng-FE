@@ -1,15 +1,16 @@
 import { useState } from "react";
 import Topbar from "../../shared/components/topbar/Topbar";
 import { useShow } from "./hooks/useShow";
-import { apiDeleteBookmark } from "./apis/jobapi";
+import { useDeleteBookmark } from "./hooks/useDelete";
 
 const JobSavedPage = () => {
   const { data: savedJobs, isLoading } = useShow();
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  const { mutate: deleteBookmark } = useDeleteBookmark();
 
   const handleRemove = (jobPostId: number) => {
     setSelectedJobId(null);
-    apiDeleteBookmark(jobPostId);
+    deleteBookmark(jobPostId);
   };
 
   return (
