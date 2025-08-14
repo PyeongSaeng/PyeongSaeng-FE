@@ -1,15 +1,15 @@
 import { useState } from "react";
 import Topbar from "../../shared/components/topbar/Topbar";
 import { useShow } from "./hooks/useShow";
+import { apiDeleteBookmark } from "./apis/jobapi";
 
 const JobSavedPage = () => {
-  const { data: savedJobs, isLoading } = useShow(); 
+  const { data: savedJobs, isLoading } = useShow();
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
 
-  const handleRemove = (jobId: number) => {
+  const handleRemove = (jobPostId: number) => {
     setSelectedJobId(null);
-    // 삭제 API 연동 시 여기서 useDelete 호출 예정
-    // 지금은 UI 동작 위주로 구현 중
+    apiDeleteBookmark(jobPostId);
   };
 
   return (
@@ -61,7 +61,7 @@ const JobSavedPage = () => {
                       src="/icons/close_icon.svg"
                       alt="취소"
                       className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
-                      onClick={() => handleRemove(item.bookmarkId)}
+                      onClick={() => handleRemove(item.jobPostDetailDTO.images[0].jobPostId)}
                     />
                   </div>
 
@@ -109,17 +109,15 @@ const JobSavedPage = () => {
         <div className="w-[301px] mt-[18px] flex gap-[13px]">
           <button
             disabled={!selectedJobId}
-            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black ${
-              !selectedJobId ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black ${!selectedJobId ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             직접 신청
           </button>
           <button
             disabled={!selectedJobId}
-            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium ${
-              !selectedJobId ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium ${!selectedJobId ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             보호자 신청
           </button>

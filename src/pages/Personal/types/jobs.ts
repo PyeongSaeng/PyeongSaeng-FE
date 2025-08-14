@@ -73,4 +73,4 @@ export type BookmarkSummary = {
 export type BookmarkedJobsResponse = {
   bookmarkSummaryDTOList: BookmarkSummary[];
 };
-// 일자리 삭제 타입 정의
+// 일자리 삭제 타입 정의(필요없음)

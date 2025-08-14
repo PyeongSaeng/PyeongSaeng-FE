@@ -46,4 +46,10 @@ export const apiGetSavedJobs = async () => {
   return res.data.result.bookmarkSummaryDTOList;
 };
 // 일자리 삭제 
+export const apiDeleteBookmark = async (jobPostId: number) => {
+  const res = await axiosInstance.delete<ApiEnvelope<string>>(
+    `/api/bookmarks/${jobPostId}`
+  );
+  return res.data.result;
+};
 
