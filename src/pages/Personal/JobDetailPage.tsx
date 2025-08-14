@@ -3,6 +3,8 @@ import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
 import { useSaveToggle } from './hooks/useSaveToggle';
 import { useShow } from './hooks/useShow';
+import { useEnsureApplication } from './hooks/useApplication';
+
 const JobDetailPage = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
@@ -19,6 +21,18 @@ const JobDetailPage = () => {
     if (!isSaved) {
       saveJob();
     }
+  };
+  const { mutate: ensureApplication, isPending: isApplying } = useEnsureApplication();
+
+  const handleApply = () => {
+    ensureApplication(jobPostId, {
+      onSuccess: () => {
+        navigate("/personal/jobs/drafts");
+      },
+      onError: () => {
+        alert("신청에 실패했습니다.");
+      },
+    });
   };
 
   if (isLoading) return <div className="p-4">로딩 중...</div>;
@@ -84,12 +98,11 @@ const JobDetailPage = () => {
           {/* 하단 버튼 */}
           <div className="w-[301px] flex gap-[13px] mt-[36px]">
             <button
-              onClick={() =>
-                navigate(`/personal/jobs/recommend/${jobPostId}/apply`)
-              }
+              onClick={handleApply}
+              disabled={isApplying}
               className="w-[144px] h-[45px] border-[1.3px] border-[var(--main-green)] rounded-[8px] bg-white text-[16px] font-medium text-black"
             >
-              신청
+              {isApplying ? '신청 중...' : '신청'}
             </button>
             <button
               onClick={handleSave}
