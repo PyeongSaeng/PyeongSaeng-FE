@@ -10,19 +10,16 @@ const JobDraftsPage = () => {
   const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
   const { useGetMyApplications, useDeleteApplication } = useApplication();
-  const { data: applications = [] } = useGetMyApplications();
+  const { data: applications = [], isLoading } = useGetMyApplications();
   const { mutate: deleteApplication } = useDeleteApplication();
 
-  // 신청 상태별 필터링
   const draftApps = applications.filter((a) => a.applicationStatus === "NON_STARTED");
   const writingApps = applications.filter((a) => a.applicationStatus === "DRAFT");
   const selectedApps = selectedTab === 0 ? draftApps : writingApps;
 
-  // jobPostId로 상세정보 병렬 요청
   const jobPostIds = selectedApps.map((a) => a.jobPostId);
   const jobResults = useApplicationJobs(jobPostIds);
 
-  // application + job 묶어서 렌더링 기준으로 사용
   const appJobPairs = selectedApps.map((application, idx) => ({
     application,
     job: jobResults[idx]?.data,
@@ -75,69 +72,75 @@ const JobDraftsPage = () => {
             className="w-[291px] flex flex-col items-center overflow-y-auto mt-[22px] space-y-9 scrollbar-hide"
             style={{ maxHeight: "400px" }}
           >
-            {appJobPairs.map(({ application, job }) => {
-              if (!job) return null;
+            {isLoading ? (
+              <p className="text-[#747474] text-[16px]">불러오는 중...</p>
+            ) : appJobPairs.length === 0 ? (
+              <p className="text-[#747474] text-[16px]">
+                {selectedTab === 0
+                  ? "작성 전인 신청서가 없습니다."
+                  : "작성 중인 신청서가 없습니다."}
+              </p>
+            ) : (
+              appJobPairs.map(({ application, job }) => {
+                if (!job) return null;
 
-              const isSelected = selectedAppId === application.applicationId;
+                const isSelected = selectedAppId === application.applicationId;
 
-              return (
-                <div key={application.applicationId} className="flex flex-col items-start relative">
-                  <div className="flex items-center gap-[6px]">
-                    {/* 선택 버튼 */}
-                    <div
-                      className="w-[27px] h-[27px] rounded-full border-2 border-[#08D485] bg-white flex items-center justify-center cursor-pointer"
-                      onClick={() =>
-                        setSelectedAppId(isSelected ? null : application.applicationId)
-                      }
-                    >
-                      {isSelected && (
-                        <div className="w-[15px] h-[15px] rounded-full bg-[#08D485]" />
-                      )}
-                    </div>
-                    <div
-                      className="w-[56px] h-[19px] flex items-center justify-center text-[16px] text-[#747474] font-medium cursor-pointer"
-                      onClick={() =>
-                        setSelectedAppId(isSelected ? null : application.applicationId)
-                      }
-                    >
-                      선택하기
-                    </div>
-
-                    {/* 삭제 버튼 */}
-                    <img
-                      src="/icons/close_icon.svg"
-                      alt="취소"
-                      className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
-                      onClick={() => handleDelete(application.applicationId)}
-                    />
-                  </div>
-
-                  {/* 카드 */}
-                  <div
-                    className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
-                      ${isSelected ? 'border-[#08D485] bg-[#ECF6F2]' : 'border-[#08D485] bg-white'}`}
-                    onClick={() =>
-                      setSelectedAppId(isSelected ? null : application.applicationId)
-                    }
-                  >
-                    <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
+                return (
+                  <div key={application.applicationId} className="flex flex-col items-start relative">
+                    <div className="flex items-center gap-[6px]">
+                      <div
+                        className="w-[27px] h-[27px] rounded-full border-2 border-[#08D485] bg-white flex items-center justify-center cursor-pointer"
+                        onClick={() =>
+                          setSelectedAppId(isSelected ? null : application.applicationId)
+                        }
+                      >
+                        {isSelected && (
+                          <div className="w-[15px] h-[15px] rounded-full bg-[#08D485]" />
+                        )}
+                      </div>
+                      <div
+                        className="w-[56px] h-[19px] flex items-center justify-center text-[16px] text-[#747474] font-medium cursor-pointer"
+                        onClick={() =>
+                          setSelectedAppId(isSelected ? null : application.applicationId)
+                        }
+                      >
+                        선택하기
+                      </div>
                       <img
-                        src={job.images?.[0]?.imageUrl}
-                        alt={job.title}
-                        className="w-full h-full object-cover"
+                        src="/icons/close_icon.svg"
+                        alt="취소"
+                        className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
+                        onClick={() => handleDelete(application.applicationId)}
                       />
                     </div>
-                    <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
-                      <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">{job.title}</p>
-                      <p className="text-[11px] font-normal text-[#414141]">
-                        거리: {job.travelTime}, 시급: {job.hourlyWage?.toLocaleString()}원,
-                        근무시간: {job.workingTime}, 월급: {job.monthlySalary?.toLocaleString()}원
-                      </p>
+
+                    <div
+                      className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
+                        ${isSelected ? 'border-[#08D485] bg-[#ECF6F2]' : 'border-[#08D485] bg-white'}`}
+                      onClick={() =>
+                        setSelectedAppId(isSelected ? null : application.applicationId)
+                      }
+                    >
+                      <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
+                        <img
+                          src={job.images?.[0]?.imageUrl}
+                          alt={job.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
+                        <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">{job.title}</p>
+                        <p className="text-[11px] font-normal text-[#414141]">
+                          거리: {job.travelTime}, 시급: {job.hourlyWage?.toLocaleString()}원,
+                          근무시간: {job.workingTime}, 월급: {job.monthlySalary?.toLocaleString()}원
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
