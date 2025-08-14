@@ -3,7 +3,8 @@ import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
 import { useSaveToggle } from './hooks/useSaveToggle';
 import { useShow } from './hooks/useShow';
-import { useEnsureApplication } from './hooks/useApplication';
+import { useApplication } from './hooks/useApplication';
+
 
 const JobDetailPage = () => {
   const { jobId } = useParams();
@@ -22,6 +23,7 @@ const JobDetailPage = () => {
       saveJob();
     }
   };
+  const { useEnsureApplication, useGetMyApplications } = useApplication();
   const { mutate: ensureApplication, isPending: isApplying } = useEnsureApplication();
 
   const handleApply = () => {

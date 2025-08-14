@@ -71,12 +71,17 @@ export const apiEnsureApplication = async (jobPostId: number) => {
 export type ApplicationItem = {
   applicationId: number;
   jobPostId: number;
-  applicationStatus: "NON_STARTED" | "DRAFT" 
+  applicationStatus: "NON_STARTED" | "DRAFT" | "SUBMITTED" | "APPROVED" | "REJECTED"
 };
 
 export const apiGetMyApplications = async (): Promise<ApplicationItem[]> => {
   const res = await axiosInstance.get<ApiEnvelope<ApplicationItem[]>>(
     "/api/applications/mine"
   );
+  return res.data.result;
+};
+// 일자리 신청 삭제
+export const apiDeleteApplication = async (applicationId: number) => {
+  const res = await axiosInstance.delete(`/api/applications/${applicationId}`);
   return res.data.result;
 };
