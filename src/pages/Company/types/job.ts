@@ -35,19 +35,19 @@ export const BASE_FORM_FIELDS: JobPostFormField[] = [
 export type JobDraft = Partial<CreateJobDTO>;
 
 export const EMPTY_JOB_DRAFT: JobDraft = {
-  title: "",
-  address: "",
-  detailAddress: "",
-  roadAddress: "",
-  zipcode: "",
+  title: '',
+  address: '',
+  detailAddress: '',
+  roadAddress: '',
+  zipcode: '',
   hourlyWage: undefined,
   monthlySalary: null,
   yearSalary: null,
-  description: "",
-  workingTime: "",
-  deadline: "",
+  description: '',
+  workingTime: '',
+  deadline: '',
   recruitCount: 1,
-  note: "",
+  note: '',
   jobPostImageList: [],
   formFieldList: BASE_FORM_FIELDS,
 } satisfies JobDraft;
@@ -69,10 +69,10 @@ export interface Result {
 }
 export interface JobPostList {
   id: number;
-  state: "RECRUITING" | "CLOSED" | string;
+  state: 'RECRUITING' | 'CLOSED' | string;
   title: string;
-  roadAddress: string,
-  description: string,
+  roadAddress: string;
+  description: string;
   images: Image[];
 }
 export interface Image {
@@ -81,8 +81,3 @@ export interface Image {
   imageUrl: string;
   originalFileName: string;
 }
-
-
-
-
-

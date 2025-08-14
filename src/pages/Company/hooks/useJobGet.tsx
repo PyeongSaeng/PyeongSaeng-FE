@@ -1,17 +1,17 @@
-import { useState, useCallback } from "react";
-import axios from "axios";
-import { JobListDTO } from "../types/job";
+import { useState, useCallback } from 'react';
+import axios from 'axios';
+import { JobListDTO } from '../types/job';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export function useJobGet(token: string) {
-  const [jobs, setJobs] = useState<JobListDTO["result"]["jobPostList"]>([]);
+  const [jobs, setJobs] = useState<JobListDTO['result']['jobPostList']>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   // page, state 기본값(1, RECRUITING)으로 GET
   const fetchJobs = useCallback(
-    async (page: number = 1, state: string = "RECRUITING") => {
+    async (page: number = 1, state: string = 'RECRUITING') => {
       setLoading(true);
       setError(null);
       try {

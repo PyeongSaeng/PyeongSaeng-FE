@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiDeleteBookmark } from "../apis/jobapi";
-import { savedJobsKey } from "./useShow";
-import { BookmarkSummary } from "../types/jobs";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiDeleteBookmark } from '../apis/jobapi';
+import { savedJobsKey } from './useShow';
+import { BookmarkSummary } from '../types/jobs';
 
 export function useDeleteBookmark() {
   const queryClient = useQueryClient();
@@ -12,10 +12,15 @@ export function useDeleteBookmark() {
     onMutate: async (jobPostId) => {
       await queryClient.cancelQueries({ queryKey: savedJobsKey });
 
-      const previous = queryClient.getQueryData<BookmarkSummary[]>(savedJobsKey);
+      const previous =
+        queryClient.getQueryData<BookmarkSummary[]>(savedJobsKey);
 
-      queryClient.setQueryData<BookmarkSummary[]>(savedJobsKey, (old) =>
-        old?.filter((job) => job.jobPostDetailDTO.images[0].jobPostId !== jobPostId) ?? []
+      queryClient.setQueryData<BookmarkSummary[]>(
+        savedJobsKey,
+        (old) =>
+          old?.filter(
+            (job) => job.jobPostDetailDTO.images[0].jobPostId !== jobPostId
+          ) ?? []
       );
 
       return { previous };
