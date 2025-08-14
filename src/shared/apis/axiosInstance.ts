@@ -27,10 +27,13 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     // 로그인 성공 시 accessToken과 role 저장 (개인 + 기업 로그인)
-    if (response.config.url?.includes('/auth/login') || response.config.url?.includes('/companies/login')) {
-
+    if (
+      response.config.url?.includes('/auth/login') ||
+      response.config.url?.includes('/companies/login')
+    ) {
       // result 안에 accessToken이 있는지 확인
-      const accessToken = response.data.result?.accessToken || response.data.accessToken;
+      const accessToken =
+        response.data.result?.accessToken || response.data.accessToken;
       const role = response.data.result?.role;
       const user = response.data.result?.user || response.data.user;
 
@@ -44,12 +47,13 @@ axiosInstance.interceptors.response.use(
       if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
-      if (user) localStorage.setItem("user", JSON.stringify(user));
+      if (user) localStorage.setItem('user', JSON.stringify(user));
     }
 
     // OAuth 토큰 교환 시에도 동일하게 처리
     if (response.config.url?.includes('/token/exchange')) {
-      const accessToken = response.data.result?.accessToken || response.data.accessToken;
+      const accessToken =
+        response.data.result?.accessToken || response.data.accessToken;
       const role = response.data.result?.role;
 
       if (accessToken) {
@@ -63,7 +67,8 @@ axiosInstance.interceptors.response.use(
 
     // 카카오 회원가입 성공 시에도 토큰 저장
     if (response.config.url?.includes('/auth/signup/kakao')) {
-      const accessToken = response.data.result?.accessToken || response.data.accessToken;
+      const accessToken =
+        response.data.result?.accessToken || response.data.accessToken;
       const role = response.data.result?.role;
 
       if (accessToken) {
@@ -89,10 +94,7 @@ axiosInstance.interceptors.response.use(
     console.error('[axiosInstance] 응답 에러:', error.response?.data);
 
     // accessToken 만료 에러 처리
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -118,7 +120,6 @@ axiosInstance.interceptors.response.use(
 
         // 원래 요청 재시도
         return axiosInstance(originalRequest);
-
       } catch (refreshError) {
         console.error('[axiosInstance] 토큰 재발급 실패:', refreshError);
 

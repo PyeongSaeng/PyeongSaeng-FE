@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Topbar from "../../shared/components/topbar/Topbar";
-import { useShow } from "./hooks/useShow";
-import { useDeleteBookmark } from "./hooks/useDelete";
+import { useState } from 'react';
+import Topbar from '../../shared/components/topbar/Topbar';
+import { useShow } from './hooks/useShow';
+import { useDeleteBookmark } from './hooks/useDelete';
 
 const JobSavedPage = () => {
   const { data: savedJobs, isLoading } = useShow();
@@ -17,18 +17,22 @@ const JobSavedPage = () => {
     <Topbar>
       <div className="w-full h-full flex flex-col items-center">
         <div className="mt-[17px] flex flex-col items-center">
-          <p className="text-[20px] font-semibold text-[#747474]">일자리 저장함</p>
+          <p className="text-[20px] font-semibold text-[#747474]">
+            일자리 저장함
+          </p>
         </div>
 
         {/* 스크롤 영역 */}
         <div
           className="flex-1 w-full flex flex-col items-center overflow-y-auto mt-[22px] space-y-8 scrollbar-hide"
-          style={{ maxHeight: "450px" }}
+          style={{ maxHeight: '450px' }}
         >
           {isLoading || !savedJobs ? (
             <p className="text-[#747474] text-[16px]">불러오는 중...</p>
           ) : savedJobs.length === 0 ? (
-            <p className="text-[#747474] text-[16px]">저장된 일자리가 없습니다.</p>
+            <p className="text-[#747474] text-[16px]">
+              저장된 일자리가 없습니다.
+            </p>
           ) : (
             savedJobs.map((item) => {
               const job = item.jobPostDetailDTO;
@@ -62,7 +66,9 @@ const JobSavedPage = () => {
                       src="/icons/close_icon.svg"
                       alt="취소"
                       className="w-[27px] h-[27px] cursor-pointer absolute right-0 top-0 z-10"
-                      onClick={() => handleRemove(item.jobPostDetailDTO.images[0].jobPostId)}
+                      onClick={() =>
+                        handleRemove(item.jobPostDetailDTO.images[0].jobPostId)
+                      }
                     />
                   </div>
 
@@ -71,7 +77,7 @@ const JobSavedPage = () => {
                     className={`
                       w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden
                       border-[1.3px] flex flex-col items-center
-                      ${isSelected ? "border-[#08D485] bg-[#ECF6F2]" : "border-[#A4A4A4] bg-white"}
+                      ${isSelected ? 'border-[#08D485] bg-[#ECF6F2]' : 'border-[#A4A4A4] bg-white'}
                     `}
                     onClick={() =>
                       setSelectedJobId(isSelected ? null : item.bookmarkId)
@@ -80,7 +86,7 @@ const JobSavedPage = () => {
                     <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
                       <img
                         src={job.images[0]?.imageUrl}
-                        alt={job.images[0]?.keyName || "job"}
+                        alt={job.images[0]?.keyName || 'job'}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -90,13 +96,15 @@ const JobSavedPage = () => {
                         {job.title}
                       </p>
                       <p className="text-[11px] font-normal text-[#414141] whitespace-pre-line">
-                        거리: {job.travelTime}{"\n"}
-                        시급: {job.hourlyWage.toLocaleString()}원{"\n"}
-                        근무시간: {job.workingTime}{"\n"}
-                        월급:{" "}
+                        거리: {job.travelTime}
+                        {'\n'}
+                        시급: {job.hourlyWage.toLocaleString()}원{'\n'}
+                        근무시간: {job.workingTime}
+                        {'\n'}
+                        월급:{' '}
                         {job.monthlySalary
                           ? `${job.monthlySalary.toLocaleString()}원`
-                          : "-"}
+                          : '-'}
                       </p>
                     </div>
                   </div>
@@ -110,15 +118,17 @@ const JobSavedPage = () => {
         <div className="w-[301px] mt-[18px] flex gap-[13px]">
           <button
             disabled={!selectedJobId}
-            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black ${!selectedJobId ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black ${
+              !selectedJobId ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             직접 신청
           </button>
           <button
             disabled={!selectedJobId}
-            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium ${!selectedJobId ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium ${
+              !selectedJobId ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             보호자 신청
           </button>

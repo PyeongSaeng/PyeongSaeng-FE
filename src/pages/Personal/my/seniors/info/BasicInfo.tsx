@@ -11,6 +11,8 @@ const BasicInfo = () => {
   const [info, setInfo] = useState<Info | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(error); // error 상태 미사용 -> 추가
+
   useEffect(() => {
     getSeniorData('/api/user/senior/me')
       .then((data) => setInfo(data.result as Info))

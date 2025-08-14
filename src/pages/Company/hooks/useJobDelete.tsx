@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { qk } from "../../../shared/apis/querykeys";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { qk } from '../../../shared/apis/querykeys';
 
 type CompanyJob = { id: number; title: string };
 const baseURL = import.meta.env.VITE_API_BASE_URL;

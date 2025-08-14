@@ -20,6 +20,8 @@ const BasicInfoEdit = () => {
   const [error, setError] = useState<string | null>();
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
 
+  console.log(error); // error 상태 미사용 -> 추가
+
   useEffect(() => {
     getSeniorData('/api/user/senior/me')
       .then((data) => {

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState } from 'react';
+import axios from 'axios';
 
 type PresignedUploadResponse = {
   isSuccess: boolean;
@@ -8,17 +8,18 @@ type PresignedUploadResponse = {
   result: {
     keyName: string;
     url: string;
-  }
+  };
 };
 
 export function useImageUpload() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
-  const userToken = localStorage.getItem("accessToken");
+  const userToken = localStorage.getItem('accessToken');
 
-
-  const uploadImage = async (file: File): Promise<{ keyName: string; url: string } | null> => {
+  const uploadImage = async (
+    file: File
+  ): Promise<{ keyName: string; url: string } | null> => {
     setLoading(true);
     setError(null);
     try {
@@ -36,7 +37,7 @@ export function useImageUpload() {
 
       await axios.put(url, file, {
         headers: {
-          "Content-Type": file.type,
+          'Content-Type': file.type,
         },
       });
 
@@ -44,7 +45,7 @@ export function useImageUpload() {
       return { keyName, url };
     } catch (e: any) {
       setLoading(false);
-      setError(e?.message || "이미지 업로드 실패");
+      setError(e?.message || '이미지 업로드 실패');
       return null;
     }
   };

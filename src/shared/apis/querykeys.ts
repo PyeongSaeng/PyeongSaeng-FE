@@ -1,1 +1,1 @@
-export const qk = { companyJobPosts: ["companyJobPosts"] as const };
+export const qk = { companyJobPosts: ['companyJobPosts'] as const };

@@ -18,7 +18,12 @@ import {
   LoginRequest,
   ProtectorSignupRequest,
 } from '../types/auth';
-import { IdFindRequest, AccountSMSRequest, VerifyPasswordResetRequest, ResetPasswordRequest } from '../types/user';
+import {
+  IdFindRequest,
+  AccountSMSRequest,
+  VerifyPasswordResetRequest,
+  ResetPasswordRequest,
+} from '../types/user';
 
 // 시니어 회원가입 훅
 export const useSeniorSignup = () => {
@@ -83,13 +88,13 @@ export const useCheckUsername = () => {
       console.error('아이디 확인 실패:', error);
     },
   });
-}; 
+};
 
 // 일반 로그인 훅
 export const useLogin = () => {
   return useMutation({
-    mutationFn: (data: LoginRequest) => login(data)
-  })
+    mutationFn: (data: LoginRequest) => login(data),
+  });
 };
 
 // 계정 찾기용 SMS 발송 훅
@@ -143,4 +148,3 @@ export const useResetPassword = () => {
     },
   });
 };
-

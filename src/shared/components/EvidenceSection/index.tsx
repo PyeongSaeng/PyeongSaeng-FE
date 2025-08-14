@@ -36,16 +36,19 @@ export default function EvidenceSection({
         </p>
       </div>
 
-      <div className={`
+      <div
+        className={`
           w-[300px] h-[45px] 
           transition-colors
           ${dragging ? 'bg-green-50' : 'bg-white'}
-          `}>
+          `}
+      >
         <ImageUploadButton
           imageFile={imageFile}
           onFileSelect={handleFileSelect}
           className="text-[#000000] border-[#08D485] bg-[#08D485]"
-          onDragStateChange={setDragging} />
+          onDragStateChange={setDragging}
+        />
       </div>
 
       <TwoButtonGroup
