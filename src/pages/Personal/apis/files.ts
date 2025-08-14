@@ -1,5 +1,4 @@
 import axiosInstance from '../../../shared/apis/axiosInstance';
-
 import type {
   ReqPresignedUpload,
   ResPresignedUpload,
