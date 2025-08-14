@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+// import { useNavigate, useLocation } from 'react-router-dom';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import dummy1 from '../../../../../shared/assets/popular-dummy1.png';
 import { getSeniorData } from '../../../apis/my/seniorMy';
@@ -68,29 +68,30 @@ type ApplicationDetail = {
   travelTime: string;
 };
 
-const filterSenior = (
-  applyList: ApplicationList[] | null,
-  seniorId: number
-) => {
-  const value: ApplicationList[] = [];
-  applyList?.map((apply) => {
-    if (apply.seniorId === seniorId) {
-      value.push(apply);
-    }
-  });
-  return value;
-};
+// const filterSenior = (
+//   applyList: ApplicationList[] | null,
+//   seniorId: number
+// ) => {
+//   const value: ApplicationList[] = [];
+//   applyList?.map((apply) => {
+//     if (apply.seniorId === seniorId) {
+//       value.push(apply);
+//     }
+//   });
+//   return value;
+// };
 
 const ApplyResults = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const seniorData = location.state?.seniorData;
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const seniorData = location.state?.seniorData;
   const [applicationList, setApplicationList] = useState<
     ApplicationList[] | null
   >(null);
 
   const [applicationDetail, setApplicationDetail] =
     useState<ApplicationDetail | null>(null);
+  console.log(applicationDetail); // applicationDetail 상태 미사용 -> 추가
 
   useEffect(() => {
     const getSeniorApplication = async () => {

@@ -1,9 +1,10 @@
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { apiGetJobDetail } from "../apis/jobapi";
-import { JobDetail } from "../types/jobs";
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { apiGetJobDetail } from '../apis/jobapi';
+import { JobDetail } from '../types/jobs';
 
-export const jobDetailKey = (jobPostId: number) => ["job", "detail", jobPostId] as const;
+export const jobDetailKey = (jobPostId: number) =>
+  ['job', 'detail', jobPostId] as const;
 
 export function useJobDetail(jobPostId: number) {
   const isValid = Number.isFinite(jobPostId) && jobPostId > 0;
@@ -11,7 +12,7 @@ export function useJobDetail(jobPostId: number) {
   return useQuery<JobDetail>({
     queryKey: jobDetailKey(jobPostId),
     queryFn: () => apiGetJobDetail(jobPostId),
-    enabled: isValid, 
+    enabled: isValid,
     staleTime: 60_000,
     retry: (count, err) => {
       if (axios.isAxiosError(err)) {

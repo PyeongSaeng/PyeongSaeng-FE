@@ -7,9 +7,10 @@ import Loading from '../../../../../shared/components/Loading';
 
 const CareInfo = () => {
   const [info, setInfo] = useState<Info | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  console.log(error); // error 상태 미사용 -> 추가
 
   // 정보 조회
   useEffect(() => {

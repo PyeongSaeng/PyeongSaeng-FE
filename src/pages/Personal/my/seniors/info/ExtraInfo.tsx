@@ -28,6 +28,8 @@ const ExtraInfo = () => {
   const [info, setInfo] = useState();
   const [error, setError] = useState();
 
+  console.log(error); // error 상태 미사용 -> 추가
+
   // api 구현 안됨 + 시니어 아이디 넣기
   useEffect(() => {
     getSeniorData(`/api/seniors/${18}/questions`)
