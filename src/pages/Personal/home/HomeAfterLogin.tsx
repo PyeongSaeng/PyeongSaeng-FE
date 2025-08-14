@@ -6,21 +6,21 @@ const HomeAfterLogin = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex justify-center font-[pretendard] text-[16px]">
+    <div className="flex justify-center text-[16px]">
       <div className="flex flex-col justify-center items-center">
         <div className="py-[16px]">
           <div className="flex gap-[4px]">
-            <HomeTopButton bgColor="green" textColor="black">
+            <HomeTopButton bgColor="green" textColor="black" onClick={() => navigate('/personal/jobs/recommend')}>
               <span className="leading-tight">
                 <span>일자리 추천(어르신용)</span>
               </span>
             </HomeTopButton>
-            <HomeTopButton bgColor="green" textColor="black">
+            <HomeTopButton bgColor="green" textColor="black" onClick={() => navigate('/personal/jobs/saved')}>
               <span className="leading-tight">
                 <span>일자리 저장(어르신용)</span>
               </span>
             </HomeTopButton>
-            <HomeTopButton bgColor="green" textColor="black">
+            <HomeTopButton bgColor="green" textColor="black" onClick={() => navigate('/personal/jobs/drafts')}>
               일자리 신청
             </HomeTopButton>
           </div>
