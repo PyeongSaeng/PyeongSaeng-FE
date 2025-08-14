@@ -162,9 +162,7 @@ const SearchAndLinkSenior = ({
     }
   };
 
-  return seniorData === null ? (
-    <NoInfomation />
-  ) : (
+  return (
     <div className="flex flex-col justify-center items-center gap-[10px]">
       <span className="text-center text-[#747474] text-[16px] font-[Pretendard JP] font-[600]">
         {seniorData
