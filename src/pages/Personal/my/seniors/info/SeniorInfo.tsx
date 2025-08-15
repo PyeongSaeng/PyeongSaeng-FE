@@ -3,24 +3,29 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../../../shared/apis/axiosInstance';
-import { Info } from '../../../types/userInfo';
+import { Answer, Info } from '../../../types/userInfo';
+import { getSeniorData } from '../../../apis/my/seniorMy';
 
 const SeniorInfo = () => {
-  const [answers, setAnswers] = useState<(string | null)[]>([
-    '1시간 내외',
-    '실외',
-    '여럿이',
-    '교육/강사',
-    'C',
-  ]);
-
   const navigate = useNavigate();
   const location = useLocation();
 
   const [btn, setBtn] = useState<'수정' | '저장'>('수정');
-  const [changes, setChanges] = useState<Partial<Info> | null>();
+
+  // 기본정보 관련
+  const [seniorInfo, setSeniorInfo] = useState<Info | null>();
+  const [changes, setChanges] = useState<Partial<Info>>({});
+
+  // 추가정보 관련
+  const [patchObject, setPatchObject] = useState<Answer[]>([]); // patch 객체
 
   const isEdit = location.pathname.endsWith('/edit');
+
+  useEffect(() => {
+    getSeniorData('/api/user/senior/me')
+      .then((data) => setSeniorInfo(data.result))
+      .catch((err) => console.error('시니어 기본 정보 조회 실패: ', err));
+  }, []);
 
   useEffect(() => {
     const currentPath = location.pathname.split('/').pop();
@@ -43,21 +48,26 @@ const SeniorInfo = () => {
     if (!isEdit) return;
 
     const pathArr = location.pathname.split('/');
-    const lastPath = pathArr[pathArr.length - 1];
     const prevPath = pathArr[pathArr.length - 2];
 
     try {
-      await axiosInstance.patch('/api/user/senior/me', changes);
-      if (lastPath === 'edit' && prevPath === 'basic') {
-        navigate('/personal/senior-my/info/basic');
-      } else if (lastPath === 'edit' && prevPath === 'extra') {
-        navigate('/personal/senior-my/info/extra');
+      if (prevPath === 'basic') {
+        await axiosInstance.patch('/api/user/senior/me', changes);
+      } else if (prevPath === 'extra') {
+        await axiosInstance.patch(`/api/seniors/${seniorInfo?.id}/answers`, {
+          answers: patchObject,
+        });
       }
+      navigate(`/personal/senior-my/info/${prevPath}`);
     } catch (err) {
       console.error('시니어 정보 수정 실패: ', err);
       alert('정보 수정에 실패했습니다.');
     }
   };
+
+  useEffect(() => {
+    console.log('부모컴포넌트 출력: ', patchObject);
+  }, [patchObject]);
 
   return (
     <div>
@@ -92,7 +102,7 @@ const SeniorInfo = () => {
           </div>
           <div className="h-[466px]">
             <Outlet
-              context={{ answers, setAnswers, setChanges }}
+              context={{ patchObject, setPatchObject, setChanges }}
               key={location.pathname}
             />
           </div>

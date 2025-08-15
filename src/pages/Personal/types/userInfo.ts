@@ -75,6 +75,11 @@ export type Question = {
   seletedOption: string | null;
 };
 
+export type Answer = {
+  questionId: number;
+  selectedOptionId: number | null;
+};
+
 // 보호자
 export type CareInfo = {
   id: number;

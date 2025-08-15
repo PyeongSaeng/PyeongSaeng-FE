@@ -2,30 +2,15 @@ import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
 import { getSeniorData } from '../../../apis/my/seniorMy';
-import { Info, Question } from '../../../types/userInfo';
-
-const questions = [
-  'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',
-  'Q2. 어디에서 일하는 것을 선호하시나요?',
-  'Q3. 일할 때 어떤 환경이 편하신가요?',
-  'Q4. 어떤 일을 할 때 가장 보람을 느끼시나요?',
-  'Q5. 질문',
-];
-
-const options = [
-  ['1시간 내외', '2시간 내외', '3시간 내외', '3시간 초과'],
-  ['실내', '실외'],
-  ['혼자서', '여럿이'],
-  ['환경 미화', '실내 청소', '조리', '아동 보호', '교육/강사'],
-  ['A', 'B', 'C'],
-];
+import { Answer, Info, Question } from '../../../types/userInfo';
+import Loading from '../../../../../shared/components/Loading';
 
 interface OutletContextType {
-  answers: (string | null)[];
+  setPatchObject: React.Dispatch<React.SetStateAction<Answer[]>>;
 }
 
 const ExtraInfo = () => {
-  const { answers } = useOutletContext<OutletContextType>();
+  const { setPatchObject } = useOutletContext<OutletContextType>();
   const [info, setInfo] = useState<Info>();
   const [questionList, setQuestionList] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -39,16 +24,18 @@ const ExtraInfo = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     getSeniorData(`/api/seniors/${info?.id}/questions`)
-      .then((data) => setQuestionList(data.result))
-      .catch((err) => console.error('시니어 추가 정보 조회 실패: ', err));
+      .then((data) => {
+        setQuestionList(data.result);
+      })
+      .catch((err) => console.error('시니어 추가 정보 조회 실패: ', err))
+      .finally(() => setLoading(false));
   }, [info]);
 
-  useEffect(() => {
-    console.log(questionList);
-  }, [questionList]);
-
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
       <div className="h-[450px] overflow-y-scroll scrollbar-hide">
         {questionList &&
