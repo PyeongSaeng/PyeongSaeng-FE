@@ -1,6 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import {
   signupCompany,
   checkCompanyUsername,
@@ -19,19 +17,14 @@ import {
 
 // 기업 로그인
 export const useCompanyLogin = () => {
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (data: CompanyLoginRequest) => loginCompany(data),
     onSuccess: (data) => {
       console.log('기업 로그인 성공:', data);
-      toast.success('로그인 성공! 메인 페이지로 이동합니다.');
-      // 로그인 성공 시 홈으로 이동
-      navigate('/company');
     },
     onError: (error: any) => {
       console.error('기업 로그인 실패:', error);
-      toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
     },
   });
 };
