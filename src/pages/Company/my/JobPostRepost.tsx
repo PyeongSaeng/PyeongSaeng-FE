@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import Topbar from '../../../shared/components/topbar/Topbar';
-import dummy1 from '../../../shared/assets/popular-dummy1.png';
+// import dummy1 from '../../../shared/assets/popular-dummy1.png';
 import { getCompanyData } from '../apis/companyMy';
 
-type appliedJobs = {
-  job: string;
-  dueDate: string;
-  dayOfWeek: string;
-  img: string;
-  result: string;
-};
+// type appliedJobs = {
+//   job: string;
+//   dueDate: string;
+//   dayOfWeek: string;
+//   img: string;
+//   result: string;
+// };
 
 // const dummyApplies: appliedJobs[] = [
 //   {

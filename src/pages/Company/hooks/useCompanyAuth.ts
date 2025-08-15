@@ -1,21 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { 
-  signupCompany, 
-  checkCompanyUsername, 
+import {
+  signupCompany,
+  checkCompanyUsername,
   sendCompanyVerificationCode,
   loginCompany,
   findUsername,
   resetPassword,
-  verifyPasswordReset
+  verifyPasswordReset,
 } from '../apis/companyAuth';
 import { CompanySigninRequest, CompanyLoginRequest } from '../types/auth';
-import { IdFindRequest, VerifyPasswordResetRequest, ResetPasswordRequest } from '../types/findAccount';
+import {
+  IdFindRequest,
+  VerifyPasswordResetRequest,
+  ResetPasswordRequest,
+} from '../types/findAccount';
 
-// 기업 로그인 
+// 기업 로그인
 export const useCompanyLogin = () => {
   const navigate = useNavigate();
-  
+
   return useMutation({
     mutationFn: (data: CompanyLoginRequest) => loginCompany(data),
     onSuccess: (data) => {
@@ -106,4 +110,3 @@ export const useResetPassword = () => {
     },
   });
 };
-

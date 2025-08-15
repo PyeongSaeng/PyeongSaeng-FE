@@ -19,7 +19,6 @@ const BasicInfoEdit = () => {
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
-
   const [isPostcodeOpen, setIsPostCodeOpen] = useState<boolean>(false);
 
   const handleRoadAddress = (data: any) => {

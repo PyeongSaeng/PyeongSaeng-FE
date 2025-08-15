@@ -48,7 +48,7 @@ export default function AddressSearchInput({
         type="text"
         placeholder="상세 주소를 입력하세요"
         value={detailAddress}
-        onChange={e => onChangeDetail(e.target.value)}
+        onChange={(e) => onChangeDetail(e.target.value)}
         className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000] placeholder:text-[#c2c2c2]"
       />
     </div>

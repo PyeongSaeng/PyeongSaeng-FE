@@ -28,7 +28,7 @@ const AfterLoginMainMenu = ({ goNext }: AfterLoginMainMenuProps) => {
           받은 신청서
         </MenuNavButton>
         <button onClick={goNext}>내 기업 정보</button>
-        <MenuNavButton url="/">로그아웃</MenuNavButton>
+        <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
         <MenuNavButton url="/company/delete-account">회원탈퇴</MenuNavButton>
       </div>
     </div>

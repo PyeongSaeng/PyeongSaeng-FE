@@ -5,7 +5,7 @@ const HomeBeforeLogin = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="text-[16px] font-[pretendard]">
+    <div className="text-[16px]">
       <div className="flex justify-center">
         <div>
           <div className="w-[298px] h-[180px] mt-[16px] mb-[40px] flex flex-col items-center justify-center gap-[27px] rounded-[13px] border-[1px] border-[#D3D3D3]">

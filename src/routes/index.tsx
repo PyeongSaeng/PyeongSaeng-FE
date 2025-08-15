@@ -138,11 +138,11 @@ const AppRoutes = () => {
         element={<ApplicationsPage />}
       ></Route>
       <Route
-        path="/company/jobs/applications/:title"
+        path="/company/jobs/applications/:jobPostId"
         element={<ApplicationDetailPage />}
       />
       <Route
-        path="/company/jobs/applications/:applicationId/results"
+        path="/company/jobs/applications/:jobPostId/results"
         element={<ApplicationResultsPage />}
       ></Route>
       <Route path="/company/my/repost" element={<JobPostRepost />}></Route>

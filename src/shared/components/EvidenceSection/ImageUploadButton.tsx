@@ -6,7 +6,7 @@ interface Props {
   onFileSelect: (file: File) => void;
   className?: string;
   onDragStateChange?: (dragging: boolean) => void;
-  fallbackName?: string;          
+  fallbackName?: string;
 }
 
 export default function ImageUploadButton({
@@ -14,7 +14,7 @@ export default function ImageUploadButton({
   onFileSelect,
   className,
   onDragStateChange,
-  fallbackName,                    
+  fallbackName,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -61,7 +61,10 @@ export default function ImageUploadButton({
       `}
       tabIndex={0}
       onClick={handleButtonClick}
-      onDragOver={e => { e.preventDefault(); setDraggingState(true); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDraggingState(true);
+      }}
       onDragLeave={() => setDraggingState(false)}
       onDrop={handleDrop}
       onPaste={handlePaste}
