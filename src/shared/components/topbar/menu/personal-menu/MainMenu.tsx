@@ -35,10 +35,16 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="/personal/jobs/recommend">
-          일자리 추천
-        </MenuNavButton>
-        <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
+        {myMenu !== 'PROTECTOR' && (
+          <>
+            <MenuNavButton url="/personal/jobs/recommend">
+              일자리 추천
+            </MenuNavButton>
+            <MenuNavButton url="/personal/jobs/saved">
+              일자리 저장함
+            </MenuNavButton>
+          </>
+        )}
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
         <MenuNavButton url="/personal/senior-my/info/extra">
           질문답변
