@@ -9,7 +9,10 @@ import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
 import { postGenerateKeywords, postGenerateAnswer } from './apis/ai';
-import { postApplicationDirect } from './apis/applications';
+import {
+  postApplicationsEnsure,
+  postApplicationDirect,
+} from './apis/applications';
 import { uploadFileAndGetKey } from './apis/files';
 import type { QAOption } from './types/ai';
 import type { FieldAndAnswer } from './types/applications';
@@ -18,14 +21,19 @@ export default function JobApplyPage() {
   const navigate = useNavigate();
   const { jobId } = useParams<{ jobId: string }>();
 
-  const parsedJobId = Number(jobId || '1');
+  const parsedJobId = Number(jobId);
 
+  // (임시) 폼필드 ID 하드코딩
   const motivationFieldId = 1;
   const certFieldId = 2;
+
+  // (임시) 추가질문 유무. 실제론 공고 상세 API 값으로 결정
   const hasExtraQuestions = true;
+
   const [step, setStep] = useState<
     'basic' | 'choice' | 'scaffold' | 'final' | 'evidence' | 'complete'
   >(hasExtraQuestions ? 'choice' : 'basic');
+
   const [selected, setSelected] = useState('');
   const MAIN_QUESTION = '지원 동기가 무엇인가요?';
 
@@ -36,6 +44,11 @@ export default function JobApplyPage() {
   const [finalText, setFinalText] = useState('');
   const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null);
 
+  // 중복 제출/저장 방지
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // (임시) 상단 카드 정보 – 실제론 사용자/공고 API 바인딩 권장
   const info = useMemo(
     () => ({
       name: '김순자',
@@ -48,13 +61,25 @@ export default function JobApplyPage() {
     []
   );
 
+  // 2) 유효하지 않은 경로 가드
   useEffect(() => {
-    if (!parsedJobId || Number.isNaN(parsedJobId)) {
+    if (!jobId || Number.isNaN(parsedJobId)) {
       alert('유효하지 않은 채용공고 경로입니다.');
       navigate('/personal');
     }
-  }, [parsedJobId, navigate]);
+  }, [jobId, parsedJobId, navigate]);
 
+  // 3) 간소 플로우라면 ensure 선호출(
+  useEffect(() => {
+    if (!Number.isNaN(parsedJobId)) {
+      postApplicationsEnsure(parsedJobId).catch(() => {
+        // 이미 존재 등은 조용히 무시
+        console.warn('POST /api/applications/ensure 실패(무시 가능)');
+      });
+    }
+  }, [parsedJobId]);
+
+  // 이탈 방지
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (step !== 'complete') {
@@ -66,6 +91,10 @@ export default function JobApplyPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [step]);
 
+  // util: 문자열 정규화
+  const normalize = (s: string) =>
+    (s ?? '').toLowerCase().normalize('NFKC').replace(/\s+/g, ''); // 공백 제거
+
   const handleChoiceSubmit = async () => {
     if (!selected.trim()) return alert('답변을 선택해 주세요.');
     setStep('scaffold');
@@ -75,16 +104,29 @@ export default function JobApplyPage() {
 
     try {
       const qa: QAOption[] = [{ question: MAIN_QUESTION, option: selected }];
+
       const keywords = await postGenerateKeywords({
         answers: qa,
         question: MAIN_QUESTION,
       });
-      const picked = keywords?.[0] ?? selected;
+
+      // 1) 사용자가 고른 키워드와 의미상 매칭되는 후보가 있으면 그걸 사용
+      const pickedFromList =
+        (keywords ?? []).find((k) => {
+          const nk = normalize(k);
+          const ns = normalize(selected);
+          return nk === ns || nk.includes(ns) || ns.includes(nk);
+        }) ?? null;
+
+      // 2) 없으면 사용자가 고른 것 그대로, 그래도 없으면 첫 후보
+      const picked = pickedFromList ?? selected ?? keywords?.[0] ?? '';
+
       const generated = await postGenerateAnswer({
         answers: qa,
         question: MAIN_QUESTION,
         selectedKeyword: picked,
       });
+
       setScaffoldText(generated);
     } catch (e: any) {
       const msg =
@@ -97,6 +139,7 @@ export default function JobApplyPage() {
     }
   };
 
+  // AI 틀 + 사용자 입력 → 최종 문장으로 합치기
   const handleAiCompose = () => {
     const base = scaffoldText.trim();
     if (!base) return alert('AI 문장을 먼저 생성해 주세요.');
@@ -104,7 +147,55 @@ export default function JobApplyPage() {
     setStep('final');
   };
 
+  // ❗ 4) 임시저장(DRAFT) – 서버 반영
+  const saveDraft = async () => {
+    if (isSavingDraft) return;
+    setIsSavingDraft(true);
+    try {
+      const payload: FieldAndAnswer[] = [];
+
+      // 텍스트가 있으면 포함
+      const draftText = finalText || scaffoldText || '';
+      if (draftText) {
+        payload.push({
+          formFieldId: motivationFieldId,
+          fieldType: 'TEXT',
+          answer: draftText,
+        });
+      }
+
+      // 증빙 이미지는 선택사항으로 처리
+      if (uploadedImageFile) {
+        const keyName = await uploadFileAndGetKey(uploadedImageFile);
+        payload.push({
+          formFieldId: certFieldId,
+          fieldType: 'IMAGE',
+          answer: [{ keyName, originalFileName: uploadedImageFile.name }],
+        });
+      }
+
+      await postApplicationDirect({
+        jobPostId: parsedJobId,
+        applicationStatus: 'DRAFT',
+        fieldAndAnswer: payload,
+      });
+
+      navigate('/personal/jobs/drafts');
+    } catch (e: any) {
+      alert(
+        e?.response?.data?.message ??
+          e?.message ??
+          '임시저장 중 오류가 발생했습니다.'
+      );
+    } finally {
+      setIsSavingDraft(false);
+    }
+  };
+
+  // ❗ 5) 최종 제출(SUBMITTED)
   const submitApplication = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       if (!finalText.trim()) return alert('완성본 문장을 확인해 주세요.');
       if (!uploadedImageFile) return alert('자격증 이미지를 업로드해 주세요.');
@@ -138,6 +229,30 @@ export default function JobApplyPage() {
           e?.message ??
           '제출 중 오류가 발생했습니다.'
       );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // basic 플로우(추가항목이 전혀 없는 경우)에서의 즉시 제출
+  const submitBasic = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await postApplicationDirect({
+        jobPostId: parsedJobId,
+        applicationStatus: 'SUBMITTED',
+        fieldAndAnswer: [],
+      });
+      setStep('complete');
+    } catch (e: any) {
+      alert(
+        e?.response?.data?.message ??
+          e?.message ??
+          '제출 중 오류가 발생했습니다.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -165,6 +280,7 @@ export default function JobApplyPage() {
             }
           />
 
+          {/* 완료 화면 */}
           {step === 'complete' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
@@ -182,18 +298,20 @@ export default function JobApplyPage() {
             </>
           )}
 
+          {/* 추가 항목이 전혀 없을 때 */}
           {step === 'basic' && (
             <>
               <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
               <TwoButtonGroup
                 leftLabel="저장"
                 rightLabel="제출"
-                onLeftClick={() => navigate('/personal/jobs/drafts')}
-                onRightClick={() => setStep('complete')}
+                onLeftClick={saveDraft}
+                onRightClick={submitBasic}
               />
             </>
           )}
 
+          {/* 선택형 질문 */}
           {step === 'choice' && (
             <div className="w-full flex flex-col gap-4">
               <MotivationChoiceSection
@@ -207,10 +325,16 @@ export default function JobApplyPage() {
                 selected={selected}
                 onSelect={setSelected}
               />
-              <NextButton onClick={handleChoiceSubmit}>제출하기</NextButton>
+              <NextButton
+                onClick={handleChoiceSubmit}
+                disabled={isLoadingScaffold || isSubmitting}
+              >
+                제출하기
+              </NextButton>
             </div>
           )}
 
+          {/* AI 틀 + 사용자 입력 */}
           {step === 'scaffold' && (
             <div className="w-full flex flex-col">
               <QuestionWriteFormSection
@@ -240,6 +364,7 @@ export default function JobApplyPage() {
             </div>
           )}
 
+          {/* 최종 문장 편집 + 임시저장/다음 */}
           {step === 'final' && (
             <>
               <QuestionWriteFormSection
@@ -249,17 +374,18 @@ export default function JobApplyPage() {
                 placeholder="여기서 수정할 수 있어요"
               />
               <TwoButtonGroup
-                leftLabel="임시저장"
+                leftLabel={isSavingDraft ? '저장 중...' : '임시저장'}
                 rightLabel="다음"
-                onLeftClick={() => navigate('/personal/jobs/drafts')}
+                onLeftClick={saveDraft}
                 onRightClick={() => setStep('evidence')}
               />
             </>
           )}
 
+          {/* 증빙 업로드 + 최종 제출 */}
           {step === 'evidence' && (
             <EvidenceSection
-              onSave={() => navigate('/personal/jobs/drafts')}
+              onSave={saveDraft}
               onSubmit={submitApplication}
               onFileUpload={setUploadedImageFile}
             />
