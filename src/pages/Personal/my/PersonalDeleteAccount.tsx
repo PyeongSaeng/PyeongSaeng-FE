@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -21,16 +22,16 @@ const PersonalDeleteAccount = () => {
         const res = await axiosInstance.delete('/api/user/withdraw', {
           data: { confirmed: true },
         });
-        alert(res.data.message);
+        toast.success(res.data.message);
         navigate('/personal/my/delete-account/done');
       } catch (error) {
         console.error('회원 탈퇴 실패', error);
-        alert('탈퇴에 실패했습니다. 다시 시도해주세요.');
+        toast.error('탈퇴에 실패했습니다. 다시 시도해주세요.');
       } finally {
         setSubmitting(false);
       }
     } else {
-      alert('문구를 바르게 입력해주세요');
+      toast.warning('문구를 바르게 입력해주세요');
     }
   };
 

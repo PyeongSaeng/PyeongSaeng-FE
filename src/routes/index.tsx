@@ -19,8 +19,6 @@ import PersonalDeleteAccount from '../pages/Personal/my/PersonalDeleteAccount';
 import PersonalDeleteAccountDone from '../pages/Personal/my/PersonalDeleteAccountDone';
 import SeniorInfo from '../pages/Personal/my/seniors/info/SeniorInfo';
 import PersonalPasswordEdit from '../pages/Personal/my/PersonalPasswordEdit';
-import ApplyResults from '../pages/Personal/my/seniors/apply/ApplyResults';
-import ApplyDetail from '../pages/Personal/my/seniors/apply/ApplyDetail';
 import BasicInfo from '../pages/Personal/my/seniors/info/BasicInfo';
 import ExtraInfo from '../pages/Personal/my/seniors/info/ExtraInfo';
 import BasicInfoEdit from '../pages/Personal/my/seniors/info/BasicInfoEdit';
@@ -40,6 +38,10 @@ import CompanyInfo from '../pages/Company/my/CompanyInfo';
 import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
 import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
 import CompanyPasswordEditDone from '../pages/Company/my/CompanyPasswordEditDone';
+import CareCheckApplicationDetail from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationDetail';
+import CareCheckApplicationResults from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationResults';
+import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults';
+import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
 
 const AppRoutes = () => {
   return (
@@ -71,11 +73,11 @@ const AppRoutes = () => {
       <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
       <Route
         path="/personal/senior-my/applied-results"
-        element={<ApplyResults />}
+        element={<SeniorApplyResults />}
       ></Route>
       <Route
-        path="/personal/senior-my/applied-results/:appliedId"
-        element={<ApplyDetail />}
+        path="/personal/senior-my/applied-results/:applicationId"
+        element={<SeniorApplyDetail />}
       ></Route>
       {/* 시니어 마이메뉴 */}
       <Route path="/personal/senior-my/info" element={<SeniorInfo />}>
@@ -96,7 +98,11 @@ const AppRoutes = () => {
       ></Route>
       <Route
         path="/personal/care-my/application-results"
-        element={<ApplyResults />}
+        element={<CareCheckApplicationResults />}
+      ></Route>
+      <Route
+        path="/personal/care-my/application-results/:applicationId"
+        element={<CareCheckApplicationDetail />}
       ></Route>
       {/* <Route path="/personal/care-my/extra" element={<></>}></Route> */}
       <Route

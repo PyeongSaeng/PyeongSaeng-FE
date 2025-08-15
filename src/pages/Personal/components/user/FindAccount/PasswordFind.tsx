@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import NextButton from '../signIn/NextButton';
 import {
   useSendAccountSMS,
@@ -30,7 +31,7 @@ const PasswordFind = () => {
 
   const handleVerificationSend = () => {
     if (!phoneNumber.trim()) {
-      alert('전화번호를 입력해주세요.');
+      toast.warning('전화번호를 입력해주세요.');
       return;
     }
 
@@ -48,7 +49,7 @@ const PasswordFind = () => {
             setIsKakaoUser(true);
             setIsVerificationSent(true);
           } else {
-            alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+            toast.error('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
           }
         },
       }
@@ -58,11 +59,11 @@ const PasswordFind = () => {
   const handleNext = () => {
     if (step === 'input') {
       if (!userId.trim() || !phoneNumber.trim() || !verificationCode.trim()) {
-        alert('모든 항목을 입력해주세요.');
+        toast.warning('모든 항목을 입력해주세요.');
         return;
       }
       if (!isVerificationSent) {
-        alert('휴대폰 인증을 완료해주세요.');
+        toast.warning('휴대폰 인증을 완료해주세요.');
         return;
       }
 
@@ -80,17 +81,17 @@ const PasswordFind = () => {
             setStep('reset');
           },
           onError: () => {
-            alert('인증에 실패했습니다.');
+            toast.error('인증에 실패했습니다.');
           },
         }
       );
     } else if (step === 'reset') {
       if (!newPassword.trim() || !confirmPassword.trim()) {
-        alert('새 비밀번호를 입력해주세요.');
+        toast.warning('새 비밀번호를 입력해주세요.');
         return;
       }
       if (newPassword !== confirmPassword) {
-        alert('비밀번호가 일치하지 않습니다.');
+        toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
 
@@ -108,7 +109,7 @@ const PasswordFind = () => {
             const errorMessage =
               error.response?.data?.message ||
               '비밀번호 재설정에 실패했습니다.';
-            alert(errorMessage);
+            toast.error(errorMessage);
           },
         }
       );

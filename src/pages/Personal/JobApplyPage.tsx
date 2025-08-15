@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
@@ -9,7 +10,6 @@ import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormS
 import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
-import ImageUploadButton from '../../shared/components/EvidenceSection/ImageUploadButton';
 
 import { postGenerateAnswer, type QAOption } from './apis/ai';
 import {
@@ -20,7 +20,6 @@ import { uploadFileAndGetKey } from './apis/files';
 
 import type { FieldAndAnswer } from './types/applications';
 import { getQuestionsDirect, pickExtraFields } from './apis/questions';
-
 import { apiGetJobDetail } from './apis/jobapi';
 
 import axiosInstance from '../../shared/apis/axiosInstance';
@@ -95,9 +94,9 @@ export default function JobApplyPage() {
   );
   const [certFieldId, setCertFieldId] = useState<number | null>(null);
 
-  // 썸네일/파일명(업로드 시 생성) — tsconfig 손대지 않도록 초기값 명시
+  // 썸네일/파일명(업로드 시 생성)
   const [previewUrl, setPreviewUrl] = useState<string>(''); // blob URL
-  const [previewName, setPreviewName] = useState<string>(''); // 파일명만 있는 경우도 표시
+  const [previewName, setPreviewName] = useState<string>(''); // 파일명 표시용
   useEffect(() => {
     if (!uploadedImageFile) return;
     const url = URL.createObjectURL(uploadedImageFile);
@@ -115,11 +114,11 @@ export default function JobApplyPage() {
 
   // 유효성
   useEffect(() => {
-    if (!jobId || Number.isNaN(parsedJobId)) {
-      alert('유효하지 않은 채용공고 경로입니다.');
-      navigate('/');
+    if (!parsedJobId || Number.isNaN(parsedJobId)) {
+      toast.error('유효하지 않은 채용공고 경로입니다.');
+      navigate('/personal');
     }
-  }, [jobId, parsedJobId, navigate]);
+  }, [parsedJobId, navigate]);
 
   // 채용공고 제목
   useEffect(() => {
@@ -162,6 +161,7 @@ export default function JobApplyPage() {
             sessionStorage.setItem(ensureOnceKey, '1');
           }
         }
+
         // (1) 질문 목록
         let allFields: Awaited<ReturnType<typeof getQuestionsDirect>> = [];
         let extras: ReturnType<typeof pickExtraFields> = [];
@@ -173,23 +173,20 @@ export default function JobApplyPage() {
           const labelOf = (f: any) =>
             `${f?.label ?? ''} ${f?.title ?? ''} ${f?.question ?? ''}`.trim();
 
-          // ✅ 지원동기 텍스트 필드를 정확히 특정
+          // ✅ 지원동기 텍스트 필드 특정
           const motivationField =
-            // 1순위: 라벨/질문에 '지원동기' 또는 MAIN_QUESTION이 들어가는 TEXT류
             allFields.find(
               (f: any) =>
                 norm(f.fieldType).startsWith('TEXT') &&
                 (labelOf(f).includes('지원동기') ||
                   labelOf(f).includes(MAIN_QUESTION))
             ) ??
-            // 2순위: extras 안의 TEXT류에서 동일 규칙
             extras.find(
               (f: any) =>
                 norm(f.fieldType).startsWith('TEXT') &&
                 (labelOf(f).includes('지원동기') ||
                   labelOf(f).includes(MAIN_QUESTION))
             ) ??
-            // 3순위(최후 보루): TEXT류 아무거나
             allFields.find((f: any) => norm(f.fieldType).startsWith('TEXT'));
 
           const imageField = allFields.find(
@@ -199,10 +196,10 @@ export default function JobApplyPage() {
           setMotivationFieldId((motivationField as any)?.formFieldId ?? null);
           setCertFieldId((imageField as any)?.formFieldId ?? null);
 
-          // 🔎 추가질문 유무는 extras 기준
+          // 🔎 추가질문 유무(extras 기준)
           const hasAnyExtras = (extras?.length ?? 0) > 0;
 
-          // ✅ 드래프트 복원: "지원동기" 필드ID로만 텍스트를 복원
+          // ✅ 드래프트 복원: "지원동기" 필드ID로만 텍스트 복원
           const textExtraById = extras.find(
             (f: any) => f.formFieldId === (motivationField as any)?.formFieldId
           );
@@ -211,7 +208,7 @@ export default function JobApplyPage() {
               ? (textExtraById.answer as string)
               : '';
 
-          // 안전장치: 너무 짧거나 이름과 동일하면 지원동기로 취급하지 않음
+          // 안전장치: 너무 짧거나 이름 동일 시 무시
           const looksWrong =
             savedText &&
             (savedText.trim().length < 5 ||
@@ -220,7 +217,7 @@ export default function JobApplyPage() {
 
           if (savedText) setFinalText(savedText);
 
-          // 이미지 메타 복원(있으면 파일명만 표시)
+          // 이미지 메타 복원(파일명만)
           const imageExtraById = extras.find(
             (f: any) => f.formFieldId === (imageField as any)?.formFieldId
           );
@@ -233,10 +230,10 @@ export default function JobApplyPage() {
               : [];
           if (savedImages.length > 0) {
             setPreviewName(savedImages[0].originalFileName || '');
-            setPreviewUrl(''); // 서버 메타만 있으니 blob URL 없음
+            setPreviewUrl(''); // 서버 메타만 있으므로 blob URL 없음
           }
 
-          // ✅ 단계 결정: 지원동기 텍스트가 있을 때만 final부터
+          // ✅ 단계 결정
           if (!hasAnyExtras) {
             setStep('basic');
           } else if (savedText) {
@@ -249,8 +246,8 @@ export default function JobApplyPage() {
           const msg = e?.response?.data?.message ?? e?.message;
           console.warn('[questions error]', code, msg);
           if (code === 'JOBPOST404') {
-            alert('존재하지 않는 채용공고입니다.');
-            navigate('/');
+            toast.error('존재하지 않는 채용공고입니다.');
+            navigate('/personal');
             return;
           }
         }
@@ -260,7 +257,7 @@ export default function JobApplyPage() {
     };
 
     init();
-  }, [parsedJobId, navigate]);
+  }, [parsedJobId, navigate, senior?.name]);
 
   // 이탈 방지
   useEffect(() => {
@@ -276,8 +273,7 @@ export default function JobApplyPage() {
 
   // <31> → 스캐폴드 생성
   const handleChoiceSubmit = async () => {
-    if (!selected.trim()) return alert('답변을 선택해 주세요.');
-
+    if (!selected.trim()) return toast.warning('답변을 선택해 주세요.');
     setStep('scaffold');
     setIsLoadingScaffold(true);
     setScaffoldError(null);
@@ -302,17 +298,18 @@ export default function JobApplyPage() {
   };
 
   // <32> → <33> (로컬 병합)
-  const handleAiCompose = async () => {
-    const scaffold = scaffoldText.trim();
-    if (!scaffold) return alert('AI 문장을 먼저 생성해 주세요.');
-    if (!personalInput.trim()) return alert('관련된 경험을 입력해 주세요.');
-
-    const merged = `${scaffold}\n\n[경험]\n${personalInput.trim()}`.trim();
+  const handleAiCompose = () => {
+    const base = scaffoldText.trim();
+    if (!base) return toast.warning('AI 문장을 먼저 생성해 주세요.');
+    const merged = [base, personalInput.trim()]
+      .filter(Boolean)
+      .join('\n\n[경험]\n')
+      .trim();
     setFinalText(merged);
     setStep('final');
   };
 
-  // 임시저장(DRAFT) — silent 모드 지원
+  // 임시저장(DRAFT)
   const saveDraft = async (opts?: { silent?: boolean }) => {
     const silent = !!opts?.silent;
     if (isSavingDraft) return;
@@ -348,7 +345,8 @@ export default function JobApplyPage() {
         navigate('/personal/jobs/drafts');
       }
     } catch (e: any) {
-      alert(
+      console.error('[draft error]', e?.response?.data ?? e);
+      toast.error(
         e?.response?.data?.message ??
           e?.message ??
           '임시저장 중 오류가 발생했습니다.'
@@ -363,10 +361,11 @@ export default function JobApplyPage() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      if (!finalText.trim()) return alert('완성본 문장을 확인해 주세요.');
+      if (!finalText.trim())
+        return toast.warning('완성본 문장을 확인해 주세요.');
       if (certFieldId != null && !uploadedImageFile && !previewName) {
         // 이미지 필수인데 새 업로드도, 저장된 파일명도 없으면 막기
-        return alert('자격증 이미지를 업로드해 주세요.');
+        return toast.warning('자격증 이미지를 업로드해 주세요.');
       }
 
       const payload: FieldAndAnswer[] = [];
@@ -387,7 +386,6 @@ export default function JobApplyPage() {
           answer: [{ keyName, originalFileName: uploadedImageFile.name }],
         });
       }
-      // 저장된 서버 파일만 있는 경우는 서버가 보존하고 있다고 가정 (추가 전송 불필요)
 
       await postApplicationDirect({
         jobPostId: parsedJobId,
@@ -396,7 +394,8 @@ export default function JobApplyPage() {
       });
       setStep('complete');
     } catch (e: any) {
-      alert(
+      console.error('[submit error]', e?.response?.data ?? e);
+      toast.error(
         e?.response?.data?.message ??
           e?.message ??
           '제출 중 오류가 발생했습니다.'
@@ -418,7 +417,8 @@ export default function JobApplyPage() {
       });
       setStep('complete');
     } catch (e: any) {
-      alert(
+      console.error('[submit basic error]', e?.response?.data ?? e);
+      toast.error(
         e?.response?.data?.message ??
           e?.message ??
           '제출 중 오류가 발생했습니다.'
@@ -463,23 +463,56 @@ export default function JobApplyPage() {
         !!uploadedImageFile ||
         !!previewUrl ||
         !!previewName) && (
-        <div className="w-full mt-4">
-          <ImageUploadButton
-            imageFile={uploadedImageFile}
-            onFileSelect={() => {}}
-            readOnly
-            fallbackName={previewName}
-            onClear={
-              mode === 'review'
-                ? () => {
+        <div className="w-full border border-emerald-300 rounded-lg p-4 mt-4">
+          <h3 className="text-[16px] font-semibold mb-2">자격증 이미지</h3>
+
+          {!!uploadedImageFile || !!previewUrl || !!previewName ? (
+            <div className="flex items-center gap-3">
+              {!!previewUrl && (
+                <img
+                  src={previewUrl}
+                  alt={previewName || 'uploaded'}
+                  className="w-[72px] h-[72px] object-cover rounded-md border"
+                />
+              )}
+              <div className="flex-1">
+                <div className="text-[14px] font-medium truncate">
+                  {previewName || uploadedImageFile?.name || '이미지'}
+                </div>
+                <div className="text-[12px] text-gray-500 mt-1">
+                  {mode === 'review'
+                    ? '첨부한 이미지가 맞는지 확인해 주세요.'
+                    : '제출된 이미지를 확인하세요.'}
+                </div>
+              </div>
+
+              {mode === 'review' && (
+                <button
+                  className="text-xs px-3 py-2 rounded border"
+                  onClick={() => {
                     setUploadedImageFile(null);
                     setPreviewUrl('');
                     setPreviewName('');
                     setStep('evidence');
-                  }
-                : undefined
-            }
-          />
+                  }}
+                >
+                  다시 첨부
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="text-[13px] text-gray-600">
+              첨부된 파일이 없습니다.{` `}
+              {mode === 'review' && (
+                <span
+                  className="underline cursor-pointer"
+                  onClick={() => setStep('evidence')}
+                >
+                  증빙 첨부 화면으로 이동
+                </span>
+              )}
+            </div>
+          )}
         </div>
       )}
     </>
