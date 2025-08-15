@@ -22,7 +22,7 @@ const JobDetailPage = () => {
       saveJob();
     }
   };
-  const { useEnsureApplication, useGetMyApplications } = useApplication();
+  const { useEnsureApplication } = useApplication();
   const { mutate: ensureApplication, isPending: isApplying } =
     useEnsureApplication();
 
