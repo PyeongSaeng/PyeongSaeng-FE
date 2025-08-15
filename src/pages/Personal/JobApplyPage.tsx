@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -10,19 +9,16 @@ import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormS
 import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
-
 import { postGenerateAnswer, type QAOption } from './apis/ai';
 import {
   postApplicationsEnsure,
   postApplicationDirect,
 } from './apis/applications';
 import { uploadFileAndGetKey } from './apis/files';
-
-import type { FieldAndAnswer } from './types/applications';
 import { getQuestionsDirect, pickExtraFields } from './apis/questions';
 import { apiGetJobDetail } from './apis/jobapi';
-
 import axiosInstance from '../../shared/apis/axiosInstance';
+import type { FieldAndAnswer } from './types/applications';
 import type { Info } from './types/userInfo';
 
 export default function JobApplyPage() {
