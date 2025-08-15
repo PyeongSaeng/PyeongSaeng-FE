@@ -18,6 +18,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
 
   const myMenu = localStorage.getItem('userRole');
   const accessToken = localStorage.getItem('accessToken');
+  const username = localStorage.getItem('username');
 
   return (
     <div className="px-[8px]">
@@ -31,14 +32,26 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
               : navigate('/personal/care-my/info');
         }}
       >
-        {accessToken ? '안녕하세요' : '로그인 하세요'}
+        {accessToken ? (
+          <>
+            안녕하세요 <strong>{username} 님</strong>
+          </>
+        ) : (
+          '로그인 하세요'
+        )}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="/personal/jobs/recommend">
-          일자리 추천
-        </MenuNavButton>
-        <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
+        {myMenu !== 'PROTECTOR' && (
+          <>
+            <MenuNavButton url="/personal/jobs/recommend">
+              일자리 추천
+            </MenuNavButton>
+            <MenuNavButton url="/personal/jobs/saved">
+              일자리 저장함
+            </MenuNavButton>
+          </>
+        )}
         <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
         <MenuNavButton url="/personal/senior-my/info/extra">
           질문답변
