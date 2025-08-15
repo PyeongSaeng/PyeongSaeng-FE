@@ -106,7 +106,7 @@ export default function JobApplyPage() {
     [selected]
   );
 
-  // 유효성 가드
+  // 유효성
   useEffect(() => {
     if (!jobId || Number.isNaN(parsedJobId)) {
       alert('유효하지 않은 채용공고 경로입니다.');
