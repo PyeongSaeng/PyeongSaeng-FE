@@ -11,25 +11,45 @@ const ToggleButton = () => {
   );
 
   useEffect(() => {
-    if (location.pathname.startsWith('/company')) {
+    const currentIsCompany = location.pathname.startsWith('/company');
+    const wasCompany = toggleVersion === 'company';
+
+    // 전환이 일어났을 때만 localStorage 정리
+    if (currentIsCompany !== wasCompany) {
+      console.log(
+        '사용자 타입 전환 감지:',
+        wasCompany ? '기업 -> 개인' : '개인 ->기업'
+      );
+
+      // 인증 관련 데이터만 선택적으로 정리
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userRole');
+    }
+
+    if (currentIsCompany) {
       setToggleVersion('company');
-      localStorage.clear();
     } else {
       setToggleVersion('');
-      localStorage.clear();
     }
-  }, [location.pathname]);
+  }, [location.pathname, toggleVersion]);
 
   const goToPersonalVersion = () => {
     if (toggleVersion !== '') {
+      // 기업 -> 개인 전환 시에만 토큰 정리
+      localStorage.removeItem('accessToken');
+
       setToggleVersion('');
-      setTimeout(() => navigate('/'), 300);
+      navigate('/');
     }
   };
   const goToCompanyVersion = () => {
     if (toggleVersion !== 'company') {
+      // 개인 -> 전환 시에만 토큰 정리
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userRole');
+
       setToggleVersion('company');
-      setTimeout(() => navigate('/company'), 300);
+      navigate('/company');
     }
   };
 
