@@ -36,7 +36,7 @@ const CompanyMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white">
+        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[700px] bg-white">
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             {menu === 'main' ? (
               <IoClose size={27} onClick={closeMenu} />
@@ -51,7 +51,7 @@ const CompanyMenu = () => {
               <CompanyMyMenu />
             )
           ) : (
-            <BeforeLoginMainMenu goNext={goToMyMenu} />
+            <BeforeLoginMainMenu />
           )}
         </div>
       )}
