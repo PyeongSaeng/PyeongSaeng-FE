@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -8,47 +9,71 @@ import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormS
 import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
-import { postGenerateKeywords, postGenerateAnswer } from './apis/ai';
+
+import {
+  postGenerateKeywords,
+  postGenerateAnswer,
+  postGenerateUpdatedAnswer,
+  type QAOption,
+} from './apis/ai';
 import {
   postApplicationsEnsure,
   postApplicationDirect,
 } from './apis/applications';
 import { uploadFileAndGetKey } from './apis/files';
-import type { QAOption } from './types/ai';
+
 import type { FieldAndAnswer } from './types/applications';
 
 export default function JobApplyPage() {
   const navigate = useNavigate();
   const { jobId } = useParams<{ jobId: string }>();
-
   const parsedJobId = Number(jobId);
 
-  // (임시) 폼필드 ID 하드코딩
+  // (임시) 폼필드 ID
   const motivationFieldId = 1;
   const certFieldId = 2;
 
-  // (임시) 추가질문 유무. 실제론 공고 상세 API 값으로 결정
+  // (임시) 추가질문 유무
   const hasExtraQuestions = true;
 
-  const [step, setStep] = useState<
-    'basic' | 'choice' | 'scaffold' | 'final' | 'evidence' | 'complete'
-  >(hasExtraQuestions ? 'choice' : 'basic');
+  type Step =
+    | 'basic'
+    | 'choice'
+    | 'scaffold'
+    | 'final'
+    | 'evidence'
+    | 'complete';
+  const [step, setStep] = useState<Step>(
+    hasExtraQuestions ? 'choice' : 'basic'
+  );
 
+  // <31> 선택 답변
   const [selected, setSelected] = useState('');
   const MAIN_QUESTION = '지원 동기가 무엇인가요?';
 
+  // <32> 스캐폴드 & 개인경험
   const [scaffoldText, setScaffoldText] = useState('');
   const [personalInput, setPersonalInput] = useState('');
   const [isLoadingScaffold, setIsLoadingScaffold] = useState(false);
   const [scaffoldError, setScaffoldError] = useState<string | null>(null);
-  const [finalText, setFinalText] = useState('');
-  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null);
 
-  // 중복 제출/저장 방지
+  // <33> 최종 문장
+  const [finalText, setFinalText] = useState('');
+
+  // 공통
+  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // (임시) 상단 카드 정보 – 실제론 사용자/공고 API 바인딩 권장
+  // 선택한 키워드 유지해서 <32>→<33> 컨텍스트 전달
+  const [pickedKeyword, setPickedKeyword] = useState<string>('');
+  // (필요 시) 다른 기본 질문/선택지도 answers에 합칠 수 있도록 배열로 보관
+  const answersBase: QAOption[] = useMemo(
+    () => (selected ? [{ question: MAIN_QUESTION, option: selected }] : []),
+    [selected]
+  );
+
+  // (임시) 상단 카드 정보
   const info = useMemo(
     () => ({
       name: '김순자',
@@ -61,7 +86,7 @@ export default function JobApplyPage() {
     []
   );
 
-  // 2) 유효하지 않은 경로 가드
+  /* 유효성 가드 */
   useEffect(() => {
     if (!jobId || Number.isNaN(parsedJobId)) {
       alert('유효하지 않은 채용공고 경로입니다.');
@@ -69,17 +94,16 @@ export default function JobApplyPage() {
     }
   }, [jobId, parsedJobId, navigate]);
 
-  // 3) 간소 플로우라면 ensure 선호출(
+  /* 간소 플로우: ensure 미리 호출 (있어도 서버가 무시) */
   useEffect(() => {
     if (!Number.isNaN(parsedJobId)) {
       postApplicationsEnsure(parsedJobId).catch(() => {
-        // 이미 존재 등은 조용히 무시
         console.warn('POST /api/applications/ensure 실패(무시 가능)');
       });
     }
   }, [parsedJobId]);
 
-  // 이탈 방지
+  /* 이탈 방지 */
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (step !== 'complete') {
@@ -91,43 +115,31 @@ export default function JobApplyPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [step]);
 
-  // util: 문자열 정규화
-  const normalize = (s: string) =>
-    (s ?? '').toLowerCase().normalize('NFKC').replace(/\s+/g, ''); // 공백 제거
-
+  /* <31> 제출 → 키워드 & 스캐폴드 생성 */
   const handleChoiceSubmit = async () => {
     if (!selected.trim()) return alert('답변을 선택해 주세요.');
+
     setStep('scaffold');
     setIsLoadingScaffold(true);
     setScaffoldError(null);
     setScaffoldText('');
 
     try {
-      const qa: QAOption[] = [{ question: MAIN_QUESTION, option: selected }];
-
+      // 1) 키워드
       const keywords = await postGenerateKeywords({
-        answers: qa,
+        answers: answersBase,
         question: MAIN_QUESTION,
       });
+      const pick = keywords?.[0] ?? selected;
+      setPickedKeyword(pick);
 
-      // 1) 사용자가 고른 키워드와 의미상 매칭되는 후보가 있으면 그걸 사용
-      const pickedFromList =
-        (keywords ?? []).find((k) => {
-          const nk = normalize(k);
-          const ns = normalize(selected);
-          return nk === ns || nk.includes(ns) || ns.includes(nk);
-        }) ?? null;
-
-      // 2) 없으면 사용자가 고른 것 그대로, 그래도 없으면 첫 후보
-      const picked = pickedFromList ?? selected ?? keywords?.[0] ?? '';
-
-      const generated = await postGenerateAnswer({
-        answers: qa,
+      // 2) 스캐폴드
+      const scaffold = await postGenerateAnswer({
+        answers: answersBase,
         question: MAIN_QUESTION,
-        selectedKeyword: picked,
+        selectedKeyword: pick,
       });
-
-      setScaffoldText(generated);
+      setScaffoldText(scaffold);
     } catch (e: any) {
       const msg =
         e?.response?.data?.message ??
@@ -139,22 +151,36 @@ export default function JobApplyPage() {
     }
   };
 
-  // AI 틀 + 사용자 입력 → 최종 문장으로 합치기
-  const handleAiCompose = () => {
-    const base = scaffoldText.trim();
-    if (!base) return alert('AI 문장을 먼저 생성해 주세요.');
-    setFinalText([base, personalInput.trim()].filter(Boolean).join('\n'));
-    setStep('final');
+  /* <32> → <33> : 스캐폴드 + 개인경험으로 ‘완성본’ 생성 */
+  const handleAiCompose = async () => {
+    const scaffold = scaffoldText.trim();
+    if (!scaffold) return alert('AI 문장을 먼저 생성해 주세요.');
+    if (!personalInput.trim()) return alert('관련된 경험을 입력해 주세요.');
+
+    try {
+      const completed = await postGenerateUpdatedAnswer({
+        answers: answersBase,
+        question: MAIN_QUESTION,
+        selectedKeyword: pickedKeyword || selected,
+        extraInfo: personalInput,
+        scaffold,
+      });
+      setFinalText(completed);
+      setStep('final');
+    } catch (e: any) {
+      console.error('[updated-answers error]', e?.response?.data ?? e);
+      // 실패해도 최소한 기존 방식(스캐폴드+경험 합치기)으로 폴백
+      setFinalText([scaffold, personalInput.trim()].filter(Boolean).join('\n'));
+      setStep('final');
+    }
   };
 
-  // ❗ 4) 임시저장(DRAFT) – 서버 반영
+  /* 임시저장(DRAFT) */
   const saveDraft = async () => {
     if (isSavingDraft) return;
     setIsSavingDraft(true);
     try {
       const payload: FieldAndAnswer[] = [];
-
-      // 텍스트가 있으면 포함
       const draftText = finalText || scaffoldText || '';
       if (draftText) {
         payload.push({
@@ -163,8 +189,6 @@ export default function JobApplyPage() {
           answer: draftText,
         });
       }
-
-      // 증빙 이미지는 선택사항으로 처리
       if (uploadedImageFile) {
         const keyName = await uploadFileAndGetKey(uploadedImageFile);
         payload.push({
@@ -173,13 +197,11 @@ export default function JobApplyPage() {
           answer: [{ keyName, originalFileName: uploadedImageFile.name }],
         });
       }
-
       await postApplicationDirect({
         jobPostId: parsedJobId,
         applicationStatus: 'DRAFT',
         fieldAndAnswer: payload,
       });
-
       navigate('/personal/jobs/drafts');
     } catch (e: any) {
       alert(
@@ -192,7 +214,7 @@ export default function JobApplyPage() {
     }
   };
 
-  // ❗ 5) 최종 제출(SUBMITTED)
+  /* 최종 제출(SUBMITTED) */
   const submitApplication = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -201,7 +223,6 @@ export default function JobApplyPage() {
       if (!uploadedImageFile) return alert('자격증 이미지를 업로드해 주세요.');
 
       const keyName = await uploadFileAndGetKey(uploadedImageFile);
-
       const fieldAndAnswer: FieldAndAnswer[] = [
         {
           formFieldId: motivationFieldId,
@@ -214,13 +235,11 @@ export default function JobApplyPage() {
           answer: [{ keyName, originalFileName: uploadedImageFile.name }],
         },
       ];
-
       await postApplicationDirect({
         jobPostId: parsedJobId,
         applicationStatus: 'SUBMITTED',
         fieldAndAnswer,
       });
-
       setStep('complete');
     } catch (e: any) {
       console.error('[submit error]', e?.response?.data ?? e);
@@ -234,7 +253,7 @@ export default function JobApplyPage() {
     }
   };
 
-  // basic 플로우(추가항목이 전혀 없는 경우)에서의 즉시 제출
+  /* (추가항목 없는 경우) 즉시 제출 */
   const submitBasic = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -311,7 +330,7 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 선택형 질문 */}
+          {/* <31> 선택형 질문 */}
           {step === 'choice' && (
             <div className="w-full flex flex-col gap-4">
               <MotivationChoiceSection
@@ -334,7 +353,7 @@ export default function JobApplyPage() {
             </div>
           )}
 
-          {/* AI 틀 + 사용자 입력 */}
+          {/* <32> 스캐폴드 + 개인경험 입력 */}
           {step === 'scaffold' && (
             <div className="w-full flex flex-col">
               <QuestionWriteFormSection
@@ -357,14 +376,18 @@ export default function JobApplyPage() {
               />
               <NextButton
                 onClick={handleAiCompose}
-                disabled={isLoadingScaffold || !scaffoldText.trim()}
+                disabled={
+                  isLoadingScaffold ||
+                  !scaffoldText.trim() ||
+                  !personalInput.trim()
+                }
               >
                 AI 자동 작성
               </NextButton>
             </div>
           )}
 
-          {/* 최종 문장 편집 + 임시저장/다음 */}
+          {/* <33> 최종 문장 편집 */}
           {step === 'final' && (
             <>
               <QuestionWriteFormSection
