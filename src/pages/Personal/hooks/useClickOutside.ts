@@ -7,10 +7,10 @@ const useClickOutside = (
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       // 모든 ref가 외부 클릭인지 확인
-      const isOutside = refs.every(ref => 
-        !ref.current || !ref.current.contains(event.target as Node)
+      const isOutside = refs.every(
+        (ref) => !ref.current || !ref.current.contains(event.target as Node)
       );
-      
+
       if (isOutside) {
         callback();
       }
@@ -19,7 +19,7 @@ const useClickOutside = (
     // 마우스와 터치 이벤트 모두 등록
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
@@ -27,4 +27,4 @@ const useClickOutside = (
   }, [refs, callback]);
 };
 
-export default useClickOutside; 
+export default useClickOutside;

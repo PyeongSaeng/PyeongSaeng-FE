@@ -14,7 +14,8 @@ const useAddressSearch = ({ onComplete }: UseAddressSearchProps) => {
   useEffect(() => {
     if (!window.daum?.Postcode) {
       const script = document.createElement('script');
-      script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+      script.src =
+        '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
       script.async = true;
       document.body.appendChild(script);
     }
@@ -31,11 +32,13 @@ const useAddressSearch = ({ onComplete }: UseAddressSearchProps) => {
         },
       }).open();
     } else {
-      alert('주소 검색 스크립트가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
+      alert(
+        '주소 검색 스크립트가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
+      );
     }
   };
 
   return { openAddressSearch };
 };
 
-export default useAddressSearch; 
+export default useAddressSearch;
