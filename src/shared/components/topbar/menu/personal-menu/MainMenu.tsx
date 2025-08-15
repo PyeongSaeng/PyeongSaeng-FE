@@ -36,7 +36,9 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
           <>
             안녕하세요 <strong>{username} 님</strong>
           </>
-        ) : '로그인 하세요'}
+        ) : (
+          '로그인 하세요'
+        )}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
