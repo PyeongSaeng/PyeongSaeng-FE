@@ -27,7 +27,7 @@ const ExtraInfoEdit = () => {
   const [questionList, setQuestionList] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [originalAnswerList, setOriginalAnswerList] = useState<Answer[]>([]);
+  const [, setOriginalAnswerList] = useState<Answer[]>([]);
   const [editAnswerList, setEditedAnswerList] = useState<Answer[]>([]);
 
   // 사용자 정보 조회

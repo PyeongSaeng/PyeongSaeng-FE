@@ -65,10 +65,6 @@ const SeniorInfo = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('부모컴포넌트 출력: ', patchObject);
-  }, [patchObject]);
-
   return (
     <div>
       <Topbar>

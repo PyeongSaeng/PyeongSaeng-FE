@@ -1,16 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
 import { getSeniorData } from '../../../apis/my/seniorMy';
-import { Answer, Info, Question } from '../../../types/userInfo';
+import { Info, Question } from '../../../types/userInfo';
 import Loading from '../../../../../shared/components/Loading';
 
-interface OutletContextType {
-  setPatchObject: React.Dispatch<React.SetStateAction<Answer[]>>;
-}
-
 const ExtraInfo = () => {
-  const { setPatchObject } = useOutletContext<OutletContextType>();
   const [info, setInfo] = useState<Info>();
   const [questionList, setQuestionList] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
