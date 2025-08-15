@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -23,6 +22,17 @@ import {
 import { uploadFileAndGetKey } from './apis/files';
 
 import type { FieldAndAnswer } from './types/applications';
+import {
+  getQuestionsDirect,
+  pickExtraFields,
+  isFieldAnswered,
+} from './apis/questions';
+
+import { apiGetJobDetail } from './apis/jobapi';
+
+import axiosInstance from '../../shared/apis/axiosInstance';
+
+import type { Info } from './types/userInfo';
 
 export default function JobApplyPage() {
   const navigate = useNavigate();
@@ -33,19 +43,44 @@ export default function JobApplyPage() {
   const motivationFieldId = 1;
   const certFieldId = 2;
 
-  // (임시) 추가질문 유무
-  const hasExtraQuestions = true;
-
   type Step =
-    | 'basic'
-    | 'choice'
-    | 'scaffold'
+    | 'basic' // <29> 추가 항목 없음
+    | 'choice' // <31> 추가 항목 있음 + 아직 답변 없음
+    | 'scaffold' // <32> 추가 항목 있음 + 이미 답변함(이어 쓰기)
     | 'final'
     | 'evidence'
     | 'complete';
-  const [step, setStep] = useState<Step>(
-    hasExtraQuestions ? 'choice' : 'basic'
-  );
+
+  const [initialized, setInitialized] = useState(false);
+  const [step, setStep] = useState<Step>('basic');
+
+  // 채용공고 제목
+  const [jobTitle, setJobTitle] = useState<string>('');
+
+  // 내 프로필 상태(Info 원본 + 화면 표시용 매핑)
+  const [senior, setSenior] = useState<Info | null>(null);
+  const jobInfoProps = useMemo(() => {
+    if (!senior) {
+      return {
+        name: '',
+        gender: '',
+        age: '',
+        phone: '',
+        idNumber: '',
+        address: '',
+      };
+    }
+    const address =
+      `${senior.roadAddress ?? ''} ${senior.detailAddress ?? ''}`.trim();
+    return {
+      name: senior.name ?? '',
+      gender: '',
+      age: senior.age ? `${senior.age}세` : '',
+      phone: senior.phone ?? '',
+      idNumber: '',
+      address,
+    };
+  }, [senior]);
 
   // <31> 선택 답변
   const [selected, setSelected] = useState('');
@@ -65,28 +100,13 @@ export default function JobApplyPage() {
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 선택한 키워드 유지해서 <32>→<33> 컨텍스트 전달
   const [pickedKeyword, setPickedKeyword] = useState<string>('');
-  // (필요 시) 다른 기본 질문/선택지도 answers에 합칠 수 있도록 배열로 보관
   const answersBase: QAOption[] = useMemo(
     () => (selected ? [{ question: MAIN_QUESTION, option: selected }] : []),
     [selected]
   );
 
-  // (임시) 상단 카드 정보
-  const info = useMemo(
-    () => ({
-      name: '김순자',
-      gender: '여성',
-      age: '63세',
-      phone: '010-1234-5678',
-      idNumber: '610908-******',
-      address: '대지로 49 203동',
-    }),
-    []
-  );
-
-  /* 유효성 가드 */
+  // 유효성 가드
   useEffect(() => {
     if (!jobId || Number.isNaN(parsedJobId)) {
       alert('유효하지 않은 채용공고 경로입니다.');
@@ -94,16 +114,87 @@ export default function JobApplyPage() {
     }
   }, [jobId, parsedJobId, navigate]);
 
-  /* 간소 플로우: ensure 미리 호출 (있어도 서버가 무시) */
+  // 채용공고 제목 로딩
   useEffect(() => {
-    if (!Number.isNaN(parsedJobId)) {
-      postApplicationsEnsure(parsedJobId).catch(() => {
-        console.warn('POST /api/applications/ensure 실패(무시 가능)');
-      });
-    }
+    if (Number.isNaN(parsedJobId)) return;
+    apiGetJobDetail(parsedJobId)
+      .then((detail) => setJobTitle(detail.title))
+      .catch(() => setJobTitle(''));
   }, [parsedJobId]);
 
-  /* 이탈 방지 */
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axiosInstance.get('/api/user/senior/me');
+        const me: Info = (data?.result ?? data) as Info;
+        setSenior(me);
+      } catch (e) {
+        console.warn('[profile load failed]', e);
+        setSenior(null);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      if (Number.isNaN(parsedJobId)) return;
+
+      try {
+        const ensureOnceKey = `ensure:${parsedJobId}`;
+        if (!sessionStorage.getItem(ensureOnceKey)) {
+          try {
+            await postApplicationsEnsure(parsedJobId);
+            sessionStorage.setItem(ensureOnceKey, '1');
+          } catch (e: any) {
+            console.warn(
+              '[ensure skipped]',
+              e?.response?.data?.message ?? e?.message
+            );
+            sessionStorage.setItem(ensureOnceKey, '1');
+          }
+        }
+
+        let extras: ReturnType<typeof pickExtraFields> = [];
+        try {
+          const allFields = await getQuestionsDirect(parsedJobId);
+          extras = pickExtraFields(allFields);
+        } catch (e: any) {
+          const code = e?.response?.data?.code as string | undefined;
+          const msg = e?.response?.data?.message ?? e?.message;
+          console.warn('[questions error]', code, msg);
+
+          if (code === 'JOBPOST404') {
+            alert('존재하지 않는 채용공고입니다.');
+            navigate('/personal');
+            return;
+          }
+          extras = [];
+        }
+
+        // 3) 29/31/32 분기
+        if (extras.length === 0) {
+          setStep('basic'); // <29>
+        } else if (extras.some(isFieldAnswered)) {
+          setStep('scaffold'); // <32>
+          const textExtra = extras.find(
+            (f) =>
+              f.fieldType === 'TEXT' &&
+              typeof f.answer === 'string' &&
+              f.answer.trim()
+          );
+          if (textExtra) setScaffoldText(textExtra.answer as string);
+        } else {
+          setStep('choice'); // <31>
+        }
+      } finally {
+        setInitialized(true);
+      }
+    };
+
+    init();
+  }, [parsedJobId, navigate]);
+
+  // 이탈 방지
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (step !== 'complete') {
@@ -115,7 +206,7 @@ export default function JobApplyPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [step]);
 
-  /* <31> 제출 → 키워드 & 스캐폴드 생성 */
+  // <31> → 스캐폴드 생성
   const handleChoiceSubmit = async () => {
     if (!selected.trim()) return alert('답변을 선택해 주세요.');
 
@@ -125,7 +216,6 @@ export default function JobApplyPage() {
     setScaffoldText('');
 
     try {
-      // 1) 키워드
       const keywords = await postGenerateKeywords({
         answers: answersBase,
         question: MAIN_QUESTION,
@@ -133,7 +223,6 @@ export default function JobApplyPage() {
       const pick = keywords?.[0] ?? selected;
       setPickedKeyword(pick);
 
-      // 2) 스캐폴드
       const scaffold = await postGenerateAnswer({
         answers: answersBase,
         question: MAIN_QUESTION,
@@ -151,7 +240,7 @@ export default function JobApplyPage() {
     }
   };
 
-  /* <32> → <33> : 스캐폴드 + 개인경험으로 ‘완성본’ 생성 */
+  // <32> → <33>
   const handleAiCompose = async () => {
     const scaffold = scaffoldText.trim();
     if (!scaffold) return alert('AI 문장을 먼저 생성해 주세요.');
@@ -167,15 +256,13 @@ export default function JobApplyPage() {
       });
       setFinalText(completed);
       setStep('final');
-    } catch (e: any) {
-      console.error('[updated-answers error]', e?.response?.data ?? e);
-      // 실패해도 최소한 기존 방식(스캐폴드+경험 합치기)으로 폴백
+    } catch {
       setFinalText([scaffold, personalInput.trim()].filter(Boolean).join('\n'));
       setStep('final');
     }
   };
 
-  /* 임시저장(DRAFT) */
+  // 임시저장(DRAFT)
   const saveDraft = async () => {
     if (isSavingDraft) return;
     setIsSavingDraft(true);
@@ -214,7 +301,7 @@ export default function JobApplyPage() {
     }
   };
 
-  /* 최종 제출(SUBMITTED) */
+  // 최종 제출(SUBMITTED)
   const submitApplication = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -242,7 +329,6 @@ export default function JobApplyPage() {
       });
       setStep('complete');
     } catch (e: any) {
-      console.error('[submit error]', e?.response?.data ?? e);
       alert(
         e?.response?.data?.message ??
           e?.message ??
@@ -253,7 +339,7 @@ export default function JobApplyPage() {
     }
   };
 
-  /* (추가항목 없는 경우) 즉시 제출 */
+  // (추가항목 없음) 즉시 제출
   const submitBasic = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -276,6 +362,14 @@ export default function JobApplyPage() {
   };
 
   const handleGoHome = () => navigate('/personal');
+
+  if (!initialized) {
+    return (
+      <div className="pt-[10px] h-[740px] flex items-center justify-center">
+        <span className="text-sm text-gray-500">불러오는 중…</span>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-[10px] h-[740px] flex flex-col">
@@ -302,7 +396,10 @@ export default function JobApplyPage() {
           {/* 완료 화면 */}
           {step === 'complete' && (
             <>
-              <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
+              <JobInfoSection
+                jobName={jobTitle || '채용공고'}
+                info={jobInfoProps}
+              />
               {!!finalText && (
                 <div className="w-full border border-[#08D485] rounded-lg p-4 mt-4">
                   <h3 className="text-[16px] font-semibold mb-2">지원동기</h3>
@@ -317,10 +414,13 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 추가 항목이 전혀 없을 때 */}
+          {/* <29> 추가 항목 없음 */}
           {step === 'basic' && (
             <>
-              <JobInfoSection jobName="죽전2동 행정복지센터" info={info} />
+              <JobInfoSection
+                jobName={jobTitle || '채용공고'}
+                info={jobInfoProps}
+              />
               <TwoButtonGroup
                 leftLabel="저장"
                 rightLabel="제출"
