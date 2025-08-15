@@ -11,10 +11,8 @@ const App = () => {
         <ToastContainer
           position="top-center"
           autoClose={3000}
-          hideProgressBar
           closeOnClick={true}
           pauseOnHover={false}
-          theme="colored"
         />
       </BrowserRouter>
     </div>

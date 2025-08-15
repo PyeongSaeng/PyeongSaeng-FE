@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import LoginLogo from '/icons/loginLogo.svg';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import TopbarForLogin from '../../shared/components/topbar/TopbarForLogin';
 import { useCompanyLogin } from './hooks/useCompanyAuth';
 
@@ -15,18 +16,11 @@ const CompanyLoginPage = () => {
     e.preventDefault();
 
     if (!username || !password) {
-      alert('아이디와 비밀번호를 입력해주세요.');
+      toast.warning('아이디와 비밀번호를 입력해주세요.');
       return;
     }
 
-    companyLoginMutation.mutate(
-      { username, password },
-      {
-        onError: () => {
-          alert('로그인에 실패했습니다. 다시 시도해주세요.');
-        },
-      }
-    );
+    companyLoginMutation.mutate({ username, password });
   };
 
   const handleSignIn = () => {

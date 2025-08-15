@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import SignUpHeader from '../SignUpHeader';
 import NextButton from '../NextButton';
 import {
@@ -32,7 +33,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
 
   const handleSendVerification = () => {
     if (!state.phone) {
-      alert('전화번호를 입력해주세요.');
+      toast.warning('전화번호를 입력해주세요.');
       return;
     }
 
@@ -40,14 +41,14 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
       { phone: state.phone },
       {
         onSuccess: () => {
-          alert(
+          toast.success(
             '인증번호가 발송되었습니다. 문자가 오지 않으면 한 번 더 눌러주세요.'
           );
           setIsVerificationSent(true);
         },
         onError: (error) => {
           console.error('인증번호 발송 실패:', error);
-          alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+          toast.error('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
         },
       }
     );
@@ -55,7 +56,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
 
   const handleVerifyCode = () => {
     if (!state.smsCode) {
-      alert('인증번호를 입력해주세요.');
+      toast.warning('인증번호를 입력해주세요.');
       return;
     }
 
@@ -70,7 +71,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
         },
         onError: (error) => {
           console.error('인증 실패:', error);
-          alert('인증번호가 올바르지 않습니다.');
+          toast.error('인증번호가 올바르지 않습니다.');
         },
       }
     );
@@ -78,11 +79,11 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
 
   const handleSubmit = () => {
     if (!state.phone) {
-      alert('모든 항목을 입력해주세요.');
+      toast.warning('모든 항목을 입력해주세요.');
       return;
     }
     if (!isVerified) {
-      alert('인증번호 확인을 완료해주세요.');
+      toast.warning('인증번호 확인을 완료해주세요.');
       return;
     }
     onSubmit();
