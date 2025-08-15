@@ -13,6 +13,7 @@ type ApplicationUI = {
   applicationStatus: string;
   seniorName?: string;
 };
+type ProtectorApplicationUI = ApplicationUI & { seniorId: number };
 
 const JobDraftsPage = () => {
   const memberType = localStorage.getItem('userRole');
@@ -29,7 +30,7 @@ const JobDraftsPage = () => {
 };
 export default JobDraftsPage;
 
-// --------------------- 시니어 신청함 ---------------------
+/* --------------------- 시니어 신청함 --------------------- */
 function SeniorDraftsView() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<0 | 1>(0);
@@ -39,29 +40,31 @@ function SeniorDraftsView() {
   const { data: applications = [], isLoading } = useGetMyApplications();
   const { mutate: deleteApplication } = useDeleteApplication();
 
-  const draftApps = applications.filter(
-    (a) => a.applicationStatus === 'NON_STARTED'
+  const draftApps = (applications as ApplicationUI[]).filter(
+    (a: ApplicationUI) => a.applicationStatus === 'NON_STARTED'
   );
-  const writingApps = applications.filter(
-    (a) => a.applicationStatus === 'DRAFT'
+  const writingApps = (applications as ApplicationUI[]).filter(
+    (a: ApplicationUI) => a.applicationStatus === 'DRAFT'
   );
   const selectedApps = selectedTab === 0 ? draftApps : writingApps;
 
-  const jobPostIds = selectedApps.map((a) => a.jobPostId);
+  const jobPostIds = selectedApps.map((a: ApplicationUI) => a.jobPostId);
   const jobResults = useApplicationJobs(jobPostIds);
 
-  const appJobPairs = selectedApps.map((application, idx) => ({
-    application: {
-      applicationId: application.applicationId,
-      jobPostId: application.jobPostId,
-      applicationStatus: application.applicationStatus,
-    },
-    job: jobResults[idx]?.data,
-  }));
+  const appJobPairs = selectedApps.map(
+    (application: ApplicationUI, idx: number) => ({
+      application: {
+        applicationId: application.applicationId,
+        jobPostId: application.jobPostId,
+        applicationStatus: application.applicationStatus,
+      },
+      job: jobResults[idx]?.data as JobDetail | undefined,
+    })
+  );
 
   const handleGoApply = () => {
     const selected = selectedApps.find(
-      (app) => app.applicationId === selectedAppId
+      (app: ApplicationUI) => app.applicationId === selectedAppId
     );
     if (!selected) return;
     navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`);
@@ -85,41 +88,44 @@ function SeniorDraftsView() {
   );
 }
 
-// --------------------- 보호자 신청함 ---------------------
+/* --------------------- 보호자 신청함 --------------------- */
 function ProtectorDraftsView() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<0 | 1>(0);
   const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
   const { data: applications = [], isLoading } = useProtectorApplications();
-  const draftApps = applications.filter(
-    (a) => a.applicationStatus === 'NON_STARTED'
+
+  const draftApps = (applications as ProtectorApplicationUI[]).filter(
+    (a: ProtectorApplicationUI) => a.applicationStatus === 'NON_STARTED'
   );
-  const writingApps = applications.filter(
-    (a) => a.applicationStatus === 'DRAFT'
+  const writingApps = (applications as ProtectorApplicationUI[]).filter(
+    (a: ProtectorApplicationUI) => a.applicationStatus === 'DRAFT'
   );
   const selectedApps = selectedTab === 0 ? draftApps : writingApps;
 
   const jobResults = useProtectorApplicationJobs(
-    selectedApps.map((app) => ({
+    selectedApps.map((app: ProtectorApplicationUI) => ({
       seniorId: app.seniorId,
       jobPostId: app.jobPostId,
     }))
   );
 
-  const appJobPairs = selectedApps.map((application, idx) => ({
-    application: {
-      applicationId: application.applicationId,
-      jobPostId: application.jobPostId,
-      applicationStatus: application.applicationStatus,
-      seniorName: application.seniorName,
-    },
-    job: jobResults[idx]?.data,
-  }));
+  const appJobPairs = selectedApps.map(
+    (application: ProtectorApplicationUI, idx: number) => ({
+      application: {
+        applicationId: application.applicationId,
+        jobPostId: application.jobPostId,
+        applicationStatus: application.applicationStatus,
+        seniorName: application.seniorName,
+      },
+      job: jobResults[idx]?.data as JobDetail | undefined,
+    })
+  );
 
   const handleGoApply = () => {
     const selected = selectedApps.find(
-      (app) => app.applicationId === selectedAppId
+      (app: ProtectorApplicationUI) => app.applicationId === selectedAppId
     );
     if (!selected) return;
     navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`);
@@ -138,14 +144,11 @@ function ProtectorDraftsView() {
   );
 }
 
-// --------------------- 공통 UI ---------------------
+/* --------------------- 공통 UI --------------------- */
 type JobDraftLayoutProps = {
   selectedTab: 0 | 1;
   setSelectedTab: (tab: 0 | 1) => void;
-  appJobPairs: {
-    application: ApplicationUI;
-    job?: JobDetail;
-  }[];
+  appJobPairs: { application: ApplicationUI; job?: JobDetail }[];
   selectedAppId: number | null;
   setSelectedAppId: (id: number | null) => void;
   isLoading: boolean;
@@ -164,6 +167,7 @@ function JobDraftLayout({
   onApply,
 }: JobDraftLayoutProps) {
   const memberType = localStorage.getItem('userRole');
+
   return (
     <div className="w-full h-full flex flex-col">
       <div className="mt-[17px] flex flex-col items-center">
@@ -171,17 +175,19 @@ function JobDraftLayout({
           일자리 신청함
         </p>
       </div>
+
       {/* 탭 버튼 */}
       <div className="w-[301px] flex gap-[13px] mt-[16px] justify-center self-center">
         {['작성 전', '작성중'].map((label, idx) => (
           <button
             key={label}
-            className={`flex-1 h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium
-
-              ${selectedTab === idx ? 'bg-[#ECF6F2] border-[#08D485]' : 'bg-white border-[#08D485]'}`}
+            className={`flex-1 h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium ${
+              selectedTab === idx
+                ? 'bg-[#ECF6F2] border-[#08D485]'
+                : 'bg-white border-[#08D485]'
+            }`}
             onClick={() => {
               setSelectedTab(idx as 0 | 1);
-
               setSelectedAppId(null);
             }}
           >
@@ -189,6 +195,7 @@ function JobDraftLayout({
           </button>
         ))}
       </div>
+
       {/* 리스트 */}
       <div
         className="flex-1 w-full flex justify-center"
@@ -210,9 +217,7 @@ function JobDraftLayout({
             appJobPairs.map(({ application, job }) => {
               if (!job) return null;
               const isSelected = selectedAppId === application.applicationId;
-              {
-                /* 선택 및 삭제 */
-              }
+
               return (
                 <div
                   key={application.applicationId}
@@ -250,16 +255,19 @@ function JobDraftLayout({
                       />
                     )}
                   </div>
-                  {/* 시니어 성함 */}
+
                   {memberType === 'PROTECTOR' && application.seniorName && (
                     <div className="w-[100px] h-[33px] mt-[15px] text-[20px] font-semibold text-[#747474] border-[#08D485] border-[1px] rounded-[13px] flex items-center justify-center">
                       <p>{application.seniorName}님</p>
                     </div>
                   )}
-                  {/* 카드 */}
+
                   <div
-                    className={`w-[291px] h-[362px] mt-[7px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
-                      ${isSelected ? 'border-[#08D485] bg-[#ECF6F2]' : 'border-[#08D485] bg-white'}`}
+                    className={`w-[291px] h-[362px] mt-[7px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center ${
+                      isSelected
+                        ? 'border-[#08D485] bg-[#ECF6F2]'
+                        : 'border-[#08D485] bg-white'
+                    }`}
                     onClick={() =>
                       setSelectedAppId(
                         isSelected ? null : application.applicationId
@@ -290,11 +298,14 @@ function JobDraftLayout({
                         선택하기
                       </div>
                       <img
-                        src={job.images?.[0]?.imageUrl}
+                        src={
+                          job.images?.[0]?.imageUrl ?? '/images/placeholder.png'
+                        }
                         alt={job.title}
                         className="w-full h-full object-cover"
                       />
                     </div>
+
                     <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
                       <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">
                         {job.title}
@@ -318,6 +329,7 @@ function JobDraftLayout({
           )}
         </div>
       </div>
+
       {/* 하단 버튼 */}
       <div className="w-full flex justify-center mt-[24px] mb-4">
         <button
