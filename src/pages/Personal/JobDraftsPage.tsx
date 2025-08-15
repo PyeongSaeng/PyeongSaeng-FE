@@ -14,7 +14,7 @@ type ApplicationUI = {
 };
 
 const JobDraftsPage = () => {
-  const memberType = localStorage.getItem('memberType');
+  const memberType = localStorage.getItem('userRole');
   return (
     <>
       <Topbar />
@@ -22,7 +22,6 @@ const JobDraftsPage = () => {
     </>
   );
 };
-
 export default JobDraftsPage;
 
 // --------------------- 시니어 신청함 ---------------------
@@ -147,7 +146,7 @@ function JobDraftLayout({
   const selectedApplication = appJobPairs.find(
     (pair) => pair.application.applicationId === selectedAppId
   )?.application;
-
+  const memberType = localStorage.getItem('userRole');
   return (
     <div className="w-full h-full flex flex-col">
       <div className="mt-[17px] flex flex-col items-center">
@@ -223,6 +222,12 @@ function JobDraftLayout({
                       />
                     )}
                   </div>
+                  {/* 시니어 성함 */}
+                  {memberType === 'PROTECTOR' && application.seniorName && (
+                    <p className="mt-[4px] ml-[33px] text-[14px] font-semibold text-[#08D485]">
+                      {application.seniorName}님
+                    </p>
+                  )}
                   {/* 카드 */}
                   <div
                     className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
