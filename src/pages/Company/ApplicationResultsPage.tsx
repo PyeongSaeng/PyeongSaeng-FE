@@ -1,4 +1,3 @@
-// src/pages/Company/ApplicationResultsPage.tsx
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import {
   useParams,
@@ -7,7 +6,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 import clsx from 'clsx';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import Field from '../../shared/components/Field';

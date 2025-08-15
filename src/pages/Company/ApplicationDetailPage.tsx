@@ -1,5 +1,4 @@
-// src/pages/Company/ApplicationDetailPage.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   useParams,
   useNavigate,
@@ -7,7 +6,6 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import { getApplications, getApplicationDetails } from './apis/applications';
@@ -46,56 +44,59 @@ export default function ApplicationDetailPage() {
   >([]);
   const [statusMap, setStatusMap] = useState<Record<number, BtnState>>({});
 
-  const fetchApps = async (forceCompleteId?: number) => {
-    if (!jobPostId) return;
+  const fetchApps = useCallback(
+    async (forceCompleteId?: number) => {
+      if (!jobPostId) return;
 
-    // 1) 목록 호출
-    const res = await getApplications({ jobPostId, page: 1 });
-    const list = res.applicationList.map((a) => ({
-      id: a.applicationId,
-      name: a.applicantName,
-      status: a.applicantStatus,
-    }));
-    setApps(list);
+      // 1) 목록 호출
+      const res = await getApplications({ jobPostId, page: 1 });
+      const list = res.applicationList.map((a) => ({
+        id: a.applicationId,
+        name: a.applicantName,
+        status: a.applicantStatus,
+      }));
+      setApps(list);
 
-    // 2) 서버가 준 상태로 1차 맵 구성
-    let baseMap: Record<number, BtnState> = {};
-    for (const a of list) {
-      const serverComplete = a.status === 'APPROVED' || a.status === 'REJECTED';
-      baseMap[a.id] = serverComplete ? 'complete' : 'init';
-    }
-
-    // 3) 미완료처럼 보이는 항목만 상세 API로 재검증해 승격
-    const needVerify = list.filter((a) => baseMap[a.id] !== 'complete');
-    if (needVerify.length) {
-      const verified = await Promise.all(
-        needVerify.map(async (a) => {
-          try {
-            const d = await getApplicationDetails(a.id);
-            const done =
-              d.applicationState === 'APPROVED' ||
-              d.applicationState === 'REJECTED';
-            return { id: a.id, done };
-          } catch {
-            return { id: a.id, done: false };
-          }
-        })
-      );
-      for (const v of verified) {
-        if (v.done) baseMap[v.id] = 'complete';
+      // 2) 서버 상태 기반 맵
+      let baseMap: Record<number, BtnState> = {};
+      for (const a of list) {
+        const serverComplete =
+          a.status === 'APPROVED' || a.status === 'REJECTED';
+        baseMap[a.id] = serverComplete ? 'complete' : 'init';
       }
-    }
 
-    // 4) 방금 공시하고 돌아온 항목 강조
-    if (forceCompleteId) baseMap[forceCompleteId] = 'complete';
+      // 3) 미완료로 보이는 항목만 상세 API로 재검증
+      const needVerify = list.filter((a) => baseMap[a.id] !== 'complete');
+      if (needVerify.length) {
+        const verified = await Promise.all(
+          needVerify.map(async (a) => {
+            try {
+              const d = await getApplicationDetails(a.id);
+              const done =
+                d.applicationState === 'APPROVED' ||
+                d.applicationState === 'REJECTED';
+              return { id: a.id, done };
+            } catch {
+              return { id: a.id, done: false };
+            }
+          })
+        );
+        for (const v of verified) {
+          if (v.done) baseMap[v.id] = 'complete';
+        }
+      }
 
-    setStatusMap(baseMap);
-  };
+      // 4) 방금 공시하고 돌아온 항목 강조
+      if (forceCompleteId) baseMap[forceCompleteId] = 'complete';
+
+      setStatusMap(baseMap);
+    },
+    [jobPostId]
+  );
 
   useEffect(() => {
     fetchApps();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jobPostId]);
+  }, [fetchApps]);
 
   // 결과 공시 후 복귀: complete + 리패치
   useEffect(() => {
@@ -105,7 +106,7 @@ export default function ApplicationDetailPage() {
       fetchApps(updatedId);
       navigate('.', { replace: true, state: null });
     }
-  }, [location.state?.updatedId, navigate]);
+  }, [location.state?.updatedId, navigate, fetchApps]);
 
   // 결과 페이지로 이동(지원자 이름 동봉)
   const goToResultPage = (id: number, name: string) => {

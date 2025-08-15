@@ -122,9 +122,10 @@ export function useCompanyJobFlow(token: string) {
 
   // Step2에서 extra 필드만 다루기 편하게 제공(옵션)
   const baseCount = BASE_FORM_FIELDS.length;
+
   const extraFields = useMemo(
     () => (draft.formFieldList ?? BASE_FORM_FIELDS).slice(baseCount),
-    [draft.formFieldList]
+    [draft.formFieldList, baseCount]
   );
   const setAllFormFields = useCallback(
     (list: JobPostFormField[]) => {

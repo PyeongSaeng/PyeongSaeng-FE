@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import { getMyJobPosts } from './apis/applications';
