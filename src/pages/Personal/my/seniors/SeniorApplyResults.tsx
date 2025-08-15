@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../../shared/components/topbar/Topbar';
 import { getSeniorData } from '../../apis/my/seniorMy';
@@ -11,34 +11,65 @@ import Loading from '../../../../shared/components/Loading';
 
 const SeniorApplyResults = () => {
   const navigate = useNavigate();
+
   const [seniorData, setSeniorData] = useState<Info | null>(null);
+  const [applicationList, setApplicationList] = useState<ApplicationType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [applicationList, setApplicationList] = useState<
-    ApplicationType[] | null
-  >();
+  // 무한 스크롤 상태
+  const [page, setPage] = useState(1);
+  const [isLast, setIsLast] = useState<boolean>(false);
 
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  // 기본정보 조회
   useEffect(() => {
+    setLoading(true);
     getSeniorData('/api/user/senior/me')
-      .then((data) => setSeniorData(data.result as Info))
-      .catch((err) => console.error('기본정보 조회 에러', err));
+      .then((data) => {
+        setSeniorData(data.result as Info);
+      })
+      .catch((err) => console.error('기본정보 조회 에러', err))
+      .finally(() => setLoading(false));
   }, []);
 
+  // 지원서 목록 조회 (페이지 변경 시)
   useEffect(() => {
-    getSeniorData('/api/applications/me/submitted?page=1')
-      .then((data) =>
-        setApplicationList(data.result.applicationList as ApplicationType[])
-      )
-      .catch((err) => console.error('지원서 조회 에러', err));
-  }, []);
+    if (isLast) return;
 
-  useEffect(() => {
-    console.log(seniorData);
-  }, [seniorData]);
+    setLoading(true);
+    getSeniorData(`/api/applications/me/submitted?page=${page}`)
+      .then((data) => {
+        const result = data.result;
+        setApplicationList((prev) => [
+          ...prev,
+          ...(result.applicationList ?? []),
+        ]);
+        setIsLast(result.isLast);
+      })
+      .catch((err) => console.error('지원서 조회 에러', err))
+      .finally(() => setLoading(false));
+  }, [page, isLast]);
 
+  // Intersection Observer로 페이지 증가
   useEffect(() => {
-    console.log(applicationList);
-  }, [applicationList]);
+    if (!loaderRef.current || isLast) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(loaderRef.current);
+
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
+    };
+  }, [isLast, loading]);
 
   return (
     <div>
@@ -47,61 +78,64 @@ const SeniorApplyResults = () => {
           <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px] border-b-[1.3px] border-[#CCCCCC]">
             신청 결과
           </div>
-          {loading ? (
-            <Loading />
-          ) : (
-            <div className="h-[572px] overflow-y-scroll scrollbar-hide">
-              {applicationList?.length === 0 ? (
-                <div className="h-full flex justify-center items-center font-[Pretendard JP] font-[600] text-[#747474] text-[18px]">
-                  지원 목록이 존재하지 않습니다
-                </div>
-              ) : (
-                applicationList?.map((apply, idx) => {
-                  return (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]"
-                    >
-                      <div className="flex justify-between w-[292px] pb-[10px]">
-                        <span>{apply.title}</span>
-                        <span>
-                          {formatDate(apply.deadline)} (
-                          {getDayOfWeek(apply.deadline)})
-                        </span>
-                      </div>
-                      <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
-                        <img
-                          className="w-[292px] h-[165px]"
-                          src={apply.images[0].imageUrl}
-                          alt="기업 대표 이미지"
-                        />
-                      </div>
-                      <div className="flex justify-center items-center gap-[6px] pt-[16px] pb-[6px]">
-                        <button
-                          type="button"
-                          className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2]"
-                          onClick={() =>
-                            navigate(
-                              `/personal/senior-my/applied-results/${apply.applicationId}`,
-                              { state: { seniorData: seniorData } }
-                            )
-                          }
-                        >
-                          신청서 확인
-                        </button>
-                        <button
-                          type="button"
-                          className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]"
-                        >
-                          {applicationStatus[apply.applicationStatus]}
-                        </button>
-                      </div>
+
+          <div className="h-[572px] overflow-y-scroll scrollbar-hide">
+            {applicationList.length === 0 && !loading ? (
+              <div className="h-full flex justify-center items-center font-[Pretendard JP] font-[600] text-[#747474] text-[18px]">
+                지원 목록이 존재하지 않습니다
+              </div>
+            ) : (
+              <>
+                {applicationList.map((apply, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]"
+                  >
+                    <div className="flex justify-between w-[292px] pb-[10px]">
+                      <span>{apply.title}</span>
+                      <span>
+                        {formatDate(apply.deadline)} (
+                        {getDayOfWeek(apply.deadline)})
+                      </span>
                     </div>
-                  );
-                })
-              )}
-            </div>
-          )}
+                    <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
+                      <img
+                        className="w-[292px] h-[165px]"
+                        src={apply.images[0].imageUrl}
+                        alt="기업 대표 이미지"
+                      />
+                    </div>
+                    <div className="flex justify-center items-center gap-[6px] pt-[16px] pb-[6px]">
+                      <button
+                        type="button"
+                        className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2]"
+                        onClick={() =>
+                          navigate(
+                            `/personal/senior-my/applied-results/${apply.applicationId}`,
+                            { state: { seniorData } }
+                          )
+                        }
+                      >
+                        신청서 확인
+                      </button>
+                      <button
+                        type="button"
+                        className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]"
+                      >
+                        {applicationStatus[apply.applicationStatus]}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* 로딩 표시 */}
+                {loading && <Loading />}
+
+                {/* 무한 스크롤 트리거 */}
+                {!isLast && <div ref={loaderRef} style={{ height: '20px' }} />}
+              </>
+            )}
+          </div>
         </div>
       </Topbar>
     </div>
