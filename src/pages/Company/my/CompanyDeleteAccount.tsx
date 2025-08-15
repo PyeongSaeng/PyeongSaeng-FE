@@ -19,7 +19,7 @@ const CompanyDeleteAccount = () => {
     if (value === '탈퇴하겠습니다') {
       try {
         setSubmitting(true);
-        
+
         await axiosInstance.post('/api/companies/withdraw', {
           confirmed: true,
         });
