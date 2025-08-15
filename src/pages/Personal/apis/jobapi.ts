@@ -6,7 +6,6 @@ import {
   JobBookmarkResult,
   BookmarkedJobsResponse,
   ProtectorApplicationItem,
-  ProtectorApplicationResponse,
 } from '../types/jobs';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -74,11 +73,11 @@ export type ApplicationItem = {
   applicationId: number;
   jobPostId: number;
   applicationStatus:
-  | 'NON_STARTED'
-  | 'DRAFT'
-  | 'SUBMITTED'
-  | 'APPROVED'
-  | 'REJECTED';
+    | 'NON_STARTED'
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
 };
 
 export const apiGetMyApplications = async (): Promise<ApplicationItem[]> => {
@@ -93,13 +92,21 @@ export const apiDeleteApplication = async (applicationId: number) => {
   return res.data.result;
 };
 // 일자리 신청[보호자]
-export async function apiGetProtectorApplications(): Promise<ProtectorApplicationItem[]> {
-  const res = await axiosInstance.get<ApiEnvelope<ProtectorApplicationItem[]>>("/api/applications/protector");
+export async function apiGetProtectorApplications(): Promise<
+  ProtectorApplicationItem[]
+> {
+  const res = await axiosInstance.get<ApiEnvelope<ProtectorApplicationItem[]>>(
+    '/api/applications/protector'
+  );
   return res.data.result ?? [];
 }
 
-export async function apiGetProtectorJobDetail(seniorId: number, jobPostId: number): Promise<JobDetail> {
-  const res = await axiosInstance.get(`/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`);
+export async function apiGetProtectorJobDetail(
+  seniorId: number,
+  jobPostId: number
+): Promise<JobDetail> {
+  const res = await axiosInstance.get(
+    `/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`
+  );
   return res.data.result;
 }
-
