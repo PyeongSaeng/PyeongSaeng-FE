@@ -38,10 +38,8 @@ export default function JobApplyPage() {
   const [initialized, setInitialized] = useState(false);
   const [step, setStep] = useState<Step>('basic');
 
-  // 채용공고 제목
   const [jobTitle, setJobTitle] = useState<string>('');
 
-  // 내 프로필
   const [senior, setSenior] = useState<Info | null>(null);
   const jobInfoProps = useMemo(() => {
     if (!senior) {
