@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { apiGetProtectorApplications } from '../apis/jobapi';
 import { ProtectorApplicationItem } from '../types/jobs';
 
