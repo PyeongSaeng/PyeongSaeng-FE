@@ -25,10 +25,9 @@ const SeniorApplyDetail = () => {
 
   const handleFileView = async (keyName: string) => {
     try {
-      const res = await axiosInstance.post(
-        '/api/s3/presigned/download',
-        keyName
-      );
+      const res = await axiosInstance.get('/api/s3/presigned/download', {
+        params: keyName,
+      });
       const presignedUrl = res.data?.result?.url;
 
       if (presignedUrl) {
