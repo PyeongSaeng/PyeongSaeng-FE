@@ -97,6 +97,17 @@ export type ApplicationType = {
   images: Image[];
 };
 
+export type ImageObject = {
+  keyName: string;
+  originalFileName: string;
+};
+
+export type questionAndAnswer = {
+  fieldName: string;
+  answerContent: string | ImageObject;
+  fieldType: 'TEXT' | 'IMAGE';
+};
+
 export type ApplicationDetail = {
   title: string;
   address: string;
@@ -105,6 +116,7 @@ export type ApplicationDetail = {
   zipcode: string;
   hourlyWage: number | null;
   yearSalary: number | null;
+  monthlySalary: number | null;
   description: string;
   workingTime: string;
   deadline: string;
@@ -112,6 +124,8 @@ export type ApplicationDetail = {
   note: string;
   images: Image[];
   travelTime: string;
+  applicationStatus: string;
+  questionAndAnswerList: questionAndAnswer[];
 };
 
 // 공통

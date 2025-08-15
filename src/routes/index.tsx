@@ -40,6 +40,8 @@ import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
 import CompanyPasswordEditDone from '../pages/Company/my/CompanyPasswordEditDone';
 import CareCheckApplicationDetail from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationDetail';
 import CareCheckApplicationResults from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationResults';
+import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults';
+import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
 
 const AppRoutes = () => {
   return (
@@ -69,15 +71,14 @@ const AppRoutes = () => {
       ></Route>
       <Route path="/personal/jobs/saved" element={<JobSavedPage />}></Route>
       <Route path="/personal/jobs/drafts" element={<JobDraftsPage />}></Route>
-      {/* <Route
+      <Route
         path="/personal/senior-my/applied-results"
-        element={<ApplyResults />}
+        element={<SeniorApplyResults />}
       ></Route>
       <Route
-        path="/personal/senior-my/applied-results/:appliedId"
-        element={<ApplyDetail />}
-      ></Route> */}
-      {/* 고쳐야됨 위에 두개 */}
+        path="/personal/senior-my/applied-results/:applicationId"
+        element={<SeniorApplyDetail />}
+      ></Route>
       {/* 시니어 마이메뉴 */}
       <Route path="/personal/senior-my/info" element={<SeniorInfo />}>
         <Route path="basic" element={<BasicInfo />}></Route>
