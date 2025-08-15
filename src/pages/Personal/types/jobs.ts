@@ -73,6 +73,7 @@ export type BookmarkSummary = {
 export type BookmarkedJobsResponse = {
   bookmarkSummaryDTOList: BookmarkSummary[];
 };
+
 // 보호자 신청함 타입 정의
 export type ProtectorApplicationItem = {
   applicationId: number;
@@ -86,6 +87,7 @@ export type ProtectorApplicationItem = {
     | 'APPROVED'
     | 'REJECTED';
 };
+
 export type ProtectorApplicationResponse = {
   isSuccess: boolean;
   code: string;

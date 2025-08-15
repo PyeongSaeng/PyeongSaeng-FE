@@ -53,21 +53,26 @@ const SeniorApplyResults = () => {
 
   // Intersection Observer로 페이지 증가
   useEffect(() => {
-    if (!loaderRef.current || isLast) return;
+    if (isLast) return;
+
+    const target = loaderRef.current; // ★ ref snapshot
+    if (!target) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading) {
+        if (entries[0]?.isIntersecting && !loading) {
           setPage((prev) => prev + 1);
         }
       },
       { threshold: 1 }
     );
 
-    observer.observe(loaderRef.current);
+    observer.observe(target);
 
     return () => {
-      if (loaderRef.current) observer.unobserve(loaderRef.current);
+      // ★ cleanup에서도 snapshot 사용 (loaderRef.current 직접 접근 X)
+      observer.unobserve(target);
+      observer.disconnect();
     };
   }, [isLast, loading]);
 
@@ -86,9 +91,9 @@ const SeniorApplyResults = () => {
               </div>
             ) : (
               <>
-                {applicationList.map((apply, idx) => (
+                {applicationList.map((apply) => (
                   <div
-                    key={idx}
+                    key={apply.applicationId}
                     className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]"
                   >
                     <div className="flex justify-between w-[292px] pb-[10px]">
@@ -100,8 +105,11 @@ const SeniorApplyResults = () => {
                     </div>
                     <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
                       <img
-                        className="w-[292px] h-[165px]"
-                        src={apply.images[0].imageUrl}
+                        className="w-[292px] h-[165px] object-cover"
+                        src={
+                          apply.images?.[0]?.imageUrl ||
+                          '/images/placeholder.png'
+                        }
                         alt="기업 대표 이미지"
                       />
                     </div>

@@ -177,9 +177,11 @@ function JobDraftLayout({
           <button
             key={label}
             className={`flex-1 h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium
+
               ${selectedTab === idx ? 'bg-[#ECF6F2] border-[#08D485]' : 'bg-white border-[#08D485]'}`}
             onClick={() => {
               setSelectedTab(idx as 0 | 1);
+
               setSelectedAppId(null);
             }}
           >
@@ -264,7 +266,29 @@ function JobDraftLayout({
                       )
                     }
                   >
-                    <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
+                    <div className="flex items-center gap-[6px]">
+                      <div
+                        className="w-[27px] h-[27px] rounded-full border-2 border-[#08D485] bg-white flex items-center justify-center cursor-pointer"
+                        onClick={() =>
+                          setSelectedAppId(
+                            isSelected ? null : application.applicationId
+                          )
+                        }
+                      >
+                        {isSelected && (
+                          <div className="w-[15px] h-[15px] rounded-full bg-[#08D485]" />
+                        )}
+                      </div>
+                      <div
+                        className="w-[56px] h-[19px] flex items-center justify-center text-[16px] text-[#747474] font-medium cursor-pointer"
+                        onClick={() =>
+                          setSelectedAppId(
+                            isSelected ? null : application.applicationId
+                          )
+                        }
+                      >
+                        선택하기
+                      </div>
                       <img
                         src={job.images?.[0]?.imageUrl}
                         alt={job.title}
