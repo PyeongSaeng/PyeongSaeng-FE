@@ -18,6 +18,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
 
   const myMenu = localStorage.getItem('userRole');
   const accessToken = localStorage.getItem('accessToken');
+  const username = localStorage.getItem('username');
 
   return (
     <div className="px-[8px]">
@@ -31,7 +32,11 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
               : navigate('/personal/care-my/info');
         }}
       >
-        {accessToken ? '안녕하세요' : '로그인 하세요'}
+        {accessToken ? (
+          <>
+            안녕하세요 <strong>{username} 님</strong>
+          </>
+        ) : '로그인 하세요'}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
