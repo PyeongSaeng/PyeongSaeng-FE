@@ -158,7 +158,7 @@ export default function CompanyJobListPage() {
       localStorage.removeItem('jobDraft');
       setStep(0);
       fetchJobs();
-    } catch (e) {
+    } catch {
       alert(submitError ?? '등록에 실패했어요. 잠시 후 다시 시도해 주세요.');
     }
   };

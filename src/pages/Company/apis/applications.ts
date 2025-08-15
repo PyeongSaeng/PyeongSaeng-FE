@@ -5,7 +5,6 @@ export async function getMyJobPosts(
   params: { page?: number; state?: 'RECRUITING' | 'CLOSED' } = {}
 ) {
   const { page = 1, state = 'RECRUITING' } = params;
-
   const { data } = await axiosInstance.get('/api/job/companies/me/posts', {
     params: { page, state },
   });
@@ -31,13 +30,13 @@ export async function getMyJobPosts(
   };
 }
 
-// 특정 공고의 지원서 목록
+//  특정 공고의 지원서 목록
 export async function getApplications(params: {
   jobPostId: number;
   page?: number;
 }) {
   const { jobPostId, page = 1 } = params;
-  const { data } = await axiosInstance.get('/applications', {
+  const { data } = await axiosInstance.get('/api/applications', {
     params: { jobPostId, page },
   });
   return data.result as {
@@ -57,7 +56,7 @@ export async function getApplications(params: {
 // 지원서 상세
 export async function getApplicationDetails(applicationId: number) {
   const { data } = await axiosInstance.get(
-    `/applications/${applicationId}/details`
+    `/api/applications/${applicationId}/details`
   );
   return data.result as {
     questionAndAnswerList: Array<
@@ -73,14 +72,16 @@ export async function getApplicationDetails(applicationId: number) {
   };
 }
 
-// 지원서 합불 변경
+//  지원서 합불 변경
+
 export async function patchApplicationStatus(
   applicationId: number,
   status: 'APPROVED' | 'REJECTED'
 ) {
   const { data } = await axiosInstance.patch(
-    `/applications/${applicationId}/state`,
+    `/api/applications/${applicationId}/state`,
     {
+      applicationState: status,
       applicationStatus: status,
     }
   );

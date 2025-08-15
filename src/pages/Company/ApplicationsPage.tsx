@@ -19,14 +19,11 @@ export default function ApplicationsPage() {
         setLoading(true);
         setError(null);
 
-        console.log(' GET /job/companies/me/posts?page=1&state=RECRUITING');
         const res = await getMyJobPosts({ page: 1, state: 'RECRUITING' });
-        console.log('응답:', res);
-
         setPosts(res.jobPostList.map((p) => ({ id: p.id, title: p.title })));
       } catch (e: any) {
-        console.error('공고 목록 로드 실패', e?.response ?? e);
         setError(e?.message || '목록을 불러오지 못했습니다.');
+        console.error('공고 목록 로드 실패', e?.response ?? e);
       } finally {
         setLoading(false);
       }
@@ -55,7 +52,9 @@ export default function ApplicationsPage() {
                   key={post.id}
                   className="w-full cursor-pointer"
                   onClick={() =>
-                    navigate(`/company/jobs/applications/${post.id}`)
+                    navigate(`/company/jobs/applications/${post.id}`, {
+                      state: { jobPostTitle: post.title },
+                    })
                   }
                 >
                   <div className="flex items-center">
