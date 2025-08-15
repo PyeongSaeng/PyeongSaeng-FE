@@ -46,8 +46,6 @@ const motivation: Tmotivation = {
 };
 
 const CareCheckApplicationDetail = () => {
-  const [seniorInfo, setSeniorInfo] = useState();
-
   const [fileName, setFileName] = useState<string | null>('');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
