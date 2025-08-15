@@ -56,9 +56,17 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState((s) => ({ ...s, idCheck: e.target.value, isIdAvailable: false }));
-    setUsernameMessage('');
-    setHasChecked(false);
+    const value = e.target.value;
+
+    // 영어와 숫자만 허용
+    const englishNumberOnlyRegex = /^[a-zA-Z0-9]*$/;
+
+    if (value === '' || englishNumberOnlyRegex.test(value)) {
+      setState((s) => ({ ...s, idCheck: value, isIdAvailable: false }));
+      setUsernameMessage('');
+    } else {
+      alert('아이디는 영어와 숫자만 사용 가능합니다.');
+    }
   };
 
   const handleNext = () => {
@@ -93,7 +101,7 @@ const CareStep3 = ({ state, setState, onNext }: CareStep3Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-[0.4rem] px-[3rem]">
+    <div className="flex flex-col items-center w-full px-[3rem]">
       <SignUpHeader title="회원가입 하기" />
       <div className="w-[30.6rem]">
         <p className="text-[#747474] mb-[2.3rem] text-[1.5rem] font-semibold">

@@ -86,7 +86,7 @@ const CareStep1 = ({ state, setState, onNext }: CareStep1Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-[0.4rem] px-[1.2rem]">
+    <div className="flex flex-col items-center w-full px-[1.2rem]">
       <SignUpHeader title="회원가입 하기" />
 
       <input
