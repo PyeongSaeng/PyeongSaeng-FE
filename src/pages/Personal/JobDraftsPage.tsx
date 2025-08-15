@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Topbar from "../../shared/components/topbar/Topbar";
-import { useApplication } from "./hooks/useApplication";
-import { useApplicationJobs } from "./hooks/useApplicationJob";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Topbar from '../../shared/components/topbar/Topbar';
+import { useApplication } from './hooks/useApplication';
+import { useApplicationJobs } from './hooks/useApplicationJob';
 
 const JobDraftsPage = () => {
   const navigate = useNavigate();
@@ -13,8 +13,12 @@ const JobDraftsPage = () => {
   const { data: applications = [], isLoading } = useGetMyApplications();
   const { mutate: deleteApplication } = useDeleteApplication();
 
-  const draftApps = applications.filter((a) => a.applicationStatus === "NON_STARTED");
-  const writingApps = applications.filter((a) => a.applicationStatus === "DRAFT");
+  const draftApps = applications.filter(
+    (a) => a.applicationStatus === 'NON_STARTED'
+  );
+  const writingApps = applications.filter(
+    (a) => a.applicationStatus === 'DRAFT'
+  );
   const selectedApps = selectedTab === 0 ? draftApps : writingApps;
 
   const jobPostIds = selectedApps.map((a) => a.jobPostId);
@@ -26,7 +30,9 @@ const JobDraftsPage = () => {
   }));
 
   const handleGoApply = () => {
-    const selected = selectedApps.find(app => app.applicationId === selectedAppId);
+    const selected = selectedApps.find(
+      (app) => app.applicationId === selectedAppId
+    );
     if (!selected) return;
     navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`);
   };
@@ -40,7 +46,9 @@ const JobDraftsPage = () => {
       <Topbar />
       <div className="w-full h-full flex flex-col">
         <div className="mt-[17px] flex flex-col items-center">
-          <p className="text-[20px] font-semibold text-[#747474]">일자리 신청함</p>
+          <p className="text-[20px] font-semibold text-[#747474]">
+            일자리 신청함
+          </p>
         </div>
 
         <div className="w-[301px] flex gap-[13px] mt-[16px] justify-center self-center">
@@ -67,18 +75,21 @@ const JobDraftsPage = () => {
         </div>
 
         {/* 신청서 리스트 */}
-        <div className="flex-1 w-full flex justify-center" style={{ minHeight: 0 }}>
+        <div
+          className="flex-1 w-full flex justify-center"
+          style={{ minHeight: 0 }}
+        >
           <div
             className="w-[291px] flex flex-col items-center overflow-y-auto mt-[22px] space-y-9 scrollbar-hide"
-            style={{ maxHeight: "400px" }}
+            style={{ maxHeight: '400px' }}
           >
             {isLoading ? (
               <p className="text-[#747474] text-[16px]">불러오는 중...</p>
             ) : appJobPairs.length === 0 ? (
               <p className="text-[#747474] text-[16px]">
                 {selectedTab === 0
-                  ? "작성 전인 신청서가 없습니다."
-                  : "작성 중인 신청서가 없습니다."}
+                  ? '작성 전인 신청서가 없습니다.'
+                  : '작성 중인 신청서가 없습니다.'}
               </p>
             ) : (
               appJobPairs.map(({ application, job }) => {
@@ -87,12 +98,17 @@ const JobDraftsPage = () => {
                 const isSelected = selectedAppId === application.applicationId;
 
                 return (
-                  <div key={application.applicationId} className="flex flex-col items-start relative">
+                  <div
+                    key={application.applicationId}
+                    className="flex flex-col items-start relative"
+                  >
                     <div className="flex items-center gap-[6px]">
                       <div
                         className="w-[27px] h-[27px] rounded-full border-2 border-[#08D485] bg-white flex items-center justify-center cursor-pointer"
                         onClick={() =>
-                          setSelectedAppId(isSelected ? null : application.applicationId)
+                          setSelectedAppId(
+                            isSelected ? null : application.applicationId
+                          )
                         }
                       >
                         {isSelected && (
@@ -102,7 +118,9 @@ const JobDraftsPage = () => {
                       <div
                         className="w-[56px] h-[19px] flex items-center justify-center text-[16px] text-[#747474] font-medium cursor-pointer"
                         onClick={() =>
-                          setSelectedAppId(isSelected ? null : application.applicationId)
+                          setSelectedAppId(
+                            isSelected ? null : application.applicationId
+                          )
                         }
                       >
                         선택하기
@@ -119,7 +137,9 @@ const JobDraftsPage = () => {
                       className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
                         ${isSelected ? 'border-[#08D485] bg-[#ECF6F2]' : 'border-[#08D485] bg-white'}`}
                       onClick={() =>
-                        setSelectedAppId(isSelected ? null : application.applicationId)
+                        setSelectedAppId(
+                          isSelected ? null : application.applicationId
+                        )
                       }
                     >
                       <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
@@ -130,10 +150,14 @@ const JobDraftsPage = () => {
                         />
                       </div>
                       <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
-                        <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">{job.title}</p>
+                        <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">
+                          {job.title}
+                        </p>
                         <p className="text-[11px] font-normal text-[#414141]">
-                          거리: {job.travelTime}, 시급: {job.hourlyWage?.toLocaleString()}원,
-                          근무시간: {job.workingTime}, 월급: {job.monthlySalary?.toLocaleString()}원
+                          거리: {job.travelTime}, 시급:{' '}
+                          {job.hourlyWage?.toLocaleString()}원, 근무시간:{' '}
+                          {job.workingTime}, 월급:{' '}
+                          {job.monthlySalary?.toLocaleString()}원
                         </p>
                       </div>
                     </div>
@@ -151,7 +175,7 @@ const JobDraftsPage = () => {
             disabled={selectedAppId === null}
             onClick={handleGoApply}
           >
-            {selectedTab === 0 ? "신청서 작성하기" : "신청서 이어서 작성하기"}
+            {selectedTab === 0 ? '신청서 작성하기' : '신청서 이어서 작성하기'}
           </button>
         </div>
       </div>

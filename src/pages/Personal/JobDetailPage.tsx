@@ -5,7 +5,6 @@ import { useSaveToggle } from './hooks/useSaveToggle';
 import { useShow } from './hooks/useShow';
 import { useApplication } from './hooks/useApplication';
 
-
 const JobDetailPage = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
@@ -24,15 +23,16 @@ const JobDetailPage = () => {
     }
   };
   const { useEnsureApplication, useGetMyApplications } = useApplication();
-  const { mutate: ensureApplication, isPending: isApplying } = useEnsureApplication();
+  const { mutate: ensureApplication, isPending: isApplying } =
+    useEnsureApplication();
 
   const handleApply = () => {
     ensureApplication(jobPostId, {
       onSuccess: () => {
-        navigate("/personal/jobs/drafts");
+        navigate('/personal/jobs/drafts');
       },
       onError: () => {
-        alert("신청에 실패했습니다.");
+        alert('신청에 실패했습니다.');
       },
     });
   };
