@@ -4,42 +4,51 @@ export type FieldType = 'TEXT' | 'IMAGE';
 
 export interface QuestionField {
   formFieldId: number;
-  formField: string;
+  formField: string | null;
   fieldType: FieldType;
-  answer?: any;
+  answer?: unknown;
 }
 
 export interface ResGetQuestions {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: {
-    formFieldList: QuestionField[];
-  };
+  result: { formFieldList: QuestionField[] };
 }
 
-/** 본인 작성용: GET /api/job/{jobPostId}/questions/direct */
 export const getQuestionsDirect = async (jobPostId: number) => {
   const { data } = await axiosInstance.get<ResGetQuestions>(
     `/api/job/${jobPostId}/questions/direct`
   );
-  return data.result.formFieldList;
+  return data.result?.formFieldList ?? [];
 };
 
-// 서버가 자동 채우는 "기본 필드" 이름
-const BASIC_FIELD_NAMES = new Set([
-  '이름',
-  '성함',
-  '연락처',
-  '전화번호',
-  '주소',
-]);
+const normalize = (s: string) =>
+  s
+    .replace(/\s+/g, '')
+    .replace(/[^\p{Letter}\p{Number}]/gu, '')
+    .toLowerCase();
 
-/** 추가 항목만 추출 */
+const BASIC_FIELD_NAMES = new Set(
+  [
+    '이름',
+    '성함',
+    '연락처',
+    '전화번호',
+    '주소',
+    '휴대폰',
+    '휴대전화',
+    '주민등록번호',
+  ].map(normalize)
+);
+
 export const pickExtraFields = (all: QuestionField[]): QuestionField[] =>
-  all.filter((f) => !BASIC_FIELD_NAMES.has(f.formField.trim()));
+  all.filter((f) => {
+    const name = (f.formField ?? '').trim();
+    if (!name) return true;
+    return !BASIC_FIELD_NAMES.has(normalize(name));
+  });
 
-/** 해당 항목에 이미 답변이 있는지 판별 */
 export const isFieldAnswered = (f: QuestionField): boolean => {
   if (f.fieldType === 'TEXT') {
     return typeof f.answer === 'string' && f.answer.trim().length > 0;

@@ -66,12 +66,12 @@ export const postGenerateAnswer = async (
   return data.result;
 };
 
-export const postGenerateUpdatedAnswer = async (
-  body: ReqGenerateUpdatedAnswer
-): Promise<ResGenerateUpdatedAnswer['result']> => {
-  const { data } = await axiosInstance.post<ResGenerateUpdatedAnswer>(
-    '/api/ai/updated-answers',
-    body
-  );
-  return data.result;
-};
+//export const postGenerateUpdatedAnswer = async (
+// body: ReqGenerateUpdatedAnswer
+//): Promise<ResGenerateUpdatedAnswer['result']> => {
+// const { data } = await axiosInstance.post<ResGenerateUpdatedAnswer>(
+// '/api/ai/updated-answers',
+// body
+//);
+//return data.result;
+//};

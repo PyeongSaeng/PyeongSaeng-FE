@@ -1,22 +1,22 @@
 import axiosInstance from '../../../shared/apis/axiosInstance';
 import type {
-  ReqPresignedUpload,
   ResPresignedUpload,
   ReqPresignedDownload,
   ResPresignedDownload,
 } from '../types/files';
 
-/** 업로드용 Presigned URL 발급 */
-export const postPresignedUpload = async (fileName: string) => {
+export const postPresignedUpload = async (
+  fileName: string,
+  contentType: string,
+  size: number
+) => {
   const { data } = await axiosInstance.post<ResPresignedUpload>(
     '/api/s3/presigned/upload',
-    { fileName } as ReqPresignedUpload
+    { fileName, contentType, size }
   );
-  // { keyName, url }
-  return data.result;
+  return data.result; // { keyName, url }
 };
 
-/** 실제 파일 PUT 업로드 */
 export const putFileToS3 = async (presignedUrl: string, file: File) => {
   const contentType = file.type || 'application/octet-stream';
   const res = await fetch(presignedUrl, {
@@ -30,7 +30,6 @@ export const putFileToS3 = async (presignedUrl: string, file: File) => {
   }
 };
 
-/** 다운로드용 Presigned URL 발급 */
 export const getPresignedDownload = async (keyName: string) => {
   const { data } = await axiosInstance.get<ResPresignedDownload>(
     '/api/s3/presigned/download',
@@ -39,9 +38,9 @@ export const getPresignedDownload = async (keyName: string) => {
   return data.result.url;
 };
 
-/** 헬퍼: 파일 하나 업로드 → keyName 반환 */
 export const uploadFileAndGetKey = async (file: File): Promise<string> => {
-  const { keyName, url } = await postPresignedUpload(file.name);
+  const ct = file.type || 'application/octet-stream';
+  const { keyName, url } = await postPresignedUpload(file.name, ct, file.size);
   await putFileToS3(url, file);
   return keyName;
 };

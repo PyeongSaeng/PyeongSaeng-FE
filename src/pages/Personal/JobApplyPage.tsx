@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -9,12 +10,7 @@ import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
 
-import {
-  postGenerateKeywords,
-  postGenerateAnswer,
-  postGenerateUpdatedAnswer,
-  type QAOption,
-} from './apis/ai';
+import { postGenerateAnswer, type QAOption } from './apis/ai';
 import {
   postApplicationsEnsure,
   postApplicationDirect,
@@ -27,11 +23,9 @@ import {
   pickExtraFields,
   isFieldAnswered,
 } from './apis/questions';
-
 import { apiGetJobDetail } from './apis/jobapi';
 
 import axiosInstance from '../../shared/apis/axiosInstance';
-
 import type { Info } from './types/userInfo';
 
 export default function JobApplyPage() {
@@ -39,17 +33,14 @@ export default function JobApplyPage() {
   const { jobId } = useParams<{ jobId: string }>();
   const parsedJobId = Number(jobId);
 
-  // (임시) 폼필드 ID
-  const motivationFieldId = 1;
-  const certFieldId = 2;
-
   type Step =
-    | 'basic' // <29> 추가 항목 없음
-    | 'choice' // <31> 추가 항목 있음 + 아직 답변 없음
-    | 'scaffold' // <32> 추가 항목 있음 + 이미 답변함(이어 쓰기)
+    | 'basic'
+    | 'choice'
+    | 'scaffold'
     | 'final'
     | 'evidence'
-    | 'complete';
+    | 'complete'
+    | 'review';
 
   const [initialized, setInitialized] = useState(false);
   const [step, setStep] = useState<Step>('basic');
@@ -57,7 +48,7 @@ export default function JobApplyPage() {
   // 채용공고 제목
   const [jobTitle, setJobTitle] = useState<string>('');
 
-  // 내 프로필 상태(Info 원본 + 화면 표시용 매핑)
+  // 내 프로필
   const [senior, setSenior] = useState<Info | null>(null);
   const jobInfoProps = useMemo(() => {
     if (!senior) {
@@ -100,7 +91,23 @@ export default function JobApplyPage() {
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [pickedKeyword, setPickedKeyword] = useState<string>('');
+  // ✅ 공고별 실제 필드 ID
+  const [motivationFieldId, setMotivationFieldId] = useState<number | null>(
+    null
+  );
+  const [certFieldId, setCertFieldId] = useState<number | null>(null);
+
+  // 🔵 완료 페이지에서 보여줄 썸네일/파일명
+  const [previewUrl, setPreviewUrl] = useState<string>(''); // blob URL
+  const [previewName, setPreviewName] = useState<string>(''); // 원본 파일명
+  useEffect(() => {
+    if (!uploadedImageFile) return;
+    const url = URL.createObjectURL(uploadedImageFile);
+    setPreviewUrl(url);
+    setPreviewName(uploadedImageFile.name);
+    return () => URL.revokeObjectURL(url);
+  }, [uploadedImageFile]);
+
   const answersBase: QAOption[] = useMemo(
     () => (selected ? [{ question: MAIN_QUESTION, option: selected }] : []),
     [selected]
@@ -114,7 +121,7 @@ export default function JobApplyPage() {
     }
   }, [jobId, parsedJobId, navigate]);
 
-  // 채용공고 제목 로딩
+  // 채용공고 제목
   useEffect(() => {
     if (Number.isNaN(parsedJobId)) return;
     apiGetJobDetail(parsedJobId)
@@ -122,6 +129,7 @@ export default function JobApplyPage() {
       .catch(() => setJobTitle(''));
   }, [parsedJobId]);
 
+  // 내 정보
   useEffect(() => {
     (async () => {
       try {
@@ -135,6 +143,7 @@ export default function JobApplyPage() {
     })();
   }, []);
 
+  // 초기 분기
   useEffect(() => {
     const init = async () => {
       if (Number.isNaN(parsedJobId)) return;
@@ -154,28 +163,57 @@ export default function JobApplyPage() {
           }
         }
 
+        // (1) 질문 목록
+        let allFields: Awaited<ReturnType<typeof getQuestionsDirect>> = [];
         let extras: ReturnType<typeof pickExtraFields> = [];
         try {
-          const allFields = await getQuestionsDirect(parsedJobId);
+          allFields = await getQuestionsDirect(parsedJobId);
           extras = pickExtraFields(allFields);
+
+          // formFieldId 매핑
+          const textField = allFields.find((f) => f.fieldType === 'TEXT');
+          const imageField = allFields.find((f) => f.fieldType === 'IMAGE');
+          setMotivationFieldId(textField?.formFieldId ?? null);
+          setCertFieldId(imageField?.formFieldId ?? null);
         } catch (e: any) {
           const code = e?.response?.data?.code as string | undefined;
           const msg = e?.response?.data?.message ?? e?.message;
           console.warn('[questions error]', code, msg);
-
           if (code === 'JOBPOST404') {
             alert('존재하지 않는 채용공고입니다.');
             navigate('/personal');
             return;
           }
+          allFields = [];
           extras = [];
         }
 
-        // 3) 29/31/32 분기
+        // (2) DRAFT 여부
+        let hasDraftForThisJob = false;
+        try {
+          const { data } = await axiosInstance.get('/api/applications/mine');
+          const myApps = (data?.result ?? []) as Array<{
+            jobPostId: number;
+            applicationStatus:
+              | 'NON_STARTED'
+              | 'DRAFT'
+              | 'SUBMITTED'
+              | 'APPROVED'
+              | 'REJECTED';
+          }>;
+          hasDraftForThisJob = myApps?.some(
+            (a) =>
+              a.jobPostId === parsedJobId && a.applicationStatus === 'DRAFT'
+          );
+        } catch (e) {
+          console.warn('[apps load failed]', e);
+        }
+
+        // (3) 최종 분기
         if (extras.length === 0) {
-          setStep('basic'); // <29>
-        } else if (extras.some(isFieldAnswered)) {
-          setStep('scaffold'); // <32>
+          setStep(allFields.length > 0 ? 'choice' : 'basic');
+        } else if (hasDraftForThisJob && extras.some(isFieldAnswered)) {
+          setStep('scaffold');
           const textExtra = extras.find(
             (f) =>
               f.fieldType === 'TEXT' &&
@@ -184,7 +222,7 @@ export default function JobApplyPage() {
           );
           if (textExtra) setScaffoldText(textExtra.answer as string);
         } else {
-          setStep('choice'); // <31>
+          setStep('choice');
         }
       } finally {
         setInitialized(true);
@@ -216,17 +254,10 @@ export default function JobApplyPage() {
     setScaffoldText('');
 
     try {
-      const keywords = await postGenerateKeywords({
-        answers: answersBase,
-        question: MAIN_QUESTION,
-      });
-      const pick = keywords?.[0] ?? selected;
-      setPickedKeyword(pick);
-
       const scaffold = await postGenerateAnswer({
         answers: answersBase,
         question: MAIN_QUESTION,
-        selectedKeyword: pick,
+        selectedKeyword: selected,
       });
       setScaffoldText(scaffold);
     } catch (e: any) {
@@ -240,43 +271,35 @@ export default function JobApplyPage() {
     }
   };
 
-  // <32> → <33>
+  // <32> → <33> (로컬 병합)
   const handleAiCompose = async () => {
     const scaffold = scaffoldText.trim();
     if (!scaffold) return alert('AI 문장을 먼저 생성해 주세요.');
     if (!personalInput.trim()) return alert('관련된 경험을 입력해 주세요.');
 
-    try {
-      const completed = await postGenerateUpdatedAnswer({
-        answers: answersBase,
-        question: MAIN_QUESTION,
-        selectedKeyword: pickedKeyword || selected,
-        extraInfo: personalInput,
-        scaffold,
-      });
-      setFinalText(completed);
-      setStep('final');
-    } catch {
-      setFinalText([scaffold, personalInput.trim()].filter(Boolean).join('\n'));
-      setStep('final');
-    }
+    const merged = `${scaffold}\n\n[경험]\n${personalInput.trim()}`.trim();
+    setFinalText(merged);
+    setStep('final');
   };
 
-  // 임시저장(DRAFT)
-  const saveDraft = async () => {
+  // 임시저장(DRAFT) — silent 모드 지원
+  const saveDraft = async (opts?: { silent?: boolean }) => {
+    const silent = !!opts?.silent;
     if (isSavingDraft) return;
     setIsSavingDraft(true);
     try {
       const payload: FieldAndAnswer[] = [];
       const draftText = finalText || scaffoldText || '';
-      if (draftText) {
+
+      if (draftText && motivationFieldId != null) {
         payload.push({
           formFieldId: motivationFieldId,
           fieldType: 'TEXT',
           answer: draftText,
         });
       }
-      if (uploadedImageFile) {
+
+      if (uploadedImageFile && certFieldId != null) {
         const keyName = await uploadFileAndGetKey(uploadedImageFile);
         payload.push({
           formFieldId: certFieldId,
@@ -284,12 +307,16 @@ export default function JobApplyPage() {
           answer: [{ keyName, originalFileName: uploadedImageFile.name }],
         });
       }
+
       await postApplicationDirect({
         jobPostId: parsedJobId,
         applicationStatus: 'DRAFT',
         fieldAndAnswer: payload,
       });
-      navigate('/personal/jobs/drafts');
+
+      if (!silent) {
+        navigate('/personal/jobs/drafts');
+      }
     } catch (e: any) {
       alert(
         e?.response?.data?.message ??
@@ -307,25 +334,33 @@ export default function JobApplyPage() {
     setIsSubmitting(true);
     try {
       if (!finalText.trim()) return alert('완성본 문장을 확인해 주세요.');
-      if (!uploadedImageFile) return alert('자격증 이미지를 업로드해 주세요.');
+      if (certFieldId != null && !uploadedImageFile) {
+        return alert('자격증 이미지를 업로드해 주세요.');
+      }
 
-      const keyName = await uploadFileAndGetKey(uploadedImageFile);
-      const fieldAndAnswer: FieldAndAnswer[] = [
-        {
+      const payload: FieldAndAnswer[] = [];
+
+      if (motivationFieldId != null) {
+        payload.push({
           formFieldId: motivationFieldId,
           fieldType: 'TEXT',
           answer: finalText,
-        },
-        {
+        });
+      }
+
+      if (uploadedImageFile && certFieldId != null) {
+        const keyName = await uploadFileAndGetKey(uploadedImageFile);
+        payload.push({
           formFieldId: certFieldId,
           fieldType: 'IMAGE',
           answer: [{ keyName, originalFileName: uploadedImageFile.name }],
-        },
-      ];
+        });
+      }
+
       await postApplicationDirect({
         jobPostId: parsedJobId,
         applicationStatus: 'SUBMITTED',
-        fieldAndAnswer,
+        fieldAndAnswer: payload,
       });
       setStep('complete');
     } catch (e: any) {
@@ -363,6 +398,12 @@ export default function JobApplyPage() {
 
   const handleGoHome = () => navigate('/personal');
 
+  // 업로드 버튼 콜백: EvidenceSection에 내려줄 래퍼 (이름/프리뷰 유지용)
+  const handleFileUpload = (file: File) => {
+    setUploadedImageFile(file);
+    // preview는 useEffect에서 생성(revoke 포함)
+  };
+
   if (!initialized) {
     return (
       <div className="pt-[10px] h-[740px] flex items-center justify-center">
@@ -387,9 +428,13 @@ export default function JobApplyPage() {
                     ? 'AI가 신청서의 틀을 잡았습니다.\n관련된 경험을 직접 입력해 주세요.'
                     : step === 'final'
                       ? 'AI는 실수할 수 있습니다.\n사실과 다른 부분을 수정해 주세요.'
-                      : step === 'complete'
-                        ? '신청 완료되었습니다.'
-                        : ''
+                      : step === 'evidence'
+                        ? '증빙자료 사진 첨부가 필요합니다.'
+                        : step === 'review'
+                          ? '신청 완료 전 마지막으로 신청서를 확인하세요.'
+                          : step === 'complete'
+                            ? '신청 완료되었습니다.'
+                            : ''
             }
           />
 
@@ -400,6 +445,7 @@ export default function JobApplyPage() {
                 jobName={jobTitle || '채용공고'}
                 info={jobInfoProps}
               />
+
               {!!finalText && (
                 <div className="w-full border border-[#08D485] rounded-lg p-4 mt-4">
                   <h3 className="text-[16px] font-semibold mb-2">지원동기</h3>
@@ -408,7 +454,32 @@ export default function JobApplyPage() {
                   </p>
                 </div>
               )}
-              <div className="w-full pb-10">
+
+              {/* 제출 후 이미지 확인 블록 */}
+              {!!previewUrl && (
+                <div className="w-full border border-emerald-300 rounded-lg p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold mb-2">
+                    자격증 이미지
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={previewUrl}
+                      alt={previewName || 'uploaded'}
+                      className="w-[96px] h-[96px] object-cover rounded-md border"
+                    />
+                    <div className="flex-1">
+                      <div className="text-[14px] font-medium truncate">
+                        {previewName}
+                      </div>
+                      <div className="text-[12px] text-gray-500 mt-1">
+                        제출된 이미지를 확인하세요.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="w-full pb-10 mt-4">
                 <NextButton onClick={handleGoHome}>홈으로 이동</NextButton>
               </div>
             </>
@@ -505,13 +576,101 @@ export default function JobApplyPage() {
             </>
           )}
 
-          {/* 증빙 업로드 + 최종 제출 */}
+          {/* 증빙 업로드 */}
           {step === 'evidence' && (
-            <EvidenceSection
-              onSave={saveDraft}
-              onSubmit={submitApplication}
-              onFileUpload={setUploadedImageFile}
-            />
+            <>
+              <EvidenceSection onFileUpload={handleFileUpload} />
+              <TwoButtonGroup
+                leftLabel="이전"
+                rightLabel="다음"
+                onLeftClick={() => setStep('final')}
+                onRightClick={() => setStep('review')}
+              />
+            </>
+          )}
+
+          {/* <36> 리뷰(최종 확인 & 제출) */}
+          {step === 'review' && (
+            <>
+              {/* 공고/내 정보 요약 */}
+              <JobInfoSection
+                jobName={jobTitle || '채용공고'}
+                info={jobInfoProps}
+              />
+
+              {/* 지원동기: 동일 컴포넌트로 readOnly */}
+              <div className="w-full mt-4">
+                <QuestionWriteFormSection
+                  title="지원동기"
+                  inputValue={finalText}
+                  onChange={() => {}}
+                  readOnly
+                />
+              </div>
+
+              {/* 업로드 파일 요약 */}
+              {certFieldId != null && (
+                <div className="w-full border border-emerald-300 rounded-lg p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold mb-2">
+                    자격증 이미지
+                  </h3>
+
+                  {uploadedImageFile ? (
+                    <div className="flex items-center gap-3">
+                      {!!previewUrl && (
+                        <img
+                          src={previewUrl}
+                          alt={previewName || 'uploaded'}
+                          className="w-[72px] h-[72px] object-cover rounded-md border"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <div className="text-[14px] font-medium truncate">
+                          {previewName}
+                        </div>
+                        <div className="text-[12px] text-gray-500 mt-1">
+                          첨부한 이미지가 맞는지 확인해 주세요.
+                        </div>
+                      </div>
+                      <button
+                        className="text-xs px-3 py-2 rounded border"
+                        onClick={() => {
+                          setUploadedImageFile(null);
+                          setPreviewUrl('');
+                          setPreviewName('');
+                          setStep('evidence');
+                        }}
+                      >
+                        다시 첨부
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="text-[13px] text-gray-600">
+                      첨부된 파일이 없습니다.{` `}
+                      <span
+                        className="underline cursor-pointer"
+                        onClick={() => setStep('evidence')}
+                      >
+                        증빙 첨부 화면으로 이동
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* 이전(저장) / 제출 */}
+              <div className="w-full pb-10 mt-3">
+                <TwoButtonGroup
+                  leftLabel={isSavingDraft ? '저장 중…' : '저장'}
+                  rightLabel={isSubmitting ? '제출 중…' : '제출'}
+                  onLeftClick={async () => {
+                    await saveDraft({ silent: true }); // 저장만
+                    setStep('evidence'); // evidence로 이동
+                  }}
+                  onRightClick={submitApplication}
+                />
+              </div>
+            </>
           )}
         </div>
       </div>
