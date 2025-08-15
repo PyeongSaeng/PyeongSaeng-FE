@@ -6,6 +6,7 @@ import {
   JobBookmarkResult,
   BookmarkedJobsResponse,
   ProtectorApplicationItem,
+  ProtectorApplicationResponse,
 } from '../types/jobs';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -92,9 +93,8 @@ export const apiDeleteApplication = async (applicationId: number) => {
   return res.data.result;
 };
 // 일자리 신청[보호자]
-export const apiGetProtectorApplications = async (): Promise<
-  ProtectorApplicationItem[]
-> => {
-  const res = await axiosInstance.get('/api/applications/protector');
+export async function apiGetProtectorApplications(): Promise<ProtectorApplicationItem[]> {
+  const res = await axios.get<ProtectorApplicationResponse>("/api/applications/protector");
   return res.data.result;
-};
+}
+
