@@ -54,13 +54,15 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         >
           일자리 신청함
         </MenuNavButton>
-        <MenuNavButton
-          url={
-            accessToken ? '/personal/senior-my/info/extra' : '/personal/login'
-          }
-        >
-          질문답변
-        </MenuNavButton>
+        {accessToken && (
+          <MenuNavButton
+            url={
+              accessToken ? '/personal/senior-my/info/extra' : '/personal/login'
+            }
+          >
+            질문답변
+          </MenuNavButton>
+        )}
         <MenuNavButton
           handleMenu={() => {
             accessToken ? handleMenu(myMenu) : navigate('/personal/login');
@@ -69,7 +71,9 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
           내 정보
         </MenuNavButton>
         <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
-        <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
+        {accessToken && (
+          <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
+        )}
       </div>
     </div>
   );

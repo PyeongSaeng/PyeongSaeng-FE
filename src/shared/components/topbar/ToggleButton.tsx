@@ -16,6 +16,7 @@ const ToggleButton = () => {
       localStorage.clear();
     } else {
       setToggleVersion('');
+      localStorage.clear();
     }
   }, [location.pathname]);
 

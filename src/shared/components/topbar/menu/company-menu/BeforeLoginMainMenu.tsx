@@ -23,7 +23,7 @@ const BeforeLoginMainMenu = ({ goNext }: BeforeLoginMainMenuProps) => {
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
         <MenuNavButton url="/company/login">신청서 입력</MenuNavButton>
         <MenuNavButton url="/company/login">받은 신청서</MenuNavButton>
-        <button onClick={goNext}>내 기업 정보</button>
+        <MenuNavButton url="/company/login">내 기업 정보</MenuNavButton>
       </div>
     </div>
   );
