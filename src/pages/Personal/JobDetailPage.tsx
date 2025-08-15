@@ -33,9 +33,7 @@ const JobDetailPage = () => {
         navigate('/personal/jobs/drafts');
       },
       onError: () => {
-
         toast.error('신청에 실패했습니다.');
-
       },
     });
   };

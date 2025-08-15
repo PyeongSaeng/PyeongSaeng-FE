@@ -174,7 +174,6 @@ function JobDraftLayout({
       {/* 탭 버튼 */}
       <div className="w-[301px] flex gap-[13px] mt-[16px] justify-center self-center">
         {['작성 전', '작성중'].map((label, idx) => (
-
           <button
             key={label}
             className={`flex-1 h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium
@@ -188,7 +187,6 @@ function JobDraftLayout({
           >
             {label}
           </button>
-
         ))}
       </div>
       {/* 리스트 */}
@@ -196,12 +194,10 @@ function JobDraftLayout({
         className="flex-1 w-full flex justify-center"
         style={{ minHeight: 0 }}
       >
-
         <div
           className="w-[291px] flex flex-col items-center overflow-y-auto mt-[22px] space-y-9 scrollbar-hide"
           style={{ maxHeight: '400px' }}
         >
-
           {isLoading ? (
             <p className="text-[#747474] text-[16px]">불러오는 중...</p>
           ) : appJobPairs.length === 0 ? (
@@ -269,7 +265,6 @@ function JobDraftLayout({
                         isSelected ? null : application.applicationId
                       )
                     }
-
                   >
                     <div className="flex items-center gap-[6px]">
                       <div
@@ -321,7 +316,6 @@ function JobDraftLayout({
               );
             })
           )}
-
         </div>
       </div>
       {/* 하단 버튼 */}

@@ -110,4 +110,3 @@ export async function apiGetProtectorJobDetail(
   );
   return res.data.result;
 }
-

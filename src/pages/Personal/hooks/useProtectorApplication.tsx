@@ -8,4 +8,3 @@ export function useProtectorApplications() {
     staleTime: 60 * 1000,
   });
 }
-

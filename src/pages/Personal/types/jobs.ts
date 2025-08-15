@@ -94,4 +94,3 @@ export type ProtectorApplicationResponse = {
   message: string;
   result: ProtectorApplicationItem[];
 };
-
