@@ -92,9 +92,21 @@ export const apiDeleteApplication = async (applicationId: number) => {
   return res.data.result;
 };
 // 일자리 신청[보호자]
-export const apiGetProtectorApplications = async (): Promise<
+export async function apiGetProtectorApplications(): Promise<
   ProtectorApplicationItem[]
-> => {
-  const res = await axiosInstance.get('/api/applications/protector');
+> {
+  const res = await axiosInstance.get<ApiEnvelope<ProtectorApplicationItem[]>>(
+    '/api/applications/protector'
+  );
+  return res.data.result ?? [];
+}
+
+export async function apiGetProtectorJobDetail(
+  seniorId: number,
+  jobPostId: number
+): Promise<JobDetail> {
+  const res = await axiosInstance.get(
+    `/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`
+  );
   return res.data.result;
-};
+}
