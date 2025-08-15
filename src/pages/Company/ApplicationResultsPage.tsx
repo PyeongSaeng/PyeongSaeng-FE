@@ -6,6 +6,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import Field from '../../shared/components/Field';
@@ -99,12 +100,12 @@ export default function ApplicationResultsPage() {
 
   const handlePublish = async () => {
     if (!applicationId) {
-      alert('URL에 applicationId가 없습니다. (예: .../results?id=456)');
+      toast.error('URL에 applicationId가 없습니다. (예: .../results?id=456)');
       return;
     }
     const status = parseStatus(result);
     if (!status) {
-      alert('합/불을 정확히 입력해주세요 (예: 합격, 불합격)');
+      toast.warning('합/불을 정확히 입력해주세요 (예: 합격, 불합격)');
       return;
     }
     try {
@@ -118,7 +119,7 @@ export default function ApplicationResultsPage() {
       });
     } catch (e) {
       console.error('PATCH status failed:', e);
-      alert('결과 공시에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      toast.error('결과 공시에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }
   };
 

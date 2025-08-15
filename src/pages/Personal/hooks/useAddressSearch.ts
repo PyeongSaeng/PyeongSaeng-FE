@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 interface AddressData {
   zonecode: string;
@@ -32,7 +33,7 @@ const useAddressSearch = ({ onComplete }: UseAddressSearchProps) => {
         },
       }).open();
     } else {
-      alert(
+      toast.error(
         '주소 검색 스크립트가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
       );
     }

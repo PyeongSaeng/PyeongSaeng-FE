@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import SeniorStep1 from './SeniorStep1';
 import SeniorStep2 from './SeniorStep2';
 import SeniorStep3 from './SeniorStep3';
@@ -118,7 +119,7 @@ const SeniorSignIn = () => {
 
     signupMutation.mutate(seniorData, {
       onSuccess: () => {
-        alert(
+        toast.success(
           isFromKakao
             ? '카카오 회원가입이 완료되었습니다!'
             : '회원가입이 완료되었습니다!'
@@ -127,7 +128,7 @@ const SeniorSignIn = () => {
       },
       onError: (error: any) => {
         console.error('시니어 회원가입 실패:', error);
-        alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+        toast.error('회원가입에 실패했습니다. 다시 시도해주세요.');
       },
     });
   };

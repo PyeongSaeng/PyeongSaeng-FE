@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -18,19 +19,23 @@ const CompanyDeleteAccount = () => {
     if (value === '탈퇴하겠습니다') {
       try {
         setSubmitting(true);
+
         await axiosInstance.post('/api/companies/withdraw', {
           confirmed: true,
         });
-        alert('회원 탈퇴가 완료되었습니다. 7일 이내에 복구 가능합니다.');
+        toast.success(
+          '회원 탈퇴가 완료되었습니다. 7일 이내에 복구 가능합니다.'
+        );
+
         navigate('/company/delete-account/done');
       } catch (error) {
         console.error('회원 탈퇴 실패', error);
-        alert('탈퇴에 실패했습니다. 다시 시도해주세요.');
+        toast.error('탈퇴에 실패했습니다. 다시 시도해주세요.');
       } finally {
         setSubmitting(false);
       }
     } else {
-      alert('문구를 바르게 입력해주세요');
+      toast.warning('문구를 바르게 입력해주세요');
     }
   };
 

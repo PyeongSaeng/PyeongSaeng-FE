@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -50,7 +51,7 @@ export default function JobApplyPage() {
 
   useEffect(() => {
     if (!parsedJobId || Number.isNaN(parsedJobId)) {
-      alert('유효하지 않은 채용공고 경로입니다.');
+      toast.error('유효하지 않은 채용공고 경로입니다.');
       navigate('/personal');
     }
   }, [parsedJobId, navigate]);
@@ -67,7 +68,7 @@ export default function JobApplyPage() {
   }, [step]);
 
   const handleChoiceSubmit = async () => {
-    if (!selected.trim()) return alert('답변을 선택해 주세요.');
+    if (!selected.trim()) return toast.warning('답변을 선택해 주세요.');
     setStep('scaffold');
     setIsLoadingScaffold(true);
     setScaffoldError(null);
@@ -99,15 +100,17 @@ export default function JobApplyPage() {
 
   const handleAiCompose = () => {
     const base = scaffoldText.trim();
-    if (!base) return alert('AI 문장을 먼저 생성해 주세요.');
+    if (!base) return toast.warning('AI 문장을 먼저 생성해 주세요.');
     setFinalText([base, personalInput.trim()].filter(Boolean).join('\n'));
     setStep('final');
   };
 
   const submitApplication = async () => {
     try {
-      if (!finalText.trim()) return alert('완성본 문장을 확인해 주세요.');
-      if (!uploadedImageFile) return alert('자격증 이미지를 업로드해 주세요.');
+      if (!finalText.trim())
+        return toast.warning('완성본 문장을 확인해 주세요.');
+      if (!uploadedImageFile)
+        return toast.warning('자격증 이미지를 업로드해 주세요.');
 
       const keyName = await uploadFileAndGetKey(uploadedImageFile);
 
@@ -133,7 +136,7 @@ export default function JobApplyPage() {
       setStep('complete');
     } catch (e: any) {
       console.error('[submit error]', e?.response?.data ?? e);
-      alert(
+      toast.error(
         e?.response?.data?.message ??
           e?.message ??
           '제출 중 오류가 발생했습니다.'

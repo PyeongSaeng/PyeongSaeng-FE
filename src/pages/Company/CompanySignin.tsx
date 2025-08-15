@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import NextButton from '../Personal/components/user/signIn/NextButton';
 import TopbarForLogin from '../../shared/components/topbar/TopbarForLogin';
 import { CompanySigninState, CompanySigninRequest } from './types/auth';
@@ -56,7 +57,7 @@ const CompanySignin = () => {
   // 인증번호 발송 함수
   const handleSendVerificationCode = () => {
     if (!state.phone) {
-      alert('전화번호를 입력해주세요.');
+      toast.warning('전화번호를 입력해주세요.');
       return;
     }
 
@@ -64,13 +65,13 @@ const CompanySignin = () => {
     sendVerificationCodeMutation.mutate(state.phone, {
       onSuccess: () => {
         setIsVerificationSent(true);
-        alert('인증번호가 발송되었습니다.');
+        toast.success('인증번호가 발송되었습니다.');
       },
       onError: (error: any) => {
         const errorMsg =
           error.response?.data?.message ||
           '인증번호 발송 중 오류가 발생했습니다.';
-        alert(errorMsg);
+        toast.error(errorMsg);
       },
     });
   };
@@ -78,7 +79,7 @@ const CompanySignin = () => {
   // 아이디 중복 확인 함수
   const handleCheckUsername = () => {
     if (!state.username) {
-      alert('아이디를 입력해주세요.');
+      toast.warning('아이디를 입력해주세요.');
       return;
     }
 
@@ -105,7 +106,7 @@ const CompanySignin = () => {
         const errorMsg =
           error.response?.data?.message ||
           '아이디 중복 확인 중 오류가 발생했습니다.';
-        alert(errorMsg);
+        toast.error(errorMsg);
       },
     });
   };
@@ -125,22 +126,22 @@ const CompanySignin = () => {
       !state.passwordConfirm ||
       !state.verificationCode
     ) {
-      alert('모든 필드를 입력해주세요.');
+      toast.warning('모든 필드를 입력해주세요.');
       return;
     }
 
     if (!isVerificationSent) {
-      alert('인증번호를 발송해주세요.');
+      toast.warning('인증번호를 발송해주세요.');
       return;
     }
 
     if (!state.isIdAvailable) {
-      alert('아이디 중복 확인을 완료해주세요.');
+      toast.warning('아이디 중복 확인을 완료해주세요.');
       return;
     }
 
     if (!passwordsMatch) {
-      alert('비밀번호가 일치하지 않습니다.');
+      toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -159,7 +160,7 @@ const CompanySignin = () => {
 
     companySignupMutation.mutate(signupData, {
       onSuccess: () => {
-        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+        toast.success('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
         navigate('/company/login');
       },
       onError: (error: any) => {
@@ -171,7 +172,7 @@ const CompanySignin = () => {
         } else {
           const errorMsg =
             error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
-          alert(errorMsg);
+          toast.error(errorMsg);
         }
       },
     });
