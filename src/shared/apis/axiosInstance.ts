@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -129,7 +130,7 @@ axiosInstance.interceptors.response.use(
 
         // 로그인 페이지로 리다이렉트
         if (!window.location.pathname.includes('/login')) {
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          toast.error('세션이 만료되었습니다. 다시 로그인해주세요.');
 
           // 현재 경로에 따라 적절한 로그인 페이지로 이동
           if (window.location.pathname.startsWith('/company')) {

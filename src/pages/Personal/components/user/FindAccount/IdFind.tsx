@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import NextButton from '../signIn/NextButton';
 import { IdFindResult } from '../../../types/user';
 import { useSendAccountSMS, useFindUsername } from '../../../hooks/useAuth';
@@ -19,7 +20,7 @@ const IdFind = () => {
 
   const handleVerificationSend = () => {
     if (!phoneNumber.trim()) {
-      alert('전화번호를 입력해주세요.');
+      toast.warning('전화번호를 입력해주세요.');
       return;
     }
 
@@ -37,7 +38,7 @@ const IdFind = () => {
             setIsKakaoUser(true);
             setIsVerificationSent(true);
           } else {
-            alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+            toast.error('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
           }
         },
       }
@@ -46,12 +47,12 @@ const IdFind = () => {
 
   const handleIdFind = () => {
     if (!name.trim() || !phoneNumber.trim() || !verificationCode.trim()) {
-      alert('모든 항목을 입력해주세요.');
+      toast.warning('모든 항목을 입력해주세요.');
       return;
     }
 
     if (!isVerificationSent) {
-      alert('휴대폰 인증을 완료해주세요.');
+      toast.warning('휴대폰 인증을 완료해주세요.');
       return;
     }
 
@@ -71,7 +72,7 @@ const IdFind = () => {
           });
           setShowResult(true);
         } else {
-          alert('아이디를 찾을 수 없습니다.');
+          toast.error('아이디를 찾을 수 없습니다.');
         }
       },
     });

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import NextButton from '../../../Personal/components/user/signIn/NextButton';
 import {
   useSendCompanyVerificationCode,
@@ -26,32 +27,32 @@ const PasswordFind = () => {
 
   const handleVerificationSend = () => {
     if (!phone.trim()) {
-      alert('전화번호를 입력해주세요.');
+      toast.warning('전화번호를 입력해주세요.');
       return;
     }
 
     sendVerificationCodeMutation.mutate(phone, {
       onSuccess: () => {
         setIsVerificationSent(true);
-        alert('인증번호가 발송되었습니다.');
+        toast.success('인증번호가 발송되었습니다.');
       },
       onError: (error: any) => {
         const errorMessage =
           error.response?.data?.message ||
           '인증번호 발송 중 오류가 발생했습니다.';
-        alert(errorMessage);
+        toast.error(errorMessage);
       },
     });
   };
 
   const handleVerifyAndNext = () => {
     if (!username.trim() || !phone.trim() || !verificationCode.trim()) {
-      alert('모든 항목을 입력해주세요.');
+      toast.warning('모든 항목을 입력해주세요.');
       return;
     }
 
     if (!isVerificationSent) {
-      alert('인증번호를 발송해주세요.');
+      toast.warning('인증번호를 발송해주세요.');
       return;
     }
 
@@ -68,19 +69,19 @@ const PasswordFind = () => {
       onError: (error: any) => {
         const errorMessage =
           error.response?.data?.message || '인증에 실패했습니다.';
-        alert(errorMessage);
+        toast.error(errorMessage);
       },
     });
   };
 
   const handlePasswordReset = () => {
     if (!newPassword.trim() || !confirmPassword.trim()) {
-      alert('새 비밀번호를 입력해주세요.');
+      toast.warning('새 비밀번호를 입력해주세요.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert('비밀번호가 일치하지 않습니다.');
+      toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -96,7 +97,7 @@ const PasswordFind = () => {
       onError: (error: any) => {
         const errorMessage =
           error.response?.data?.message || '비밀번호 재설정에 실패했습니다.';
-        alert(errorMessage);
+        toast.error(errorMessage);
       },
     });
   };

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { logout as personalLogout } from '../../pages/Personal/apis/auth';
 import { logoutCompany } from '../../pages/Company/apis/companyAuth';
 
@@ -31,7 +32,7 @@ export const useLogout = () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('userRole');
 
-      alert(`${isCompanyRoute ? '기업' : '개인'} 회원 로그아웃 성공`);
+      toast.success(`${isCompanyRoute ? '기업' : '개인'} 회원 로그아웃 성공`);
 
       // 각 로그인 페이지로 이동
       if (isCompanyRoute) {
@@ -51,12 +52,7 @@ export const useLogout = () => {
         error
       );
 
-      // 세션 만료 에러인지 확인
-      if (error.response?.status === 401) {
-        alert('세션이 만료되었습니다.');
-      } else {
-        alert('로그아웃 중 오류가 발생했습니다.');
-      }
+      toast.error('로그아웃 중 오류가 발생했습니다.');
 
       // 에러가 발생해도 로컬스토리지는 정리하고 로그인 페이지로 이동
       localStorage.removeItem('accessToken');

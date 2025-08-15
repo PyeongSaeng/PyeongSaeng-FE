@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../../../shared/apis/axiosInstance';
 import { Answer, Info } from '../../../types/userInfo';
@@ -61,7 +62,7 @@ const SeniorInfo = () => {
       navigate(`/personal/senior-my/info/${prevPath}`);
     } catch (err) {
       console.error('시니어 정보 수정 실패: ', err);
-      alert('정보 수정에 실패했습니다.');
+      toast.error('정보 수정에 실패했습니다.');
     }
   };
 

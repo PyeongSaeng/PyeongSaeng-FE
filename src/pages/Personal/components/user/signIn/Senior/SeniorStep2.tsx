@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import NextButton from '../NextButton';
 import SignUpHeader from '../SignUpHeader';
 import { useCheckUsername } from '../../../../hooks/useAuth';
@@ -29,7 +30,7 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
   // 아이디 중복 확인
   const handleCheckUsername = () => {
     if (!state.idCheck.trim()) {
-      alert('아이디를 입력해주세요.');
+      toast.warning('아이디를 입력해주세요.');
       return;
     }
 
@@ -66,21 +67,21 @@ const SeniorStep2 = ({ state, setState, onNext }: SeniorStep2Props) => {
       setState((s) => ({ ...s, idCheck: value, isIdAvailable: false }));
       setUsernameMessage('');
     } else {
-      alert('아이디는 영어와 숫자만 사용 가능합니다.');
+      toast.info('아이디는 영어와 숫자만 사용 가능합니다.');
     }
   };
 
   const handleNext = () => {
     if (!state.idCheck || !state.password || !state.passwordConfirm) {
-      alert('모든 항목을 입력해주세요.');
+      toast.warning('모든 항목을 입력해주세요.');
       return;
     }
     if (state.password !== state.passwordConfirm) {
-      alert('비밀번호가 일치하지 않습니다.');
+      toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
     if (!state.isIdAvailable) {
-      alert('아이디 중복 확인을 해주세요.');
+      toast.warning('아이디 중복 확인을 해주세요.');
       return;
     }
     onNext();
