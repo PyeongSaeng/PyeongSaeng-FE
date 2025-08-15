@@ -9,14 +9,11 @@ import Loading from '../../../../../shared/components/Loading';
 
 const BasicInfo = () => {
   const [info, setInfo] = useState<Info | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  console.log(error); // error 상태 미사용 -> 추가
 
   useEffect(() => {
     getSeniorData('/api/user/senior/me')
       .then((data) => setInfo(data.result as Info))
-      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+      .catch((err) => console.error('기본정보 조회 에러', err));
   }, []);
 
   const infoData = useMemo(() => {
@@ -37,11 +34,6 @@ const BasicInfo = () => {
       { label: '기간', value: ExperiencePeriodLabel[info.experiencePeriod] },
     ];
   }, [info]);
-
-  // 디테일 필요
-  // if (error) {
-  //   return <div>{error}</div>;
-  // }
 
   if (!info) {
     return <Loading />;

@@ -15,3 +15,27 @@ export const diff = <T extends object>(prev: T, curr: T): Partial<T> => {
   });
   return out;
 };
+
+// 요일로 바꾸기
+export const getDayOfWeek = (dateString: string) => {
+  const days = [
+    '일요일',
+    '월요일',
+    '화요일',
+    '수요일',
+    '목요일',
+    '금요일',
+    '토요일',
+  ];
+
+  const date = new Date(dateString);
+  return days[date.getDay()];
+};
+
+// 날짜 형식 바꾸기
+export const formatDate = (dateString: string) => {
+  const splitDate = dateString.split('-');
+  const date = '~ ' + splitDate[1] + '/' + splitDate[2];
+
+  return date;
+};

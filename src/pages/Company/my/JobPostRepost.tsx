@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Topbar from '../../../shared/components/topbar/Topbar';
 // import dummy1 from '../../../shared/assets/popular-dummy1.png';
-// import axiosInstance from '../../../shared/apis/axiosInstance';
 import { getCompanyData } from '../apis/companyMy';
 
 // type appliedJobs = {
@@ -41,7 +40,7 @@ const JobPostRepost = () => {
 
   useEffect(() => {
     getCompanyData('/api/job/companies/me/posts')
-      .then((data) => setJobPostList(data))
+      .then((data) => setJobPostList(data.result.jobPostList))
       .catch((err) => console.log('마감 공고 조회 에러', err));
   }, []);
 
@@ -56,7 +55,37 @@ const JobPostRepost = () => {
           마감된 공고 다시 올리기
         </div>
         <div className="h-[572px] text-[16px] font-[400] font-[Regular] overflow-y-scroll scrollbar-hide">
-          {jobPostList ? <></> : <></>}
+          {/* {jobPostList ? (
+            jobPostList.map((jobPost, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]"
+                >
+                  <div className="flex justify-between w-[292px] pb-[10px]">
+                    <span>{jobPost.job}</span>
+                  </div>
+                  <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
+                    <img
+                      className="w-[292px] h-[165px]"
+                      src={jobPost.img}
+                      alt="더미1"
+                    />
+                  </div>
+                  <div className="flex justify-center items-center gap-[6px] pt-[16px] pb-[6px]">
+                    <button
+                      type="button"
+                      className="w-[294px] h-[45px] rounded-[8px] border-[1.3px] bg-[#0D29B7] text-white"
+                    >
+                      수정 후 게시
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <></>
+          )} */}
         </div>
       </Topbar>
     </div>
