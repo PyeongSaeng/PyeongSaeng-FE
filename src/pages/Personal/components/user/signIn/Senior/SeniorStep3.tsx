@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
 import SignUpHeader from '../SignUpHeader';
 import NextButton from '../NextButton';
 import useClickOutside from '../../../../hooks/useClickOutside';
@@ -96,7 +97,7 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
       !state.roadAddress ||
       !state.detailAddress
     ) {
-      alert('모든 항목을 입력해주세요.');
+      toast.warning('모든 항목을 입력해주세요.');
       return;
     }
 

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import axiosInstance from '../../shared/apis/axiosInstance';
 
 const KakaoCallback = () => {
@@ -25,7 +26,7 @@ const KakaoCallback = () => {
         await handleNewUserSignup(kakaoId, nickname);
       } else {
         console.error('유효한 파라미터가 없습니다.');
-        alert('카카오 로그인 중 문제가 발생했습니다.');
+        toast.error('카카오 로그인 중 문제가 발생했습니다.');
         navigate('/personal/login', { replace: true });
       }
     };
@@ -47,12 +48,12 @@ const KakaoCallback = () => {
         console.log('저장된 토큰:', savedToken ? '존재' : '없음');
         console.log('저장된 역할:', savedRole || '없음');
 
-        alert('카카오 로그인 성공! 메인 페이지로 이동합니다.');
+        toast.success('카카오 로그인 성공! 메인 페이지로 이동합니다.');
         navigate('/', { replace: true });
       } catch (error: any) {
         console.error('카카오 로그인 실패:', error);
         console.error('에러 응답 내용:', error.response?.data);
-        alert('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
+        toast.error('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
         navigate('/personal/login', { replace: true });
       }
     };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import CareStep1 from './CareStep1';
 import CareStep2 from './CareStep2';
 import CareStep3 from './CareStep3';
@@ -140,13 +141,13 @@ const CareSignIn = () => {
           setStep(3);
         } else {
           console.error('protectorId를 찾을 수 없음:', data);
-          alert('보호자 정보 저장에 실패했습니다.');
+          toast.error('보호자 정보 저장에 실패했습니다.');
         }
       },
       onError: (error: any) => {
         const errorMessage =
           error.response?.data?.message || '보호자 회원가입에 실패했습니다.';
-        alert(errorMessage);
+        toast.error(errorMessage);
       },
     });
   };
@@ -210,14 +211,14 @@ const CareSignIn = () => {
   // Step5 완료 시 시니어 회원가입 (일반 가입만)
   const handleSeniorSignup = () => {
     if (!protectorId) {
-      alert('보호자 정보가 없습니다. 다시 시도해주세요.');
+      toast.error('보호자 정보가 없습니다. 다시 시도해주세요.');
       return;
     }
 
     // 나이 검증 추가
     const parsedAge = parseInt(step4State.age);
     if (isNaN(parsedAge) || parsedAge <= 0) {
-      alert('올바른 나이를 입력해주세요.');
+      toast.warning('올바른 나이를 입력해주세요.');
       return;
     }
 
@@ -247,9 +248,11 @@ const CareSignIn = () => {
     seniorSignupMutation.mutate(seniorData, {
       onSuccess: () => {
         if (isFromKakao) {
-          alert('카카오 보호자 및 어르신 회원가입이 모두 완료되었습니다!');
+          toast.success(
+            '카카오 보호자 및 어르신 회원가입이 모두 완료되었습니다!'
+          );
         } else {
-          alert('보호자 및 어르신 회원가입이 모두 완료되었습니다.');
+          toast.success('보호자 및 어르신 회원가입이 모두 완료되었습니다!');
         }
         navigate('/personal/login');
       },
@@ -257,7 +260,7 @@ const CareSignIn = () => {
         console.error('시니어 회원가입 실패:', error);
         const errorMessage =
           error.response?.data?.message || '시니어 회원가입에 실패했습니다.';
-        alert(errorMessage);
+        toast.error(errorMessage);
       },
     });
   };

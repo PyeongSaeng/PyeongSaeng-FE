@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import TopbarForLogin from '../../shared/components/topbar/TopbarForLogin';
 import { useLogin } from './hooks/useAuth';
 
@@ -16,7 +17,7 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     if (!id || !pw) {
-      alert('아이디와 비밀번호를 입력해주세요.');
+      toast.warning('아이디와 비밀번호를 입력해주세요.');
       return;
     }
 
@@ -24,12 +25,12 @@ const LoginPage = () => {
       { username: id, password: pw },
       {
         onSuccess: () => {
-          alert('로그인 성공! 메인 페이지로 이동합니다.');
+          toast.success('로그인 성공! 메인 페이지로 이동합니다.');
           navigate('/', { replace: true });
         },
         onError: (error: unknown) => {
           console.error('로그인 실패:', error);
-          alert('로그인 실패! 다시 시도해주세요.');
+          toast.error('로그인 실패! 다시 시도해주세요.');
         },
       }
     );
