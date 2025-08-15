@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
 import { getSeniorData } from '../../../apis/my/seniorMy';
+import { Info, Question } from '../../../types/userInfo';
 
 const questions = [
   'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',
@@ -25,48 +26,65 @@ interface OutletContextType {
 
 const ExtraInfo = () => {
   const { answers } = useOutletContext<OutletContextType>();
-  const [info, setInfo] = useState();
-  const [error, setError] = useState();
+  const [info, setInfo] = useState<Info>();
+  const [questionList, setQuestionList] = useState<Question[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // api 구현 안됨 + 시니어 아이디 넣기
   useEffect(() => {
-    getSeniorData(`/api/seniors/${18}/questions`)
-      .then((data) => setInfo(data))
-      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+    setLoading(true);
+    getSeniorData('/api/user/senior/me')
+      .then((data) => setInfo(data.result))
+      .catch((err) => console.error('시니어 기본 정보 조회 실패: ', err))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
-    console.log(info);
+    getSeniorData(`/api/seniors/${info?.id}/questions`)
+      .then((data) => setQuestionList(data.result))
+      .catch((err) => console.error('시니어 추가 정보 조회 실패: ', err));
   }, [info]);
+
+  useEffect(() => {
+    console.log(questionList);
+  }, [questionList]);
 
   return (
     <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
       <div className="h-[450px] overflow-y-scroll scrollbar-hide">
-        {questions.map((q, index) => {
-          const answerList = options[index];
-          return (
-            <div key={q} className="py-[8px]">
-              <div className="pb-[4px]">{q}</div>
-              <div className="flex flex-wrap gap-[10px] ">
-                {answerList.map((e) => (
-                  <button
-                    type="button"
-                    key={e}
-                    className={clsx(
-                      answers[index] === e ? 'bg-[#ECF6F2]' : '',
-                      'min-w-[94px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] text-[14px]'
-                    )}
-                  >
-                    {e}
-                  </button>
-                ))}
+        {questionList &&
+          questionList?.map((q) => {
+            const answerList = q.options;
+            return (
+              <div key={q.questionId} className="py-[8px]">
+                <div className="pb-[4px]">
+                  {`Q${q.questionId}. ${q.question}`}
+                </div>
+                <div className="flex flex-wrap gap-[10px] ">
+                  {answerList.map((e) => {
+                    return (
+                      <button
+                        type="button"
+                        key={e.optionId}
+                        className={clsx(
+                          q.selectedOptionId === e.optionId
+                            ? 'bg-[#ECF6F2]'
+                            : '',
+                          'min-w-[94px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] text-[14px]'
+                        )}
+                      >
+                        {e.option}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );
 };
 
 export default ExtraInfo;
+
+// answers[index] === e ?

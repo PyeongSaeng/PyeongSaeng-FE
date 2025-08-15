@@ -62,6 +62,19 @@ export interface updateSeniorData {
   newPassword?: string;
 }
 
+export type QuestionOptions = {
+  optionId: number;
+  option: string;
+};
+
+export type Question = {
+  questionId: number;
+  question: string;
+  options: QuestionOptions[];
+  selectedOptionId: number | null;
+  seletedOption: string | null;
+};
+
 // 보호자
 export type CareInfo = {
   id: number;
