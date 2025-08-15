@@ -87,7 +87,7 @@ const SeniorStep1 = ({ state, setState, onNext }: SeniorStep1Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-[0.4rem] px-[1.1rem]">
+    <div className="flex flex-col items-center w-full px-[1.1rem]">
       <SignUpHeader title="회원가입 하기" />
       <input
         className={`${inputClass} w-[29.4rem] mb-[2.1rem] ${state.name ? 'text-black' : 'text-[#c2c2c2]'}`}

@@ -89,7 +89,7 @@ const CareStep5 = ({ state, setState, onSubmit }: CareStep5Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-[0.4rem] px-[1.1rem] pb-[8rem]">
+    <div className="flex flex-col items-center w-full px-[1.1rem] pb-[8rem]">
       <SignUpHeader title="회원가입 하기" />
       <div className="w-full text-left text-[#747474] text-[1.6rem] font-semibold mb-[1.5rem] leading-tight">
         어르신 본인인증을 진행합니다.

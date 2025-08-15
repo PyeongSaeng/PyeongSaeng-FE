@@ -104,7 +104,9 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
   };
 
   return (
-    <div className="px-[2rem] pb-[10rem] mb-[7rem] bg-white flex flex-col items-center">
+    <div
+      className={`px-[2rem] pb-[10rem] bg-white flex flex-col items-center ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
+    >
       <SignUpHeader title="구직자 정보 입력" />
 
       {isFromKakao && (
