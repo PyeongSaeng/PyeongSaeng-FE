@@ -74,10 +74,11 @@ jobs:
               repo: context.repo.repo,
               body: `### 빌드 결과\n${buildStatusMessage}`
             });
-
-      - name: Fail if build failed
+            
+       - name: Fail if build failed
         if: steps.build.outcome == 'failure'
         run: exit 1
+
 
       - name: Deploy to Vercel
         if: github.ref == 'refs/heads/main'

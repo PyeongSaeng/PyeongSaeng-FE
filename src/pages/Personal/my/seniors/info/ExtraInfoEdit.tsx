@@ -1,55 +1,99 @@
+import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
-
-const questions = [
-  'Q1. 하루에 몇 시간 정도 일하고 싶으신가요?',
-  'Q2. 어디에서 일하는 것을 선호하시나요?',
-  'Q3. 일할 때 어떤 환경이 편하신가요?',
-  'Q4. 어떤 일을 할 때 가장 보람을 느끼시나요?',
-  'Q5. 질문',
-];
-
-const options = [
-  ['1시간 내외', '2시간 내외', '3시간 내외', '3시간 초과'],
-  ['실내', '실외'],
-  ['혼자서', '여럿이'],
-  ['환경 미화', '실내 청소', '조리', '아동 보호', '교육/강사'],
-  ['A', 'B', 'C'],
-];
+import { Info, Question } from '../../../types/userInfo';
+import { getSeniorData } from '../../../apis/my/seniorMy';
+import Loading from '../../../../../shared/components/Loading';
+import { Answer } from '../../../types/userInfo';
 
 interface OutletContextType {
-  answers: (string | null)[];
-  setAnswers: React.Dispatch<React.SetStateAction<(string | null)[]>>;
+  setPatchObject: React.Dispatch<React.SetStateAction<Answer[]>>;
 }
 
-const ExtraInfoEdit = () => {
-  const { answers, setAnswers } = useOutletContext<OutletContextType>();
-  const handleSelect = (questionIndex: number, answer: string) => {
-    const updated = [...answers];
-    updated[questionIndex] = updated[questionIndex] === answer ? null : answer;
-    setAnswers(updated);
-  };
+const makePatchAnswerList = (object: any) => {
+  const answerObject: Answer[] = [];
+  object.map((ob: any) => {
+    answerObject.push({
+      questionId: ob.questionId,
+      selectedOptionId: ob.selectedOptionId,
+    });
+  });
+  return answerObject;
+};
 
-  return (
+const ExtraInfoEdit = () => {
+  const { setPatchObject } = useOutletContext<OutletContextType>();
+  const [info, setInfo] = useState<Info>();
+  const [questionList, setQuestionList] = useState<Question[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [, setOriginalAnswerList] = useState<Answer[]>([]);
+  const [editAnswerList, setEditedAnswerList] = useState<Answer[]>([]);
+
+  // 사용자 정보 조회
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData('/api/user/senior/me')
+      .then((data) => setInfo(data.result))
+      .catch((err) => console.error('시니어 기본 정보 조회 실패: ', err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // 사용자 질문 리스트 패치
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData(`/api/seniors/${info?.id}/questions`)
+      .then((data) => {
+        setQuestionList(data.result);
+        const filterData = makePatchAnswerList(data.result);
+        setOriginalAnswerList(filterData);
+        setEditedAnswerList(filterData);
+      })
+      .catch((err) => console.error('시니어 추가 정보 조회 실패: ', err))
+      .finally(() => setLoading(false));
+  }, [info]);
+
+  useEffect(() => {
+    setPatchObject(editAnswerList);
+  }, [editAnswerList, setPatchObject]);
+
+  return loading ? (
+    <Loading />
+  ) : (
     <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
       <div className="h-[450px] overflow-y-scroll scrollbar-hide">
-        {questions.map((q, index) => {
-          const answerList = options[index];
+        {questionList.map((q, qIdx) => {
+          const answerList = q.options;
           return (
-            <div key={q} className="py-[8px]">
-              <div className="pb-[4px]">{q}</div>
+            <div key={q.questionId} className="py-[8px]">
+              <div className="pb-[4px]">{`Q${q.questionId}. ${q.question}`}</div>
               <div className="flex flex-wrap gap-[10px] ">
                 {answerList.map((e) => (
                   <button
                     type="button"
-                    key={e}
-                    onClick={() => handleSelect(index, e)}
+                    key={e.optionId}
+                    onClick={() => {
+                      if (
+                        editAnswerList[qIdx]?.selectedOptionId !== e.optionId
+                      ) {
+                        setEditedAnswerList((prev) => {
+                          const newList = [...prev];
+                          newList[qIdx] = {
+                            ...newList[qIdx],
+                            selectedOptionId: e.optionId,
+                          };
+                          return newList;
+                        });
+                      }
+                    }}
                     className={clsx(
-                      answers[index] === e ? 'bg-[#ECF6F2]' : '',
+                      editAnswerList[qIdx]?.selectedOptionId === e.optionId
+                        ? 'bg-[#ECF6F2]'
+                        : '',
                       'min-w-[94px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] text-[14px]'
                     )}
                   >
-                    {e}
+                    {e.option}
                   </button>
                 ))}
               </div>

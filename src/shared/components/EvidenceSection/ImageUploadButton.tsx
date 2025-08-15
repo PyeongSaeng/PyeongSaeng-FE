@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePasteUpload } from '../../hooks/usePasteUpload';
 
 interface Props {
@@ -7,6 +7,10 @@ interface Props {
   className?: string;
   onDragStateChange?: (dragging: boolean) => void;
   fallbackName?: string;
+
+  // 리뷰/완료에서 쓰는 보기 전용 모드
+  readOnly?: boolean;
+  onClear?: () => void;
 }
 
 export default function ImageUploadButton({
@@ -15,14 +19,27 @@ export default function ImageUploadButton({
   className,
   onDragStateChange,
   fallbackName,
+  readOnly = false,
+  onClear,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>(''); // 초기값 명시
   const setDraggingState = (state: boolean) => {
     setDragging(state);
     onDragStateChange?.(state);
   };
   usePasteUpload(onFileSelect);
+
+  useEffect(() => {
+    if (!imageFile) {
+      setPreviewUrl('');
+      return;
+    }
+    const url = URL.createObjectURL(imageFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [imageFile]);
 
   const handleButtonClick = () => fileInputRef.current?.click();
 
@@ -49,6 +66,51 @@ export default function ImageUploadButton({
 
   const displayName = imageFile?.name || fallbackName || '';
 
+  // 보기 전용 모드
+  if (readOnly) {
+    return (
+      <div
+        className={`w-full border border-emerald-300 rounded-lg p-4 ${className ?? ''}`}
+      >
+        <h3 className="text-[16px] font-semibold mb-2">자격증 이미지</h3>
+        {imageFile || displayName ? (
+          <div className="flex items-center gap-3">
+            <div className="w-[72px] h-[72px] rounded-md border overflow-hidden">
+              {previewUrl && (
+                <img
+                  src={previewUrl}
+                  alt={displayName || 'uploaded'}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+            <div className="flex-1">
+              <div className="text-[14px] font-medium truncate">
+                {displayName || '이미지'}
+              </div>
+              <div className="text-[12px] text-gray-500 mt-1">
+                첨부한 이미지가 맞는지 확인해 주세요.
+              </div>
+            </div>
+            {onClear && (
+              <button
+                className="text-xs px-3 py-2 rounded border"
+                onClick={onClear}
+              >
+                다시 첨부
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="text-[13px] text-gray-600">
+            첨부된 파일이 없습니다.
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 업로드 모드
   return (
     <div
       role="button"
@@ -70,10 +132,19 @@ export default function ImageUploadButton({
       onPaste={handlePaste}
       style={{ userSelect: 'none' }}
     >
-      {displayName ? (
-        <div className="flex flex-col items-center">
+      {previewUrl || displayName ? (
+        <div className="flex items-center gap-3">
+          <div className="w-[24px] h-[24px] rounded border overflow-hidden">
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt={displayName || 'uploaded'}
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
           <span className="text-[16px] font-bold text-[var(--main-blue)] truncate max-w-[150px]">
-            {displayName}
+            {displayName || '이미지를 첨부하세요.'}
           </span>
         </div>
       ) : (

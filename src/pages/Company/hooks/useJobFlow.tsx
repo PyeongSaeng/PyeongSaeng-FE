@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useJobPost } from './useJobPost';
 import {
   BASE_FORM_FIELDS,
@@ -82,7 +83,7 @@ export function useCompanyJobFlow(token: string) {
     ];
     for (const k of required) {
       if (!draft[k]) {
-        alert(`필수값 누락: ${k}`);
+        toast.warning(`필수값 누락: ${k}`);
         return;
       }
     }
@@ -111,7 +112,7 @@ export function useCompanyJobFlow(token: string) {
     };
 
     await createJob(payload);
-    alert('등록 완료!');
+    toast.success('등록이 완료되었습니다!');
 
     // 초기화 + 리스트 리프레시
     setDraft({ ...EMPTY_JOB_DRAFT, formFieldList: BASE_FORM_FIELDS });
@@ -122,9 +123,10 @@ export function useCompanyJobFlow(token: string) {
 
   // Step2에서 extra 필드만 다루기 편하게 제공(옵션)
   const baseCount = BASE_FORM_FIELDS.length;
+
   const extraFields = useMemo(
     () => (draft.formFieldList ?? BASE_FORM_FIELDS).slice(baseCount),
-    [draft.formFieldList]
+    [draft.formFieldList, baseCount]
   );
   const setAllFormFields = useCallback(
     (list: JobPostFormField[]) => {

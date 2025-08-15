@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import NextButton from '../NextButton';
 import SignUpHeader from '../SignUpHeader';
 import { useCheckUsername } from '../../../../hooks/useAuth';
@@ -35,7 +36,7 @@ const CareStep2 = ({
 
   const handleCheckUsername = () => {
     if (!state.idCheck.trim()) {
-      alert('아이디를 입력해주세요.');
+      toast.warning('아이디를 입력해주세요.');
       return;
     }
 
@@ -62,30 +63,38 @@ const CareStep2 = ({
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState((s) => ({ ...s, idCheck: e.target.value, isIdAvailable: false }));
-    setUsernameMessage('');
-    setHasChecked(false);
+    const value = e.target.value;
+
+    // 영어와 숫자만 허용
+    const englishNumberOnlyRegex = /^[a-zA-Z0-9]*$/;
+
+    if (value === '' || englishNumberOnlyRegex.test(value)) {
+      setState((s) => ({ ...s, idCheck: value, isIdAvailable: false }));
+      setUsernameMessage('');
+    } else {
+      toast.info('아이디는 영어와 숫자만 사용 가능합니다.');
+    }
   };
 
   const handleNext = () => {
     if (isFromKakao) {
       // 카카오 가입: 전화번호만 필수
       if (!state.phone) {
-        alert('전화번호를 입력해주세요.');
+        toast.warning('전화번호를 입력해주세요.');
         return;
       }
     } else {
       // 일반 가입: 모든 필드 필수
       if (!state.idCheck || !state.password || !state.passwordConfirm) {
-        alert('모든 항목을 입력해주세요.');
+        toast.warning('모든 항목을 입력해주세요.');
         return;
       }
       if (state.password !== state.passwordConfirm) {
-        alert('비밀번호가 일치하지 않습니다.');
+        toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
       if (!state.isIdAvailable) {
-        alert('아이디 중복 확인을 해주세요.');
+        toast.warning('아이디 중복 확인을 해주세요.');
         return;
       }
     }
@@ -105,7 +114,7 @@ const CareStep2 = ({
   };
 
   return (
-    <div className="flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem]">
+    <div className="flex flex-col items-center w-full px-[3.3rem]">
       <SignUpHeader title="회원가입 하기" />
       <div className="w-[29.4rem]">
         <p className="text-[#747474] mb-[2.3rem] text-[1.6rem] font-semibold">
@@ -133,7 +142,7 @@ const CareStep2 = ({
                   ? 'text-black'
                   : 'bg-[#BDBDBD]'
             }`}
-            placeholder="본인 아이디를 입력해주세요"
+            placeholder="(영어)본인 아이디를 입력해주세요"
             value={isFromKakao ? '••••' : state.idCheck}
             onChange={handleUsernameChange}
             disabled={isFromKakao}

@@ -73,4 +73,24 @@ export type BookmarkSummary = {
 export type BookmarkedJobsResponse = {
   bookmarkSummaryDTOList: BookmarkSummary[];
 };
-// 일자리 삭제 타입 정의(필요없음)
+
+// 보호자 신청함 타입 정의
+export type ProtectorApplicationItem = {
+  applicationId: number;
+  seniorId: number;
+  jobPostId: number;
+  seniorName: string;
+  applicationStatus:
+    | 'NON_STARTED'
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
+};
+
+export type ProtectorApplicationResponse = {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: ProtectorApplicationItem[];
+};

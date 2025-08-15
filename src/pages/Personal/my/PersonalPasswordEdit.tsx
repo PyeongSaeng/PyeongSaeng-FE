@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 import Topbar from '../../../shared/components/topbar/Topbar';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 import { passwordUpdate } from '../types/userInfo';
@@ -40,7 +41,7 @@ const PersonalPasswordEdit = () => {
       console.error('비밀번호 변경 실패', err);
       const error = err as AxiosError<{ message?: string }>;
       if (error.response?.status === 400) {
-        alert('현재 비밀번호가 올바르지 않습니다');
+        toast.error('현재 비밀번호가 올바르지 않습니다');
       }
     } finally {
       setSubmitting(false);

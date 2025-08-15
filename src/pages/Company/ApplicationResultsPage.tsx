@@ -1,6 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
+import {
+  useParams,
+  useSearchParams,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import Field from '../../shared/components/Field';
@@ -9,12 +15,21 @@ import {
   patchApplicationStatus,
 } from './apis/applications';
 
+type AppState = 'APPROVED' | 'REJECTED';
+type LocState = { jobPostTitle?: string; applicantName?: string } | null;
+
 export default function ApplicationResultsPage() {
   const navigate = useNavigate();
-  const { jobPostId } = useParams<{ jobPostId: string }>();
-  const [searchParams] = useSearchParams();
+  const location = useLocation() as { state: LocState };
 
-  // id 안전 파싱
+  // jobPostId 3중 폴백
+  const { jobPostId: pathId } = useParams<{ jobPostId?: string }>();
+  const [searchParams] = useSearchParams();
+  const queryId = searchParams.get('jobPostId') ?? undefined;
+  const matchId = window.location.pathname.match(/\/applications\/(\d+)/)?.[1];
+  const jobPostId = pathId ?? queryId ?? matchId ?? '';
+
+  // applicationId는 쿼리(id)로 전달
   const idParam = searchParams.get('id');
   const applicationId =
     idParam && /^\d+$/.test(idParam) ? parseInt(idParam, 10) : undefined;
@@ -22,37 +37,46 @@ export default function ApplicationResultsPage() {
   const [detail, setDetail] = useState<Awaited<
     ReturnType<typeof getApplicationDetails>
   > | null>(null);
-  const [result, setResult] = useState('');
-  const [isPublished, setIsPublished] = useState(false);
+  const [result, setResult] = useState<string>('');
+  const [isPublished, setIsPublished] = useState<boolean>(false);
 
   useEffect(() => {
     if (!applicationId) return;
+    let mounted = true;
+
     (async () => {
       const d = await getApplicationDetails(applicationId);
+      if (!mounted) return;
       setDetail(d);
-      if (
-        d.applicationState === 'APPROVED' ||
-        d.applicationState === 'REJECTED'
-      )
-        setIsPublished(true);
+      const st = d.applicationState;
+      if (st === 'APPROVED' || st === 'REJECTED') setIsPublished(true);
     })();
+
+    return () => {
+      mounted = false;
+    };
   }, [applicationId]);
 
   const asTextFields = useMemo(() => {
     const from = detail?.questionAndAnswerList ?? [];
     const dict: Record<string, string> = {};
-    from.forEach((item) => {
-      if (item.fieldType === 'TEXT') dict[item.fieldName] = item.answerContent;
-      if (item.fieldType === 'IMAGE')
-        dict[item.fieldName] = item.answerContent
-          .map((f) => f.originalFileName)
+    for (const item of from) {
+      if (item.fieldType === 'TEXT') {
+        dict[item.fieldName] = String(item.answerContent ?? '');
+      } else if (item.fieldType === 'IMAGE') {
+        const list = Array.isArray(item.answerContent)
+          ? item.answerContent
+          : [];
+        dict[item.fieldName] = list
+          .map((f: any) => f?.originalFileName ?? '')
+          .filter(Boolean)
           .join(', ');
-    });
+      }
+    }
     return dict;
   }, [detail]);
 
-  // 관대한 합/불 파서
-  const parseStatus = (v: string): 'APPROVED' | 'REJECTED' | null => {
+  const parseStatus = (v: string): AppState | null => {
     const norm = v
       .normalize('NFKC')
       .replace(
@@ -69,28 +93,41 @@ export default function ApplicationResultsPage() {
     return null;
   };
 
+  const handleChangeResult = (v: string | ChangeEvent<HTMLInputElement>) => {
+    if (typeof v === 'string') setResult(v);
+    else setResult(v?.target?.value ?? '');
+  };
+
   const handlePublish = async () => {
     if (!applicationId) {
-      alert('URL에 applicationId가 없습니다. (예: .../results?id=456)');
+      toast.error('URL에 applicationId가 없습니다. (예: .../results?id=456)');
       return;
     }
     const status = parseStatus(result);
     if (!status) {
-      alert('합/불을 정확히 입력해주세요 (예: 합격, 불합격)');
+      toast.warning('합/불을 정확히 입력해주세요 (예: 합격, 불합격)');
       return;
     }
     try {
       await patchApplicationStatus(applicationId, status);
       setIsPublished(true);
-      // 이전 페이지로 돌아가며 업데이트된 applicationId 전달
       navigate(`/company/jobs/applications/${jobPostId}`, {
-        state: { updatedId: applicationId },
+        state: {
+          updatedId: applicationId,
+          jobPostTitle: location.state?.jobPostTitle,
+        },
       });
     } catch (e) {
       console.error('PATCH status failed:', e);
-      alert('결과 공시에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      toast.error('결과 공시에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }
   };
+
+  const headerName = location.state?.applicantName
+    ? `${location.state.applicantName} 님 신청서`
+    : asTextFields['성함']
+      ? `${asTextFields['성함']} 님 신청서`
+      : '';
 
   return (
     <div className="h-[740px] flex flex-col bg-white font-pretendard">
@@ -99,9 +136,7 @@ export default function ApplicationResultsPage() {
       {/* 고정 헤더 */}
       <div className="flex flex-col items-center w-full max-w-[320px] self-center px-4 pt-10">
         <PageHeader title="받은 신청서" />
-        <PageHeader
-          title={`${asTextFields['성함'] ? `${asTextFields['성함']} 님 신청서` : ''}`}
-        />
+        <PageHeader title={headerName} />
       </div>
 
       {/* 스크롤 영역 */}
@@ -114,23 +149,24 @@ export default function ApplicationResultsPage() {
           <Field label="경력" value={asTextFields['경력'] ?? ''} />
           <Field label="상태" value={detail?.applicationState ?? ''} />
 
-          {/* onChange: 이벤트/문자열 모두 수용 */}
+          {/* 합불 입력(미공시 상태에서만 의미 있음) */}
           <Field
             label="합불"
             value={result}
-            onChange={(v: any) =>
-              setResult(typeof v === 'string' ? v : (v?.target?.value ?? ''))
-            }
+            onChange={handleChangeResult}
             placeholder="합격 / 불합격"
             disabled={isPublished}
           />
 
+          {/* 버튼: 미공시 → 파랑 '합불 결과 공시', 공시됨 → 회색 '공시 완료' */}
           <button
-            onClick={handlePublish}
+            onClick={isPublished ? undefined : handlePublish}
             disabled={isPublished}
             className={clsx(
-              'w-full max-w-[320px] py-4 rounded-[8px] text-[16px] font-semibold text-white mt-4',
-              isPublished ? 'bg-[#7F7F7F] cursor-not-allowed' : 'bg-[#0D29B7]'
+              'w-full max-w-[320px] py-4 rounded-[8px] text-[16px] font-semibold mt-4',
+              isPublished
+                ? 'bg-[#7F7F7F] text-white cursor-not-allowed'
+                : 'bg-[#0D29B7] text-white'
             )}
           >
             {isPublished ? '공시 완료' : '합불 결과 공시'}

@@ -1,14 +1,10 @@
-declare global {
-  interface Window {
-    daum?: {
-      Postcode: any;
-    };
-  }
-}
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
 import SignUpHeader from '../SignUpHeader';
 import NextButton from '../NextButton';
+import useClickOutside from '../../../../hooks/useClickOutside';
+import useAddressSearch from '../../../../hooks/useAddressSearch';
 
 const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem] font-medium';
@@ -63,34 +59,24 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
   const [jobOpen, setJobOpen] = useState(false);
   const [periodOpen, setPeriodOpen] = useState(false);
 
-  // 주소
-  useEffect(() => {
-    if (!window.daum?.Postcode) {
-      const script = document.createElement('script');
-      script.src =
-        '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
+  // 드롭다운 ref
+  const jobDropdownRef = useRef<HTMLDivElement>(null);
+  const periodDropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleAddressSearch = () => {
-    if (window.daum?.Postcode) {
-      new window.daum.Postcode({
-        oncomplete: function (data: any) {
-          setState((s) => ({
-            ...s,
-            zipcode: data.zonecode,
-            roadAddress: data.roadAddress,
-          }));
-        },
-      }).open();
-    } else {
-      alert(
-        '주소 검색 스크립트가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
-      );
-    }
-  };
+  // 외부 클릭으로 드롭다운 닫기
+  useClickOutside([jobDropdownRef], () => setJobOpen(false));
+  useClickOutside([periodDropdownRef], () => setPeriodOpen(false));
+
+  // 주소 검색 훅
+  const { openAddressSearch } = useAddressSearch({
+    onComplete: (data) => {
+      setState((s) => ({
+        ...s,
+        zipcode: data.zonecode,
+        roadAddress: data.roadAddress,
+      }));
+    },
+  });
 
   const handleNext = () => {
     if (
@@ -102,7 +88,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
       !state.period ||
       !state.detailAddress
     ) {
-      alert('모든 항목을 입력해주세요.');
+      toast.warning('모든 항목을 입력해주세요.');
       return;
     }
     onNext();
@@ -110,7 +96,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
 
   return (
     <div
-      className={`flex flex-col items-center w-full pt-[0.4rem] px-[3.3rem] pb-[10rem] ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
+      className={`flex flex-col items-center w-full px-[3.3rem] pb-[10rem] ${jobOpen || periodOpen ? 'pb-[19.3rem]' : 'pb-[8rem]'}`}
     >
       <SignUpHeader title="구직자 정보 입력" />
       <div className="w-[29.4rem] flex flex-col items-center gap-[1rem]">
@@ -162,7 +148,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
           <button
             className="bg-[#08D485] w-[10rem] text-black rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem]"
             type="button"
-            onClick={handleAddressSearch}
+            onClick={openAddressSearch}
           >
             주소 찾기
           </button>
@@ -182,7 +168,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             직무
           </div>
-          <div className="flex-1 relative">
+          <div className="flex-1 relative" ref={jobDropdownRef}>
             <div
               className={`${dropdownBoxClass} h-[4.5rem] ${jobOpen ? '' : ''}`}
               onClick={() => setJobOpen((open) => !open)}
@@ -234,7 +220,7 @@ const CareStep4 = ({ state, setState, onNext }: CareStep4Props) => {
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             기간
           </div>
-          <div className="flex-1 relative">
+          <div className="flex-1 relative" ref={periodDropdownRef}>
             <div
               className={`${dropdownBoxClass} h-[4.5rem] ${periodOpen ? '' : ''}`}
               onClick={() => setPeriodOpen((open) => !open)}

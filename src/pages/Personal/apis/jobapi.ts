@@ -5,6 +5,7 @@ import {
   JobDetail,
   JobBookmarkResult,
   BookmarkedJobsResponse,
+  ProtectorApplicationItem,
 } from '../types/jobs';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -60,3 +61,52 @@ export const apiDeleteBookmark = async (jobPostId: number) => {
   );
   return res.data.result;
 };
+// 일자리 신청
+export const apiEnsureApplication = async (jobPostId: number) => {
+  const res = await axiosInstance.post('/api/applications/ensure', null, {
+    params: { jobPostId },
+  });
+  return res.data.result;
+};
+// 일자리 신청상태 목록
+export type ApplicationItem = {
+  applicationId: number;
+  jobPostId: number;
+  applicationStatus:
+    | 'NON_STARTED'
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
+};
+
+export const apiGetMyApplications = async (): Promise<ApplicationItem[]> => {
+  const res = await axiosInstance.get<ApiEnvelope<ApplicationItem[]>>(
+    '/api/applications/mine'
+  );
+  return res.data.result;
+};
+// 일자리 신청 삭제
+export const apiDeleteApplication = async (applicationId: number) => {
+  const res = await axiosInstance.delete(`/api/applications/${applicationId}`);
+  return res.data.result;
+};
+// 일자리 신청[보호자]
+export async function apiGetProtectorApplications(): Promise<
+  ProtectorApplicationItem[]
+> {
+  const res = await axiosInstance.get<ApiEnvelope<ProtectorApplicationItem[]>>(
+    '/api/applications/protector'
+  );
+  return res.data.result ?? [];
+}
+
+export async function apiGetProtectorJobDetail(
+  seniorId: number,
+  jobPostId: number
+): Promise<JobDetail> {
+  const res = await axiosInstance.get(
+    `/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`
+  );
+  return res.data.result;
+}

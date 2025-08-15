@@ -62,6 +62,24 @@ export interface updateSeniorData {
   newPassword?: string;
 }
 
+export type QuestionOptions = {
+  optionId: number;
+  option: string;
+};
+
+export type Question = {
+  questionId: number;
+  question: string;
+  options: QuestionOptions[];
+  selectedOptionId: number | null;
+  seletedOption: string | null;
+};
+
+export type Answer = {
+  questionId: number;
+  selectedOptionId: number | null;
+};
+
 // 보호자
 export type CareInfo = {
   id: number;
@@ -74,6 +92,58 @@ export type LinkedSenior = {
   seniorId: number;
   seniorName: string;
   seniorPhone: string;
+};
+
+export type Image = {
+  imageId: number;
+  keyName: string;
+  imageUrl: string;
+  originalFileName: string;
+};
+
+export enum applicationStatus {
+  SUBMITTED = '미정',
+  APPROVED = '합격',
+  REJECTED = '불합',
+}
+
+export type ApplicationType = {
+  applicationId: number;
+  title: string;
+  deadline: string;
+  applicationStatus: 'SUBMITTED' | 'APPROVED' | 'REJECTED';
+  images: Image[];
+};
+
+export type ImageObject = {
+  keyName: string;
+  originalFileName: string;
+};
+
+export type questionAndAnswer = {
+  fieldName: string;
+  answerContent: string | ImageObject;
+  fieldType: 'TEXT' | 'IMAGE';
+};
+
+export type ApplicationDetail = {
+  title: string;
+  address: string;
+  detailAddress: string;
+  roadAddress: string;
+  zipcode: string;
+  hourlyWage: number | null;
+  yearSalary: number | null;
+  monthlySalary: number | null;
+  description: string;
+  workingTime: string;
+  deadline: string;
+  recruitCount: number;
+  note: string;
+  images: Image[];
+  travelTime: string;
+  applicationStatus: string;
+  questionAndAnswerList: questionAndAnswer[];
 };
 
 // 공통

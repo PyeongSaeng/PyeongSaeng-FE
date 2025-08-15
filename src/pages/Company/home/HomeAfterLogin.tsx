@@ -66,7 +66,7 @@ const HomeAfterLogin = () => {
           <span className="font-[pretendard JP] font-[600] text-[20px] text-[#747474]">
             이번 주 지원이 많은 공고
           </span>
-          <div className="h-[348px] overflow-y-scroll scrollbar-hide">
+          <div className="h-[348px] mt-[21px] overflow-y-scroll scrollbar-hide">
             {loading && (
               <>
                 <div className="w-[298px] h-[196px] mb-[17px] rounded-[13px] border-[1px] border-[#D3D3D3] animate-pulse" />
@@ -91,9 +91,9 @@ const HomeAfterLogin = () => {
               jobs.map((job) => (
                 <div
                   key={job.id}
-                  className="w-[298px] h-[196px] mb-[17px] flex flex-col items-center justify-center gap-[12px] rounded-[13px] border-[1px] border-[#D3D3D3]"
+                  className="w-[298px] h-[196px] mb-[17px] flex flex-col items-center justify-center gap-[17px] rounded-[13px] border-[1px] border-[#D3D3D3]"
                 >
-                  <span className="px-[10px] text-center text-[14px] font-medium">
+                  <span className="text-center text-[16px] font-medium mt-[13px]">
                     {job.roadAddress}
                   </span>
                   {job.images &&
@@ -102,7 +102,7 @@ const HomeAfterLogin = () => {
                     <img
                       src={job.images[0].imageUrl}
                       alt={job.images[0].originalFileName ?? job.title}
-                      className="w-[292px] h-[168px] object-cover rounded-[10px] border-[1.3px] border-[#A0A0A0]"
+                      className="w-[230px] h-[133px] object-cover rounded-[10px] border-[1.3px] border-[#A0A0A0]"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.style.display = 'none';
@@ -115,7 +115,7 @@ const HomeAfterLogin = () => {
                   <div
                     className={`${
                       job.images && job.images.length > 0 ? 'hidden' : ''
-                    } w-[292px] h-[168px] text-[13px] bg-gray-100 rounded-[10px] border-[1.3px] border-[#A0A0A0] flex items-center justify-center text-gray-400`}
+                    } w-[230px] h-[133px] text-[13px] bg-gray-100 rounded-[10px] border-[1.3px] border-[#A0A0A0] flex items-center justify-center text-gray-400`}
                   >
                     이미지 없음
                   </div>
