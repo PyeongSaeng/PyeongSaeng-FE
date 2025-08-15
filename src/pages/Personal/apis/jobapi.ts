@@ -99,7 +99,7 @@ export async function apiGetProtectorApplications(): Promise<ProtectorApplicatio
 }
 
 export async function apiGetProtectorJobDetail(seniorId: number, jobPostId: number): Promise<JobDetail> {
-  const res = await axios.get(`/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`);
+  const res = await axiosInstance.get(`/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`);
   return res.data.result;
 }
 

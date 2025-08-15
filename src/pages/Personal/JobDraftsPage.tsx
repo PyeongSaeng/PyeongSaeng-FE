@@ -82,7 +82,7 @@ function ProtectorDraftsView() {
   const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
   const { data: applications = [], isLoading } = useProtectorApplications();
-  //
+  {/*
   useEffect(() => {
     console.log('[debug] protector 신청서 전체 목록:', applications);
 
@@ -93,7 +93,7 @@ function ProtectorDraftsView() {
 
     console.log('[debug] 연결된 시니어들:', seniors);
   }, [applications]);
-  //
+  */}
   const draftApps = applications.filter((a) => a.applicationStatus === 'NON_STARTED');
   const writingApps = applications.filter((a) => a.applicationStatus === 'DRAFT');
   const selectedApps = selectedTab === 0 ? draftApps : writingApps;
