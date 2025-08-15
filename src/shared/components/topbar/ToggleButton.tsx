@@ -13,6 +13,7 @@ const ToggleButton = () => {
   useEffect(() => {
     if (location.pathname.startsWith('/company')) {
       setToggleVersion('company');
+      localStorage.clear();
     } else {
       setToggleVersion('');
     }
