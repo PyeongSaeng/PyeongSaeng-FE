@@ -169,11 +169,6 @@ function JobDraftLayout({
     <div className="w-full h-full flex flex-col">
       <div className="mt-[17px] flex flex-col items-center">
         <p className="text-[20px] font-semibold text-[#747474]">일자리 신청함</p>
-        {selectedApplication?.seniorName && (
-          <p className="mt-[6px] text-[16px] font-semibold text-[#08D485]">
-            {selectedApplication.seniorName}님
-          </p>
-        )}
       </div>
       {/* 탭 버튼 */}
       <div className="w-[301px] flex gap-[13px] mt-[16px] justify-center self-center">
@@ -242,13 +237,16 @@ function JobDraftLayout({
                   </div>
                   {/* 시니어 성함 */}
                   {memberType === 'PROTECTOR' && application.seniorName && (
-                    <p className="mt-[4px] ml-[33px] text-[14px] font-semibold text-[#08D485]">
-                      {application.seniorName}님
-                    </p>
+                    <div
+                      className="w-[100px] h-[33px] mt-[15px] text-[20px] font-semibold text-[#747474] border-[#08D485] border-[1px] rounded-[13px] flex items-center justify-center">
+                      <p>
+                        {application.seniorName}님
+                      </p>
+                    </div>
                   )}
                   {/* 카드 */}
                   <div
-                    className={`w-[291px] h-[362px] mt-[11px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
+                    className={`w-[291px] h-[362px] mt-[7px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center
                       ${isSelected ? 'border-[#08D485] bg-[#ECF6F2]' : 'border-[#08D485] bg-white'}`}
                     onClick={() =>
                       setSelectedAppId(isSelected ? null : application.applicationId)
