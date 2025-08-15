@@ -2,11 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoChevronForward } from 'react-icons/io5';
 import MenuNavButton from '../MenuNavButton';
 
-interface BeforeLoginMainMenuProps {
-  goNext: () => void;
-}
-
-const BeforeLoginMainMenu = ({ goNext }: BeforeLoginMainMenuProps) => {
+const BeforeLoginMainMenu = () => {
   const navigate = useNavigate();
 
   return (

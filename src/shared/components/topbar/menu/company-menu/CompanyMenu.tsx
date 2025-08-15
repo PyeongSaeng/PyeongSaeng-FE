@@ -51,7 +51,7 @@ const CompanyMenu = () => {
               <CompanyMyMenu />
             )
           ) : (
-            <BeforeLoginMainMenu goNext={goToMyMenu} />
+            <BeforeLoginMainMenu />
           )}
         </div>
       )}
