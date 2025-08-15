@@ -26,7 +26,7 @@ const LinkedSeniorList = ({ goNext, goBack }: LinkedSeniorListProps) => {
         setLinkedSeniors(data.result as LinkedSenior[]);
       } catch (err) {
         console.error('연결된 시니어 정보 조회 실패: ', err);
-        alert('연결된 시니어의 정보를 불러오지 못했습니다');
+        ('연결된 시니어의 정보를 불러오지 못했습니다');
         setError('연결된 시니어의 정보를 불러오지 못했습니다');
       } finally {
         setTimeout(() => setLoading(false), 300);

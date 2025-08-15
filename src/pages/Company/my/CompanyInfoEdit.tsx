@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../../shared/components/topbar/Topbar';
 import { CompanyInfo as Info } from '../types/companyInfo';
 import { getCompanyData } from '../apis/companyMy';
@@ -91,7 +92,7 @@ const CompanyInfoEdit = () => {
       navigate('/company/my/info');
     } catch (err) {
       console.error('기업 정보 수정 실패: ', err);
-      alert('정보 수정에 실패했습니다.');
+      toast.error('정보 수정에 실패했습니다.');
     }
   };
 

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import CompanyCreateJobPage from './CompanyCreateJobPage';
 import CompanyCreateFormPage from './CompanyCreateFormPage';
@@ -122,7 +123,7 @@ export default function CompanyJobListPage() {
           draft.title = '기본 제목'; // 테스트용
         }
         if (!draft[k]) {
-          alert(`필수값 누락: ${k}`);
+          toast.warning(`필수값 누락: ${k}`);
           return;
         }
       }
@@ -151,7 +152,7 @@ export default function CompanyJobListPage() {
       };
 
       await createJob(payload);
-      alert('등록 완료!');
+      toast.success('등록이 완료되었습니다!');
 
       // 초기화 & 리스트로
       setDraft({ ...EMPTY_JOB_DRAFT, formFieldList: BASE_FORM_FIELDS });
@@ -159,7 +160,9 @@ export default function CompanyJobListPage() {
       setStep(0);
       fetchJobs();
     } catch {
-      alert(submitError ?? '등록에 실패했어요. 잠시 후 다시 시도해 주세요.');
+      toast.error(
+        submitError ?? '등록에 실패했어요. 잠시 후 다시 시도해 주세요.'
+      );
     }
   };
   const handleChangeFormFields = useCallback(

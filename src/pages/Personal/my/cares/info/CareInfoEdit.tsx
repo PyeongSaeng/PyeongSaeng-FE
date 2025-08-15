@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import { getCareBasicInfo } from '../../../apis/my/careMy';
 import { CareInfo as Info } from '../../../types/userInfo';
@@ -66,7 +67,7 @@ const CareInfoEdit = () => {
       navigate('/personal/care-my/info');
     } catch (err) {
       console.error('보호자 정보 수정 실패: ', err);
-      alert('정보 수정에 실패했습니다.');
+      toast.error('정보 수정에 실패했습니다.');
     }
   };
 

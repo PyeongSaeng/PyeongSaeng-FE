@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import ImageUploadButton from '../../shared/components/EvidenceSection/ImageUploadButton';
 import AddressSearchInput from '../../shared/components/AddressSearchInput';
 import { JobDraft } from './types/job';
@@ -38,19 +39,19 @@ export default function CompanyCreateJobPage({
     const hasText = (v?: string | null) => !!v && v.trim().length > 0;
 
     if (!draft.jobPostImageList?.length) {
-      alert('근무지 이미지를 첨부해 주세요!');
+      toast.warning('근무지 이미지를 첨부해 주세요!');
       return;
     }
     if (!hasText(draft.address)) {
-      alert('주소를 입력해 주세요!');
+      toast.warning('주소를 입력해 주세요!');
       return;
     }
     if (!hasText(draft.detailAddress)) {
-      alert('상세 주소를 입력해 주세요!');
+      toast.warning('상세 주소를 입력해 주세요!');
       return;
     }
     if (!hasText(draft.description)) {
-      alert('근무내용을 입력해 주세요!');
+      toast.warning('근무내용을 입력해 주세요!');
       return;
     }
     if (
@@ -58,15 +59,15 @@ export default function CompanyCreateJobPage({
       draft.hourlyWage === null ||
       draft.hourlyWage <= 0
     ) {
-      alert('시급을 올바르게 입력해 주세요!');
+      toast.warning('시급을 올바르게 입력해 주세요!');
       return;
     }
     if (!hasText(draft.workingTime)) {
-      alert('근무일수를 입력해 주세요!');
+      toast.warning('근무일수를 입력해 주세요!');
       return;
     }
     if (!hasText(draft.deadline)) {
-      alert('마감기한을 입력해 주세요!');
+      toast.warning('마감기한을 입력해 주세요!');
       return;
     }
     onNext();

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import Modal from './Modal';
 import { formatPhone } from '../../../../../shared/utils/userInfoUtils';
@@ -130,7 +131,7 @@ const SearchAndLinkSenior = ({
     } catch (err: any) {
       console.error('에러', err.response.status);
       setError(err.response.status);
-      alert('전화번호로 시니어를 찾는 데 실패하였습니다.');
+      toast.error('전화번호로 시니어를 찾는 데 실패하였습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -151,10 +152,10 @@ const SearchAndLinkSenior = ({
     try {
       await connectSenior({ seniorId: seniorData.id });
       setDone(false);
-      alert('시니어 연결에 성공하였습니다.');
+      toast.success('시니어 연결에 성공하였습니다.');
     } catch (err) {
       console.error(err);
-      alert('시니어 연결에 실패하였습니다.');
+      toast.error('시니어 연결에 실패하였습니다.');
     } finally {
       setIsLoading(false);
       setButton({

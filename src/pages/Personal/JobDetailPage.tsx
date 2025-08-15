@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
 import { useSaveToggle } from './hooks/useSaveToggle';
@@ -32,7 +33,7 @@ const JobDetailPage = () => {
         navigate('/personal/jobs/drafts');
       },
       onError: () => {
-        alert('신청에 실패했습니다.');
+        toast.error('신청에 실패했습니다.');
       },
     });
   };
