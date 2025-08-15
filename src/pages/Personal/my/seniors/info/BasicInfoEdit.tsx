@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
+import DaumPostcode from 'react-daum-postcode';
 import { Info } from '../../../types/userInfo';
 import { getSeniorData } from '../../../apis/my/seniorMy';
 import { JobTypeLabel, ExperiencePeriodLabel } from '../../../types/userInfo';
@@ -17,8 +18,14 @@ const BasicInfoEdit = () => {
   const { setChanges } = useOutletContext<OutletContext>();
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
-  const [error, setError] = useState<string | null>();
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
+
+  const [isPostcodeOpen, setIsPostCodeOpen] = useState<boolean>(false);
+
+  const handleRoadAddress = (data: any) => {
+    handleChange('roadAddress', data.roadAddress);
+    setIsPostCodeOpen(false);
+  };
 
   useEffect(() => {
     getSeniorData('/api/user/senior/me')
@@ -27,7 +34,7 @@ const BasicInfoEdit = () => {
         setOriginalInfo(me);
         setEditedInfo(me);
       })
-      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+      .catch((err) => console.error('시니어 정보 조회 실패: ', err));
   }, []);
 
   // 뷰전용 데이터 로드
@@ -59,17 +66,10 @@ const BasicInfoEdit = () => {
     setChanges(changes);
   }, [originalInfo, editedInfo, setChanges]);
 
-  // 디테일 필요
-  // if (error) {
-  //   return <div>{error}</div>;
-  // }
-
-  if (!originalInfo) {
-    return <Loading />;
-  }
-
   // 주소 검색 기능 구현 필요
-  return (
+  return !originalInfo ? (
+    <Loading />
+  ) : (
     <div className="flex flex-col justify-center items-center text-[16px] font-[Pretendard] font-[500]">
       <div className="py-[6px]">
         {infoData.map(({ label, value }) => (
@@ -99,13 +99,13 @@ const BasicInfoEdit = () => {
                   <div className="flex jusity-between gap-[4px]">
                     <input
                       className="w-[146px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
-                      onChange={(e) =>
-                        handleChange('roadAddress', e.target.value)
-                      }
+                      value={editedInfo?.roadAddress}
+                      disabled
                     />
                     <button
                       type="button"
                       className="w-[50px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[14px] font-[Pretendard JP]"
+                      onClick={() => setIsPostCodeOpen(true)}
                     >
                       검색
                     </button>
@@ -181,6 +181,19 @@ const BasicInfoEdit = () => {
           </div>
         ))}
       </div>
+      {isPostcodeOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <DaumPostcode onComplete={handleRoadAddress} autoClose />
+            <button
+              className="mt-[2px] px-[10px] py-[6px] bg-gray-300 rounded"
+              onClick={() => setIsPostCodeOpen(false)}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
