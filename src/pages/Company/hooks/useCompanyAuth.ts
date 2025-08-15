@@ -17,7 +17,6 @@ import {
 
 // 기업 로그인
 export const useCompanyLogin = () => {
-
   return useMutation({
     mutationFn: (data: CompanyLoginRequest) => loginCompany(data),
     onSuccess: (data) => {

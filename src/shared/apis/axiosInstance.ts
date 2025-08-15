@@ -84,7 +84,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
 
-  // 에러 처리 
+  // 에러 처리
   async (error: AxiosError<any>) => {
     const originalRequest = error.config as AxiosRequestConfig & {
       _retry?: boolean;
@@ -93,8 +93,9 @@ axiosInstance.interceptors.response.use(
     console.error('[axiosInstance] 응답 에러:', error.response?.data);
 
     // 로그인 요청에서는 토큰 재발급 시도하지 않음
-    const isLoginRequest = originalRequest.url?.includes('/auth/login') || 
-                          originalRequest.url?.includes('/companies/login');
+    const isLoginRequest =
+      originalRequest.url?.includes('/auth/login') ||
+      originalRequest.url?.includes('/companies/login');
 
     if (isLoginRequest) {
       console.log('[axiosInstance] 로그인 요청 에러 - 토큰 재발급 시도 안 함');
