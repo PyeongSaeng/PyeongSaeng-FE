@@ -36,7 +36,6 @@ axiosInstance.interceptors.response.use(
       const accessToken =
         response.data.result?.accessToken || response.data.accessToken;
       const role = response.data.result?.role;
-      const user = response.data.result?.user || response.data.user;
 
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
@@ -48,7 +47,6 @@ axiosInstance.interceptors.response.use(
       if (role && (role === 'SENIOR' || role === 'PROTECTOR')) {
         localStorage.setItem('userRole', role);
       }
-      if (user) localStorage.setItem('user', JSON.stringify(user));
     }
 
     // OAuth 토큰 교환 시에도 동일하게 처리
@@ -94,7 +92,17 @@ axiosInstance.interceptors.response.use(
 
     console.error('[axiosInstance] 응답 에러:', error.response?.data);
 
-    // accessToken 만료 에러 처리
+    // 로그인 요청에서는 토큰 재발급 시도하지 않음
+    const isLoginRequest =
+      originalRequest.url?.includes('/auth/login') ||
+      originalRequest.url?.includes('/companies/login');
+
+    if (isLoginRequest) {
+      console.log('[axiosInstance] 로그인 요청 에러 - 토큰 재발급 시도 안 함');
+      return Promise.reject(error);
+    }
+
+    // accessToken 만료 에러 처리 (로그인 요청이 아닌 경우만)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 

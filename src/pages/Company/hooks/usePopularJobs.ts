@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../../shared/apis/axiosInstance';
 import type { JobListDTO } from '../types/job';
-
-const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export function usePopularJobs(token?: string) {
   const [jobs, setJobs] = useState<JobListDTO['result']['jobPostList']>([]);
@@ -26,11 +24,10 @@ export function usePopularJobs(token?: string) {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get<JobListDTO>(
-          `${baseURL}/api/job/companies/me/posts/popularity`,
+        const res = await axiosInstance.get<JobListDTO>(
+          `/api/job/companies/me/posts/popularity`,
           {
             params: { page },
-            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
           }
         );
         const r = res.data.result;
