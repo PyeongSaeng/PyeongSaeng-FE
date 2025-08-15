@@ -1,14 +1,9 @@
-declare global {
-  interface Window {
-    daum?: {
-      Postcode: any;
-    };
-  }
-}
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import SignUpHeader from '../SignUpHeader';
 import NextButton from '../NextButton';
+import useClickOutside from '../../../../hooks/useClickOutside';
+import useAddressSearch from '../../../../hooks/useAddressSearch';
 
 const inputClass =
   'w-full h-[4.5rem] border border-[#E1E1E1] rounded-[0.8rem] px-[1.6rem] py-[1.3rem] mb-3 bg-white placeholder-[#c2c2c2] text-[1.6rem] font-medium';
@@ -56,7 +51,7 @@ type Step3State = {
 
 // Props 타입 정의 개선
 interface SeniorStep3Props {
-  state: Step3State; // any 대신 Step3State 사용
+  state: Step3State;
   setState: React.Dispatch<React.SetStateAction<Step3State>>; // 정확한 타입
   onSubmit: () => void;
   isFromKakao?: boolean;
@@ -71,34 +66,24 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
   const [jobOpen, setJobOpen] = useState(false);
   const [periodOpen, setPeriodOpen] = useState(false);
 
-  // 주소 검색 스크립트 로드
-  useEffect(() => {
-    if (!window.daum?.Postcode) {
-      const script = document.createElement('script');
-      script.src =
-        '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
+  // 드롭다운 ref
+  const jobDropdownRef = useRef<HTMLDivElement>(null);
+  const periodDropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleAddressSearch = () => {
-    if (window.daum?.Postcode) {
-      new window.daum.Postcode({
-        oncomplete: function (data: any) {
-          setState((prevState) => ({
-            ...prevState,
-            zipcode: data.zonecode,
-            roadAddress: data.roadAddress,
-          }));
-        },
-      }).open();
-    } else {
-      alert(
-        '주소 검색 스크립트가 로드되지 않았습니다. 잠시 후 다시 시도해주세요.'
-      );
-    }
-  };
+  // 외부 클릭으로 드롭다운 닫기
+  useClickOutside([jobDropdownRef], () => setJobOpen(false));
+  useClickOutside([periodDropdownRef], () => setPeriodOpen(false));
+
+  // 주소 검색 훅
+  const { openAddressSearch } = useAddressSearch({
+    onComplete: (data) => {
+      setState((prevState) => ({
+        ...prevState,
+        zipcode: data.zonecode,
+        roadAddress: data.roadAddress,
+      }));
+    },
+  });
 
   const handleSubmit = () => {
     // 필수 입력 검증 - zipcode 제외 (주소 찾기에서 자동 설정)
@@ -119,7 +104,7 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
   };
 
   return (
-    <div className="px-[2rem] pt-[2rem] pb-[10rem] min-h-screen bg-white">
+    <div className="px-[2rem] pb-[10rem] mb-[7rem] bg-white flex flex-col items-center">
       <SignUpHeader title="구직자 정보 입력" />
 
       {isFromKakao && (
@@ -186,10 +171,11 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
             value={state.roadAddress}
             readOnly
           />
+          {/* 주소 검색 버튼 */}
           <button
             className="bg-[#08D485] w-[10rem] text-black rounded-[8px] py-[1.2rem] text-[1.6rem] font-medium h-[4.5rem]"
             type="button"
-            onClick={handleAddressSearch}
+            onClick={openAddressSearch}
           >
             주소 찾기
           </button>
@@ -212,12 +198,12 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
           경력 사항
         </div>
 
-        {/* 직무 선택 */}
+        {/* 직무 선택  */}
         <div className="flex w-full mb-3 gap-[6.5rem]">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             직무
           </div>
-          <div className="flex-1 relative">
+          <div className="flex-1 relative" ref={jobDropdownRef}>
             <div
               className={`${dropdownBoxClass} h-[4.5rem]`}
               onClick={() => setJobOpen((open) => !open)}
@@ -267,11 +253,11 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
         </div>
 
         {/* 경력 기간 선택 */}
-        <div className="flex gap-[6.5rem] w-full mb-[8rem]">
+        <div className="flex gap-[6.5rem] w-full">
           <div className="w-[4.5rem] text-[#747474] text-[1.6rem] mt-[1rem]">
             기간
           </div>
-          <div className="flex-1 relative">
+          <div className="flex-1 relative" ref={periodDropdownRef}>
             <div
               className={`${dropdownBoxClass} h-[4.5rem]`}
               onClick={() => setPeriodOpen((open) => !open)}
@@ -324,7 +310,7 @@ const SeniorStep3: React.FC<SeniorStep3Props> = ({
         </div>
 
         <NextButton
-          className="!mt-[1.4rem]"
+          className="!mt-[0rem]"
           onClick={handleSubmit}
           disabled={false}
         >
