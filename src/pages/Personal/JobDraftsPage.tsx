@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useApplication } from './hooks/useApplication';
 import { useApplicationJobs } from './hooks/useApplicationJob';
 import { useProtectorApplications } from './hooks/useProtectorApplication';
 import { JobDetail } from './types/jobs';
+import { useProtectorApplicationJobs } from './hooks/useProtectorApplicationShow';
 
 type ApplicationUI = {
   applicationId: number;
@@ -81,13 +82,28 @@ function ProtectorDraftsView() {
   const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
   const { data: applications = [], isLoading } = useProtectorApplications();
+  //
+  useEffect(() => {
+    console.log('[debug] protector 신청서 전체 목록:', applications);
 
+    const seniors = applications.map(a => ({
+      seniorId: a.seniorId,
+      seniorName: a.seniorName,
+    }));
+
+    console.log('[debug] 연결된 시니어들:', seniors);
+  }, [applications]);
+  //
   const draftApps = applications.filter((a) => a.applicationStatus === 'NON_STARTED');
   const writingApps = applications.filter((a) => a.applicationStatus === 'DRAFT');
   const selectedApps = selectedTab === 0 ? draftApps : writingApps;
 
-  const jobPostIds = selectedApps.map((a) => a.jobPostId);
-  const jobResults = useApplicationJobs(jobPostIds);
+  const jobResults = useProtectorApplicationJobs(
+    selectedApps.map((app) => ({
+      seniorId: app.seniorId,
+      jobPostId: app.jobPostId,
+    }))
+  );
 
   const appJobPairs = selectedApps.map((application, idx) => ({
     application: {
@@ -102,7 +118,9 @@ function ProtectorDraftsView() {
   const handleGoApply = () => {
     const selected = selectedApps.find((app) => app.applicationId === selectedAppId);
     if (!selected) return;
-    navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply?seniorId=${selected.seniorId}`);
+    navigate(
+      `/personal/jobs/recommend/${selected.jobPostId}/apply`
+    );
   };
 
   return (

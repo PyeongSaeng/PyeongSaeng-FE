@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { apiGetProtectorApplications } from "../apis/jobapi";
-
-export const protectorApplicationsKey = ["applications", "protector"];
+import { useQuery } from '@tanstack/react-query';
+import { apiGetProtectorApplications } from '../apis/jobapi';
+import { ProtectorApplicationItem } from '../types/jobs';
 
 export function useProtectorApplications() {
-  return useQuery({
-    queryKey: protectorApplicationsKey,
+  return useQuery<ProtectorApplicationItem[]>({
+    queryKey: ['applications', 'protector'],
     queryFn: apiGetProtectorApplications,
     staleTime: 60 * 1000,
   });
