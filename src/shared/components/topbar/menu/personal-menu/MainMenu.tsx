@@ -16,37 +16,55 @@ interface MainMenuProps {
 const MainMenu = ({ handleMenu }: MainMenuProps) => {
   const navigate = useNavigate();
 
-  const myMenu = localStorage.getItem('userRole');
+  const role = localStorage.getItem('userRole');
   const accessToken = localStorage.getItem('accessToken');
+
+  const myMenu = role === 'SENIOR' ? 'seniorMy' : 'careMy';
 
   return (
     <div className="px-[8px]">
       <button
         className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]"
         onClick={() => {
-          accessToken
+          !accessToken
             ? navigate('/personal/login')
-            : myMenu === 'SENIOR'
+            : accessToken && role === 'SENIOR'
               ? navigate('/personal/senior-my/info/basic')
-              : navigate('/personal/care-my/info');
+              : accessToken && role === 'PROTECTOR'
+                ? navigate('/personal/care-my/info')
+                : null;
         }}
       >
         {accessToken ? '안녕하세요' : '로그인 하세요'}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton url="/personal/jobs/recommend">
+        <MenuNavButton
+          url={accessToken ? '/personal/jobs/recommend' : '/personal/login'}
+        >
           일자리 추천
         </MenuNavButton>
-        <MenuNavButton url="/personal/jobs/saved">일자리 저장함</MenuNavButton>
-        <MenuNavButton url="/personal/jobs/drafts">일자리 신청함</MenuNavButton>
-        <MenuNavButton url="/personal/senior-my/info/extra">
+        <MenuNavButton
+          url={accessToken ? '/personal/jobs/saved' : '/personal/login'}
+        >
+          일자리 저장함
+        </MenuNavButton>
+        <MenuNavButton
+          url={accessToken ? '/personal/jobs/drafts' : '/personal/login'}
+        >
+          일자리 신청함
+        </MenuNavButton>
+        <MenuNavButton
+          url={
+            accessToken ? '/personal/senior-my/info/extra' : '/personal/login'
+          }
+        >
           질문답변
         </MenuNavButton>
         <MenuNavButton
-          handleMenu={() =>
-            handleMenu(myMenu === 'SENIOR' ? 'seniorMy' : 'careMy')
-          }
+          handleMenu={() => {
+            accessToken ? handleMenu(myMenu) : navigate('/personal/login');
+          }}
         >
           내 정보
         </MenuNavButton>
