@@ -208,7 +208,9 @@ function JobDraftLayout({
             appJobPairs.map(({ application, job }) => {
               if (!job) return null;
               const isSelected = selectedAppId === application.applicationId;
-              {/* 선택 및 삭제 */}
+              {
+                /* 선택 및 삭제 */
+              }
               return (
                 <div
                   key={application.applicationId}
