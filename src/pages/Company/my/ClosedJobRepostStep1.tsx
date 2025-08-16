@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import clsx from 'clsx';
 import { IoClose } from 'react-icons/io5';
 import DaumPostcode from 'react-daum-postcode';
@@ -7,6 +8,7 @@ import Topbar from '../../../shared/components/topbar/Topbar';
 import { RepostJob } from '../types/companyInfo';
 import { getCompanyData } from '../apis/companyMy';
 import Loading from '../../../shared/components/Loading';
+import axiosInstance from '../../../shared/apis/axiosInstance';
 
 const truncate = (str: string) => {
   if (!str) return '';
@@ -20,7 +22,7 @@ const truncate = (str: string) => {
   return str;
 };
 
-const JobRepost = () => {
+const ClosedJobRepostStep1 = () => {
   const { applicationId } = useParams<{ applicationId: string }>();
   const [originalJobData, setoriginalJobData] = useState<RepostJob>(); // 원본
   const [editedJobData, setEditedJobData] = useState<Partial<RepostJob>>({}); // 서버제출
@@ -32,7 +34,16 @@ const JobRepost = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleRoadAddress = (data: any) => {
-    // handleChange('roadAddress', data.roadAddress);
+    setEditedJobData((prev) =>
+      prev
+        ? {
+            ...prev,
+            address: data.address,
+            roadAddress: data.roadAddress,
+            zipcode: data.zonecode,
+          }
+        : prev
+    );
     setIsPostCodeOpen(false);
   };
 
@@ -44,6 +55,17 @@ const JobRepost = () => {
 
     window.open(presignedUrl, '_blank');
   };
+
+  // const handleUpload = async (file: File) => {
+  //   const {data} = await axiosInstance.post('/api/s3/presigned/upload', {fileName: file.name});
+  //   const {url, keyName} = data.result;
+
+  //   await axios.put(url, file, {
+  //     headers: {
+  //       'Content-Type': file.type,
+  //     },
+  //   });
+  // }
 
   // 채용공고 내용 불러오기
   useEffect(() => {
@@ -59,7 +81,11 @@ const JobRepost = () => {
   }, [applicationId]);
 
   useEffect(() => {
-    console.log(originalJobData);
+    console.log(editedJobData);
+  }, [editedJobData]);
+
+  useEffect(() => {
+    console.log('오리지날', originalJobData);
   }, [originalJobData]);
 
   return (
@@ -130,9 +156,8 @@ const JobRepost = () => {
                 근무내용
               </label>
               <textarea
-                // type="text"
                 placeholder="ex) 환경 미화"
-                className="w-[231px] h-[80px] resize-none border border-[#E1E1E1] rounded-[8px] text-[#C2C2C2] text-[16px] placeholder:text-[#c2c2c2] focus:text-black focus:outline-black"
+                className="w-[231px] h-[80px] px-[8px] py-[4px] resize-none border border-[#E1E1E1] rounded-[8px] text-[#C2C2C2] text-[16px] placeholder:text-[#c2c2c2] focus:text-black focus:outline-black"
                 value={editedJobData?.description}
                 onChange={(e) =>
                   setEditedJobData((prev) =>
@@ -212,7 +237,13 @@ const JobRepost = () => {
               />
             </div>
 
-            <button className="w-[294px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium mb-[44px] p-5">
+            <button
+              type="button"
+              className="w-[294px] mt-[24px] bg-[#0D29B7] text-white rounded-[8px] text-[16px] font-medium mb-[44px] p-5"
+              onClick={() =>
+                navigate(`/company/jobs/repost/${applicationId}/step2`)
+              }
+            >
               신청서 양식 작성하기
             </button>
           </div>
@@ -239,7 +270,7 @@ const JobRepost = () => {
   );
 };
 
-export default JobRepost;
+export default ClosedJobRepostStep1;
 
 interface FileUploadProps {
   imagefile: string;
@@ -254,6 +285,7 @@ const FileUpload = ({ imagefile, keyName, download }: FileUploadProps) => {
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFileName(e.target.files[0].name);

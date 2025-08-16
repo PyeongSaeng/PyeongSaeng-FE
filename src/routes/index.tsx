@@ -42,7 +42,8 @@ import CareCheckApplicationDetail from '../pages/Personal/my/cares/care-seniors/
 import CareCheckApplicationResults from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationResults';
 import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults';
 import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
-import JobRepost from '../pages/Company/my/JobRepost';
+import ClosedJobRepostStep1 from '../pages/Company/my/ClosedJobRepostStep1';
+import ClosedJobRepostStep2 from '../pages/Company/my/ClosedJobRePostStep2';
 
 const AppRoutes = () => {
   return (
@@ -148,8 +149,12 @@ const AppRoutes = () => {
       ></Route>
       <Route path="/company/jobs/closed" element={<ClosedJopPosts />}></Route>
       <Route
-        path="/company/jobs/repost/:applicationId"
-        element={<JobRepost />}
+        path="/company/jobs/repost/:applicationId/step1"
+        element={<ClosedJobRepostStep1 />}
+      ></Route>
+      <Route
+        path="/company/jobs/repost/:applicationId/step2"
+        element={<ClosedJobRepostStep2 />}
       ></Route>
       <Route path="/company/my/info" element={<CompanyInfo />}></Route>
       <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>

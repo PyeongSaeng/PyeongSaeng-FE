@@ -99,7 +99,7 @@ const ClosedJopPosts = () => {
                       type="button"
                       className="w-[294px] h-[45px] rounded-[8px] border-[1.3px] bg-[#0D29B7] text-white"
                       onClick={() => {
-                        navigate(`/company/jobs/repost/${post.id}`);
+                        navigate(`/company/jobs/repost/${post.id}/step1`);
                       }}
                     >
                       수정 후 게시
