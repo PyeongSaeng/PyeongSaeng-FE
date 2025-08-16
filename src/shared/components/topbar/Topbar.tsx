@@ -33,7 +33,7 @@ const Topbar = ({ children }: TopbarProps) => {
               ) : (
                 <>
                   <PersonalMenu />
-                  <QuestionButton />
+                  {/* <QuestionButton /> */}
                 </>
               )}
             </div>
