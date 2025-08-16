@@ -33,7 +33,7 @@ import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
 import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
 import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
-import JobPostRepost from '../pages/Company/my/JobPostRepost';
+import ClosedJopPost from '../pages/Company/my/JobPostRepost';
 import CompanyInfo from '../pages/Company/my/CompanyInfo';
 import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
 import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
@@ -145,7 +145,8 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:jobPostId/results"
         element={<ApplicationResultsPage />}
       ></Route>
-      <Route path="/company/my/repost" element={<JobPostRepost />}></Route>
+      <Route path="/company/jobs/closed" element={<ClosedJopPost />}></Route>
+      <Route path="/company/jobs/repost" element={<></>}></Route>
       <Route path="/company/my/info" element={<CompanyInfo />}></Route>
       <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>
       <Route

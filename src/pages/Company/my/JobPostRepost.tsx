@@ -1,48 +1,69 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Topbar from '../../../shared/components/topbar/Topbar';
-// import dummy1 from '../../../shared/assets/popular-dummy1.png';
 import { getCompanyData } from '../apis/companyMy';
+import { JobPost } from '../types/companyInfo';
 
-// type appliedJobs = {
-//   job: string;
-//   dueDate: string;
-//   dayOfWeek: string;
-//   img: string;
-//   result: string;
-// };
+const filterClosed = (object: JobPost[]) => {
+  const closedJobList: JobPost[] = [];
+  object.map((ob: any) => {
+    if (ob.state === 'CLOSED') {
+      closedJobList.push(ob);
+    }
+  });
+  return closedJobList;
+};
 
-// const dummyApplies: appliedJobs[] = [
-//   {
-//     job: '죽전2동 행정복지센터 미화원',
-//     dueDate: '7/20',
-//     dayOfWeek: '일',
-//     img: dummy1,
-//     result: '합격',
-//   },
-//   {
-//     job: '죽전도서관 사서',
-//     dueDate: '7/27',
-//     dayOfWeek: '일',
-//     img: dummy1,
-//     result: '미정',
-//   },
-//   {
-//     job: '죽전2동 동사무소 미화',
-//     dueDate: '7/27',
-//     dayOfWeek: '일',
-//     img: dummy1,
-//     result: '불합격',
-//   },
-// ];
+const ClosedJopPost = () => {
+  const navigate = useNavigate();
+  const [jobPostList, setJobPostList] = useState<JobPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-const JobPostRepost = () => {
-  const [jobPostList, setJobPostList] = useState();
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
+  // 무한 스크롤 상태
+  const [page, setPage] = useState(1);
+  const [isLast, setIsLast] = useState<boolean>(false);
+
+  // 마감 공고 목록 조회 (페이지 변경)
   useEffect(() => {
-    getCompanyData('/api/job/companies/me/posts')
-      .then((data) => setJobPostList(data.result.jobPostList))
-      .catch((err) => console.log('마감 공고 조회 에러', err));
-  }, []);
+    if (isLast) return;
+
+    setLoading(true);
+    getCompanyData(`/api/job/companies/me/posts?page=${page}&state=CLOSED`)
+      .then((data) => {
+        const result = data.result;
+        const closed = filterClosed(result.jobPostList);
+        setJobPostList((prev) => [...prev, ...closed]);
+        setIsLast(result.isLast);
+      })
+      .catch((err) => console.log('마감 지원서 조회 에러', err))
+      .finally(() => setLoading(false));
+  }, [page, isLast]);
+
+  // Intersection Observer로 페이지 증가
+  useEffect(() => {
+    if (isLast) return;
+
+    const target = loaderRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.unobserve(target);
+      observer.disconnect();
+    };
+  }, [isLast, loading]);
 
   useEffect(() => {
     console.log(jobPostList);
@@ -55,27 +76,30 @@ const JobPostRepost = () => {
           마감된 공고 다시 올리기
         </div>
         <div className="h-[572px] text-[16px] font-[400] font-[Regular] overflow-y-scroll scrollbar-hide">
-          {/* {jobPostList ? (
-            jobPostList.map((jobPost, idx) => {
+          {jobPostList ? (
+            jobPostList.map((post, idx) => {
               return (
                 <div
                   key={idx}
                   className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]"
                 >
-                  <div className="flex justify-between w-[292px] pb-[10px]">
-                    <span>{jobPost.job}</span>
+                  <div className="flex justify-between w-[292px] pb-[4px]">
+                    <span>{post.title}</span>
                   </div>
                   <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
                     <img
                       className="w-[292px] h-[165px]"
-                      src={jobPost.img}
-                      alt="더미1"
+                      src={post.images[0].imageUrl}
+                      alt="기업 대표 사진"
                     />
                   </div>
                   <div className="flex justify-center items-center gap-[6px] pt-[16px] pb-[6px]">
                     <button
                       type="button"
                       className="w-[294px] h-[45px] rounded-[8px] border-[1.3px] bg-[#0D29B7] text-white"
+                      onClick={() => {
+                        navigate(`/company/jobs/repost/${post.id}`);
+                      }}
                     >
                       수정 후 게시
                     </button>
@@ -85,11 +109,11 @@ const JobPostRepost = () => {
             })
           ) : (
             <></>
-          )} */}
+          )}
         </div>
       </Topbar>
     </div>
   );
 };
 
-export default JobPostRepost;
+export default ClosedJopPost;

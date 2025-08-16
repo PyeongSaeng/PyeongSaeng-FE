@@ -33,7 +33,7 @@ const SeniorApplyResults = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // 지원서 목록 조회 (페이지 변경 시)
+  // 지원서 목록 조회 (페이지 변경)
   useEffect(() => {
     if (isLast) return;
 
@@ -55,7 +55,7 @@ const SeniorApplyResults = () => {
   useEffect(() => {
     if (isLast) return;
 
-    const target = loaderRef.current; // ★ ref snapshot
+    const target = loaderRef.current;
     if (!target) return;
 
     const observer = new IntersectionObserver(
@@ -70,7 +70,6 @@ const SeniorApplyResults = () => {
     observer.observe(target);
 
     return () => {
-      // ★ cleanup에서도 snapshot 사용 (loaderRef.current 직접 접근 X)
       observer.unobserve(target);
       observer.disconnect();
     };
