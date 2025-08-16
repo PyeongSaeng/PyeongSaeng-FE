@@ -14,7 +14,7 @@ const filterClosed = (object: JobPost[]) => {
   return closedJobList;
 };
 
-const ClosedJopPost = () => {
+const ClosedJopPosts = () => {
   const navigate = useNavigate();
   const [jobPostList, setJobPostList] = useState<JobPost[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,8 +33,9 @@ const ClosedJopPost = () => {
     getCompanyData(`/api/job/companies/me/posts?page=${page}&state=CLOSED`)
       .then((data) => {
         const result = data.result;
-        const closed = filterClosed(result.jobPostList);
-        setJobPostList((prev) => [...prev, ...closed]);
+        console.log(result);
+        // const closed = filterClosed(result.jobPostList);
+        setJobPostList((prev) => [...prev, ...result.jobPostList]);
         setIsLast(result.isLast);
       })
       .catch((err) => console.log('마감 지원서 조회 에러', err))
@@ -116,4 +117,4 @@ const ClosedJopPost = () => {
   );
 };
 
-export default ClosedJopPost;
+export default ClosedJopPosts;

@@ -33,7 +33,7 @@ import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
 import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
 import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
-import ClosedJopPost from '../pages/Company/my/JobPostRepost';
+import ClosedJopPosts from '../pages/Company/my/ClosedJobPosts';
 import CompanyInfo from '../pages/Company/my/CompanyInfo';
 import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
 import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
@@ -42,6 +42,7 @@ import CareCheckApplicationDetail from '../pages/Personal/my/cares/care-seniors/
 import CareCheckApplicationResults from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationResults';
 import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults';
 import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
+import JobRepost from '../pages/Company/my/JobRepost';
 
 const AppRoutes = () => {
   return (
@@ -145,8 +146,11 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:jobPostId/results"
         element={<ApplicationResultsPage />}
       ></Route>
-      <Route path="/company/jobs/closed" element={<ClosedJopPost />}></Route>
-      <Route path="/company/jobs/repost" element={<></>}></Route>
+      <Route path="/company/jobs/closed" element={<ClosedJopPosts />}></Route>
+      <Route
+        path="/company/jobs/repost/:applicationId"
+        element={<JobRepost />}
+      ></Route>
       <Route path="/company/my/info" element={<CompanyInfo />}></Route>
       <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>
       <Route

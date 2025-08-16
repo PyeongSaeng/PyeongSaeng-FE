@@ -65,7 +65,6 @@ const BasicInfoEdit = () => {
     setChanges(changes);
   }, [originalInfo, editedInfo, setChanges]);
 
-  // 주소 검색 기능 구현 필요
   return !originalInfo ? (
     <Loading />
   ) : (
@@ -99,7 +98,7 @@ const BasicInfoEdit = () => {
                     <input
                       className="w-[146px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black"
                       value={editedInfo?.roadAddress}
-                      disabled
+                      onClick={() => setIsPostCodeOpen(true)}
                     />
                     <button
                       type="button"
@@ -182,7 +181,11 @@ const BasicInfoEdit = () => {
       </div>
       {isPostcodeOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg">
+          <div
+            className="bg-white p-4 rounded-lg shadow-lg
+                 transition-all duration-300 ease-out
+                 opacity-0 scale-95 animate-fadeIn"
+          >
             <DaumPostcode onComplete={handleRoadAddress} autoClose />
             <button
               className="mt-[2px] px-[10px] py-[6px] bg-gray-300 rounded"

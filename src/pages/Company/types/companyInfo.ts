@@ -29,6 +29,7 @@ export type JobPostImage = {
   originalFileName: string;
 };
 
+// 목록 조회시 필요
 export type JobPost = {
   id: string;
   state: string;
@@ -36,4 +37,36 @@ export type JobPost = {
   roadAddress: string;
   description: string;
   images: JobPostImage[];
+};
+
+// 회사구인공고 리포스트
+
+export type RepostImage = {
+  keyName: string;
+  originalFileName: string;
+};
+
+export type RepostFormField = {
+  fieldName: string;
+  fieldType: 'TEXT' | 'IMAGE';
+};
+
+export type RepostJob = {
+  id: number;
+  state: string;
+  title: string;
+  address?: string;
+  detailAddress: string;
+  roadAddress: string;
+  zipcode: string;
+  hourlyWage: number;
+  monthlySalary: number | null;
+  yearSalary: number | null;
+  description: string;
+  workingTime: string;
+  deadline: string;
+  recruitCount: number;
+  note: string;
+  jobPostImageList: JobPostImage[];
+  formFieldList: RepostFormField[];
 };
