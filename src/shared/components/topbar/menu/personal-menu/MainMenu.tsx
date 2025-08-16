@@ -39,16 +39,20 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton
-          url={accessToken ? '/personal/jobs/recommend' : '/personal/login'}
-        >
-          일자리 추천
-        </MenuNavButton>
-        <MenuNavButton
-          url={accessToken ? '/personal/jobs/saved' : '/personal/login'}
-        >
-          일자리 저장함
-        </MenuNavButton>
+        {role === 'SENIOR' && (
+          <>
+            <MenuNavButton
+              url={accessToken ? '/personal/jobs/recommend' : '/personal/login'}
+            >
+              일자리 추천
+            </MenuNavButton>
+            <MenuNavButton
+              url={accessToken ? '/personal/jobs/saved' : '/personal/login'}
+            >
+              일자리 저장함
+            </MenuNavButton>
+          </>
+        )}
         <MenuNavButton
           url={accessToken ? '/personal/jobs/drafts' : '/personal/login'}
         >
