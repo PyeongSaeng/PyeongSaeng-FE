@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import { getSeniorData } from '../../../apis/my/seniorMy';
@@ -13,33 +13,58 @@ const CareCheckApplicationResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const seniorData = location.state?.seniorData;
+  const [applicationList, setApplicationList] = useState<ApplicationType[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [applicationList, setApplicationList] = useState<
-    ApplicationType[] | null
-  >(null);
+  // 무한 스크롤 상태
+  const [page, setPage] = useState(1);
+  const [isLast, setIsLast] = useState<boolean>(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
+  // 지원서 목록 조회 (페이지 변경)
   useEffect(() => {
-    const getSeniorApplication = async () => {
-      const res = await getSeniorData(
-        `/api/applications/senior/${seniorData.seniorId}/submitted`
-      );
-      setApplicationList(res.result.applicationList);
+    if (isLast) return;
+
+    setLoading(true);
+    getSeniorData(
+      `/api/applications/senior/${seniorData.seniorId}/submitted?${page}`
+    )
+      .then((data) => {
+        const result = data.result;
+        setApplicationList((prev) => [
+          ...prev,
+          ...(result.applicationList ?? []),
+        ]);
+        setIsLast(result.isLast);
+      })
+      .catch((err) => console.error('지원서 목록 조회 에러: ', err))
+      .finally(() => setLoading(false));
+  }, [page, isLast, seniorData]);
+
+  // Intersection Observer로 페이지 증가
+  useEffect(() => {
+    if (isLast) return;
+
+    const target = loaderRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.unobserve(target);
+      observer.disconnect();
     };
-
-    try {
-      getSeniorApplication();
-      setLoading(true);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [seniorData]);
-
-  useEffect(() => {
-    console.log(seniorData);
-  }, [seniorData]);
+  }, [isLast, loading]);
 
   return (
     <div>
@@ -83,7 +108,12 @@ const CareCheckApplicationResults = () => {
                           className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2]"
                           onClick={() =>
                             navigate(
-                              `/personal/care-my/application-results/${seniorData.applicationId}`
+                              `/personal/care-my/application-results/${4}`,
+                              {
+                                state: {
+                                  seniorData: seniorData,
+                                },
+                              }
                             )
                           }
                         >

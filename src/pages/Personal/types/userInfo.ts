@@ -95,7 +95,7 @@ export type LinkedSenior = {
 };
 
 export type Image = {
-  imageId: number;
+  jobPostId: number;
   keyName: string;
   imageUrl: string;
   originalFileName: string;
@@ -113,6 +113,7 @@ export type ApplicationType = {
   deadline: string;
   applicationStatus: 'SUBMITTED' | 'APPROVED' | 'REJECTED';
   images: Image[];
+  jobPostId: any;
 };
 
 export type ImageObject = {
@@ -143,7 +144,7 @@ export type ApplicationDetail = {
   images: Image[];
   travelTime: string;
   applicationStatus: string;
-  questionAndAnswerList: questionAndAnswer[];
+  questionAndAnswerList?: questionAndAnswer[];
 };
 
 // 공통
