@@ -108,7 +108,7 @@ const CareCheckApplicationResults = () => {
                           className="w-[144px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2]"
                           onClick={() =>
                             navigate(
-                              `/personal/care-my/application-results/${4}`,
+                              `/personal/care-my/application-results/${apply.applicationId}`,
                               {
                                 state: {
                                   seniorData: seniorData,

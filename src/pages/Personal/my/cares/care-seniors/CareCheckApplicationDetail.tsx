@@ -1,63 +1,52 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { MdOutlineFileDownload } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import { getSeniorData } from '../../../apis/my/seniorMy';
 import Loading from '../../../../../shared/components/Loading';
-import { ApplicationDetail } from '../../../types/userInfo';
-
-type Tmotivation = {
-  motivation: string;
-};
-const motivation: Tmotivation = {
-  motivation:
-    '경제적으로 자립하여 손주에게 맛있는 것도 사주고 싶은 마음에, 건강한 몸으로 즐겁게 일하고자 지원했습니다.',
-};
+import {
+  ApplicationDetail,
+  ImageObject,
+  questionAndAnswer,
+} from '../../../types/userInfo';
+import axiosInstance from '../../../../../shared/apis/axiosInstance';
 
 const CareCheckApplicationDetail = () => {
   const location = useLocation();
   const { seniorData } = location.state || {};
   const { applicationId } = useParams();
-  const [applicationData, setApplicationData] = useState<any>();
+  const [applicationData, setApplicationData] =
+    useState<ApplicationDetail | null>(null);
+  const [answerData, setAnswerData] = useState<questionAndAnswer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [fileName, setFileName] = useState<string | null>('');
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFileName(e.target.files[0].name);
-    }
-  };
-
-  const handleRemoveFile = () => {
-    setFileName(null);
-    const input = document.getElementById('file-upload') as HTMLInputElement;
-    if (input) input.value = '';
-  };
+  const viewData = [
+    { label: '거리', value: applicationData?.travelTime },
+    {
+      label: '주소',
+      value:
+        applicationData?.roadAddress + ' ' + applicationData?.detailAddress,
+    },
+    { label: '시급', value: applicationData?.hourlyWage },
+    { label: '근무시간', value: applicationData?.workingTime },
+    { label: '월급', value: applicationData?.monthlySalary },
+    { label: '연봉', value: applicationData?.yearSalary },
+  ];
 
   useEffect(() => {
     setLoading(true);
     getSeniorData(
-      `/api/job/protector/seniors/${seniorData.seniorId}/posts/${applicationId}`
+      `/api/applications/protector/senior/${seniorData.seniorId}/details/${applicationId}`
     )
-      .then((data) => setApplicationData(data.result))
+      .then((data) => {
+        const res = data.result;
+        setApplicationData(res);
+        setAnswerData(res.questionAndAnswerList);
+      })
       .catch((err) => console.error('지원서 상세 조회 에러: ', err))
       .finally(() => setLoading(false));
-  }, [applicationId, seniorData]);
-
-  useEffect(() => {
-    if (applicationData) {
-      console.log('질문 답변 리스트: ', applicationData);
-    }
-    // console.log(applicationData);
-  }, [applicationData]);
-
-  // useEffect(() => {
-  //   console.log(seniorData);
-  // }, [seniorData]);
-
-  // useEffect(() => {
-  //   console.log('jobPostId: ', applicationId);
-  // }, [applicationId]);
+  }, [seniorData, applicationId]);
 
   return (
     <div className="flex flex-col">
@@ -69,7 +58,7 @@ const CareCheckApplicationDetail = () => {
           <Loading />
         ) : (
           <div className="h-[572px] overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center gap-[16px] py-[20px] text-[14px] font-[500] text-[Pretendard] text-[#414141]">
-            <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4]">
+            <div className="w-[292px] min-h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
               <img
                 className="w-[292px] h-[165px] rounded-[10px]"
                 src={applicationData?.images?.[0]?.imageUrl}
@@ -81,24 +70,16 @@ const CareCheckApplicationDetail = () => {
                 {applicationData?.title}
               </span>
               <div className="leading-[1.8]">
-                <div className="flex justify-between">
-                  <span>거리</span>
-                  <span>{applicationData?.travelTime}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>시급</span>
-                  <span>{applicationData?.hourlyWage}원</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>근무시간</span>
-                  <span>{applicationData?.workingTime}</span>
-                </div>
-                {applicationData?.monthlySalary && (
-                  <div className="flex justify-between">
-                    <span>월급</span>
-                    <span>{applicationData?.monthlySalary}만원</span>
-                  </div>
-                )}
+                {viewData.map((data, idx) => {
+                  if (data.value) {
+                    return (
+                      <div key={idx} className="flex justify-between">
+                        <div className="min-w-[40px]">{data.label}</div>
+                        <div className="text-right">{data.value}</div>
+                      </div>
+                    );
+                  }
+                })}
               </div>
             </div>
             <div className="flex flex-col justify-around w-[297px] h-[221px] px-[16px] py-[10px] rounded-[13px] border-[1.3px] border-[#08D485]">
@@ -132,45 +113,30 @@ const CareCheckApplicationDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col justify-around w-[297px] h-[134px] rounded-[13px] px-[16px] py-[10px] border-[1.3px] border-[#08D485]">
-              <span className="text-[16px] font-[600] pb-[12px]">
-                지원 동기
-              </span>
-              <div className="flex justify-between">
-                <span>{motivation.motivation}</span>
-              </div>
-            </div>
-            <div className="flex flex-col text-[14px] font-[Pretendard JP] font-[400]">
-              <label className="pb-[6px] text-[#747474]">
-                사회복지 자격증 이미지
-                <span className="text-[#FF0004]"> (필수)</span>
-              </label>
-              <div className="flex justify-center gap-[11px]">
-                <div className="flex justify-between items-center w-[225px] h-[45px] p-[12px] rounded-[8px] border-[1.3px] border-[#08D485]">
-                  <span className="truncate">
-                    {fileName || '선택된 파일 없음'}
-                  </span>
-                  {fileName && (
-                    <button type="button" onClick={handleRemoveFile}>
-                      X
-                    </button>
-                  )}
-                </div>
-                <label
-                  htmlFor="file-upload"
-                  className="flex justify-center items-center w-[61px] h-[45px] rounded-[8px] bg-[#08D485] text-black"
-                >
-                  검색
-                </label>
-              </div>
-              <input
-                id="file-upload"
-                type="file"
-                accept="application/pdf"
-                className="hidden"
-                onChange={handleFileChange}
-              ></input>
-            </div>
+            {answerData.length > 0 ? (
+              <>
+                {answerData.map((answer, idx) => {
+                  if (answer.fieldType === 'IMAGE') {
+                    return (
+                      <ImageField
+                        key={idx}
+                        fieldName={answer.fieldName}
+                        answerContent={answer.answerContent as ImageObject}
+                      />
+                    );
+                  } else if (answer.fieldType === 'TEXT') {
+                    return (
+                      <TextField
+                        key={idx}
+                        fieldName={answer.fieldName}
+                        answerContent={answer.answerContent as string}
+                      />
+                    );
+                  }
+                  return <></>;
+                })}
+              </>
+            ) : undefined}
           </div>
         )}
       </Topbar>
@@ -179,3 +145,56 @@ const CareCheckApplicationDetail = () => {
 };
 
 export default CareCheckApplicationDetail;
+
+interface ImageFieldProps {
+  fieldName: string;
+  answerContent: ImageObject;
+}
+
+interface TextFieldProps {
+  fieldName: string;
+  answerContent: string;
+}
+
+const ImageField = ({ fieldName, answerContent }: ImageFieldProps) => {
+  const handleViewFile = async (keyName: string) => {
+    try {
+      const res = await axiosInstance.get(
+        `/api/s3/presigned/download/${keyName}`
+      );
+      window.open(res.data.result.url, '_blank');
+    } catch (err) {
+      console.error('첨부파일 다운로드 실패', err);
+      toast.error('파일을 불러올 수 없습니다.');
+    }
+  };
+
+  return (
+    <div className="flex flex-col text-[14px] font-[Pretendard JP] font-[400]">
+      <div className="flex items-center gap-[4px] mb-[4px]">
+        <span className="text-[#747474]">{fieldName}</span>
+        <span className="text-[#FF0004]">(필수)</span>
+      </div>
+      <div className="flex justify-center gap-[11px]">
+        <div className="flex jusitfy-between items-center w-[297px] h-[45px] p-[12px] rounded-[8px] border-[1.3px] border-[#08D485]">
+          <span className="truncate">{answerContent.originalFileName}</span>
+          <MdOutlineFileDownload
+            size={32}
+            onClick={() => handleViewFile(answerContent.keyName)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TextField = ({ fieldName, answerContent }: TextFieldProps) => {
+  return (
+    <div className="flex flex-col justify-around w-[297px] h-[134px] rounded-[13px] px-[16px] py-[10px] border-[1.3px] border-[#08D485]">
+      <span className="text-[16px] font-[600] pb-[12px]">{fieldName}</span>
+      <div className="flex justify-between">
+        <span>{answerContent}</span>
+      </div>
+    </div>
+  );
+};
