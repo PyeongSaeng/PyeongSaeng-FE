@@ -23,14 +23,22 @@ const LinkedSeniorDetail = ({
             <div className="text-[24px]">{seniorData?.seniorName}</div>
             <button
               onClick={() =>
-                navigate('/personal/care-my/application-results', {
+                navigate('/personal/care-my/senior/application-results', {
                   state: { seniorData },
                 })
               }
             >
               신청 결과
             </button>
-            <button onClick={() => navigate('')}>추가 정보 입력</button>
+            <button
+              onClick={() =>
+                navigate('/personal/care-my/senior/extra', {
+                  state: { seniorData },
+                })
+              }
+            >
+              추가 정보 입력
+            </button>
           </div>
         </>
       ) : (

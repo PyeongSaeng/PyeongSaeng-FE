@@ -44,6 +44,8 @@ import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults'
 import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
 import ClosedJobRepostStep1 from '../pages/Company/my/ClosedJobRepostStep1';
 import ClosedJobRepostStep2 from '../pages/Company/my/ClosedJobRePostStep2';
+import SeniorExtraInfo from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfo';
+import SeniorExtraInfoEdit from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfoEdit';
 
 const AppRoutes = () => {
   return (
@@ -99,14 +101,21 @@ const AppRoutes = () => {
         element={<LinkingSenior />}
       ></Route>
       <Route
-        path="/personal/care-my/application-results"
+        path="/personal/care-my/senior/application-results"
         element={<CareCheckApplicationResults />}
       ></Route>
       <Route
-        path="/personal/care-my/application-results/:applicationId"
+        path="/personal/care-my/senior/application-results/:applicationId"
         element={<CareCheckApplicationDetail />}
       ></Route>
-      {/* <Route path="/personal/care-my/extra" element={<></>}></Route> */}
+      <Route
+        path="/personal/care-my/senior/extra"
+        element={<SeniorExtraInfo />}
+      ></Route>
+      <Route
+        path="/personal/care-my/senior/extra/edit"
+        element={<SeniorExtraInfoEdit />}
+      ></Route>
       <Route
         path="/personal/password-edit"
         element={<PersonalPasswordEdit />}
