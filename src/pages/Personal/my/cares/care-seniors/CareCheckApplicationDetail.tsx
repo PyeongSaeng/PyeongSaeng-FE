@@ -48,9 +48,9 @@ const CareCheckApplicationDetail = () => {
       .finally(() => setLoading(false));
   }, [seniorData, applicationId]);
 
-  useEffect(() => {
-    console.log(applicationData);
-  }, [applicationData]);
+  // useEffect(() => {
+  //   console.log(applicationData);
+  // }, [applicationData]);
 
   return (
     <div className="flex flex-col">
@@ -95,10 +95,10 @@ const CareCheckApplicationDetail = () => {
                   <span>성함</span>
                   <span>{seniorData.seniorName}</span>
                 </div>
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span>성별</span>
                   <span>{'여자'}</span>
-                </div>
+                </div> */}
                 <div className="flex justify-between">
                   <span>나이</span>
                   <span>{'75'}세</span>

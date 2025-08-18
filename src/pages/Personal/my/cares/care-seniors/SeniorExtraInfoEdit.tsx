@@ -75,6 +75,9 @@ const SeniorExtraInfoEdit = () => {
       console.error('추가 질문 수정 에러: ', err);
     } finally {
       setLoading(false);
+      navigate('/personal/care-my/senior/extra', {
+        state: { seniorData: seniorData },
+      });
     }
   };
 

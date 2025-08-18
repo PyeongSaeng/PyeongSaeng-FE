@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import clsx from 'clsx';
 import { IoClose } from 'react-icons/io5';
 import DaumPostcode from 'react-daum-postcode';
@@ -8,7 +7,6 @@ import Topbar from '../../../shared/components/topbar/Topbar';
 import { RepostJob } from '../types/companyInfo';
 import { getCompanyData } from '../apis/companyMy';
 import Loading from '../../../shared/components/Loading';
-import axiosInstance from '../../../shared/apis/axiosInstance';
 
 const truncate = (str: string) => {
   if (!str) return '';
@@ -26,7 +24,7 @@ const ClosedJobRepostStep1 = () => {
   const { applicationId } = useParams<{ applicationId: string }>();
   const [originalJobData, setoriginalJobData] = useState<RepostJob>(); // 원본
   const [editedJobData, setEditedJobData] = useState<Partial<RepostJob>>({}); // 서버제출
-  const [companyImg, setCompanyImg] = useState<string>('');
+  const [, setCompanyImg] = useState<string>('');
   const [isPostcodeOpen, setIsPostCodeOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();

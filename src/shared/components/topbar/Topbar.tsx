@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import ToggleButton from './ToggleButton';
-import QuestionButton from './QuestionButton';
 import PersonalMenu from './menu/personal-menu/PersonalMenu';
 import CompanyMenu from './menu/company-menu/CompanyMenu';
 

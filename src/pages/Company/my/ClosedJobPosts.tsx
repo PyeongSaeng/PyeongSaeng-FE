@@ -4,15 +4,16 @@ import Topbar from '../../../shared/components/topbar/Topbar';
 import { getCompanyData } from '../apis/companyMy';
 import { JobPost } from '../types/companyInfo';
 
-const filterClosed = (object: JobPost[]) => {
-  const closedJobList: JobPost[] = [];
-  object.map((ob: any) => {
-    if (ob.state === 'CLOSED') {
-      closedJobList.push(ob);
-    }
-  });
-  return closedJobList;
-};
+// api 확인해보기
+// const filterClosed = (object: JobPost[]) => {
+//   const closedJobList: JobPost[] = [];
+//   object.map((ob: any) => {
+//     if (ob.state === 'CLOSED') {
+//       closedJobList.push(ob);
+//     }
+//   });
+//   return closedJobList;
+// };
 
 const ClosedJopPosts = () => {
   const navigate = useNavigate();
