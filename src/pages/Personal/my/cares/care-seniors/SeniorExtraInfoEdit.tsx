@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import Loading from '../../../../../shared/components/Loading';
 import { Question, Answer } from '../../../types/userInfo';
@@ -57,7 +58,7 @@ const SeniorExtraInfoEdit = () => {
     try {
       const unselected = patchArr.filter((p) => !p.selectedOptionId);
       if (unselected.length > 0) {
-        alert(
+        toast(
           `아직 선택하지 않은 질문: ${unselected.map((p) => p.questionId).join(', ')}`
         );
         return;

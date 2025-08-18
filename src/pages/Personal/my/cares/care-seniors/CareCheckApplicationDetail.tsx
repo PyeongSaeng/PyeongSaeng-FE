@@ -48,6 +48,10 @@ const CareCheckApplicationDetail = () => {
       .finally(() => setLoading(false));
   }, [seniorData, applicationId]);
 
+  useEffect(() => {
+    console.log(applicationData);
+  }, [applicationData]);
+
   return (
     <div className="flex flex-col">
       <Topbar>
@@ -104,12 +108,8 @@ const CareCheckApplicationDetail = () => {
                   <span>{seniorData.seniorPhone}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>주민등록번호</span>
-                  <span>{'000000-*******'}</span>
-                </div>
-                <div className="flex justify-between">
                   <span>거주지</span>
-                  <span>{'userInfo.address'}</span>
+                  <span>{seniorData.roadAddress}</span>
                 </div>
               </div>
             </div>
@@ -133,7 +133,6 @@ const CareCheckApplicationDetail = () => {
                       />
                     );
                   }
-                  return <></>;
                 })}
               </>
             ) : undefined}
