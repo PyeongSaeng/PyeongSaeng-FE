@@ -1,64 +1,72 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { MdOutlineFileDownload } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
-import dummy1 from '../../../../../shared/assets/popular-dummy1.png';
-
-type TjobData = {
-  job: string;
-  distance: string;
-  pay: string;
-  hours: string;
-  salary: string;
-};
-
-type TuserInfo = {
-  name: string;
-  sex: string;
-  age: number;
-  phone: string;
-  residentNumber: string;
-  address: string;
-};
-
-type Tmotivation = {
-  motivation: string;
-};
-
-const jobData: TjobData = {
-  job: '죽전2동 행정복지센터 미화원',
-  distance: '도보 및 지하철 20분',
-  pay: '12,240',
-  hours: '월수금 2시간',
-  salary: '29',
-};
-
-const userInfo: TuserInfo = {
-  name: '김순자',
-  sex: '여성',
-  age: 63,
-  phone: '010-1234-5678',
-  residentNumber: '610908-*******',
-  address: '대지로 49 203동',
-};
-
-const motivation: Tmotivation = {
-  motivation:
-    '경제적으로 자립하여 손주에게 맛있는 것도 사주고 싶은 마음에, 건강한 몸으로 즐겁게 일하고자 지원했습니다.',
-};
+import { getSeniorData } from '../../../apis/my/seniorMy';
+import Loading from '../../../../../shared/components/Loading';
+import {
+  ApplicationDetail,
+  ImageObject,
+  questionAndAnswer,
+  LinkedSenior,
+} from '../../../types/userInfo';
+import axiosInstance from '../../../../../shared/apis/axiosInstance';
 
 const CareCheckApplicationDetail = () => {
-  const [fileName, setFileName] = useState<string | null>('');
+  const { seniorId, applicationId } = useParams();
+  const seniorIdNum = seniorId ? Number(seniorId) : undefined;
+  const [seniorData, setSeniorData] = useState<LinkedSenior>();
+  const [applicationData, setApplicationData] =
+    useState<ApplicationDetail | null>(null);
+  const [answerData, setAnswerData] = useState<questionAndAnswer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFileName(e.target.files[0].name);
-    }
-  };
+  const viewData = [
+    { label: '거리', value: applicationData?.travelTime },
+    {
+      label: '주소',
+      value:
+        applicationData?.roadAddress + ' ' + applicationData?.detailAddress,
+    },
+    { label: '시급', value: applicationData?.hourlyWage },
+    { label: '근무시간', value: applicationData?.workingTime },
+    { label: '월급', value: applicationData?.monthlySalary },
+    { label: '연봉', value: applicationData?.yearSalary },
+  ];
 
-  const handleRemoveFile = () => {
-    setFileName(null);
-    const input = document.getElementById('file-upload') as HTMLInputElement;
-    if (input) input.value = '';
-  };
+  // 시니어 데이터 조회
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData('/api/user/seniors')
+      .then((data) => {
+        const value = data.result.find(
+          (d: LinkedSenior) => d.seniorId === seniorIdNum
+        );
+        setSeniorData(value);
+      })
+      .catch((err) => console.error('시니어 데이터 조회 에러: ', err))
+      .finally(() => setLoading(false));
+  }, [seniorIdNum]);
+
+  // 지원서 상세 조회
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData(
+      `/api/applications/protector/senior/${seniorId}/details/${applicationId}`
+    )
+      .then((data) => {
+        const res = data.result;
+        setApplicationData(res);
+        setAnswerData(res.questionAndAnswerList);
+      })
+      .catch((err) => console.error('지원서 상세 조회 에러: ', err))
+      .finally(() => setLoading(false));
+  }, [seniorId, applicationId]);
+
+  // useEffect(() => {
+  //   console.log(applicationData);
+  // }, [applicationData]);
 
   return (
     <div className="flex flex-col">
@@ -66,109 +74,142 @@ const CareCheckApplicationDetail = () => {
         <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px] border-b-[1.3px] border-[#CCCCCC]">
           신청 결과
         </div>
-        <div className="h-[572px] overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center gap-[16px] py-[20px] text-[14px] font-[500] text-[Pretendard] text-[#414141]">
-          <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4]">
-            <img
-              className="w-[292px] h-[165px] rounded-[10px]"
-              src={dummy1}
-              alt="더미1"
-            />
-          </div>
-          <div className="flex flex-col justify-around w-[297px] h-[173px] px-[16px] py-[10px] rounded-[13px] border-[1.3px] border-[#08D485]">
-            <span className="text-[16px] font-[600] pb-[12px]">
-              {jobData.job}
-            </span>
-            <div className="leading-[1.8]">
-              <div className="flex justify-between">
-                <span>거리</span>
-                <span>{jobData.distance}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>시급</span>
-                <span>{jobData.pay}원</span>
-              </div>
-              <div className="flex justify-between">
-                <span>근무시간</span>
-                <span>{jobData.hours}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>월급</span>
-                <span>{jobData.salary}만원</span>
+        {loading ? (
+          <Loading />
+        ) : (
+          <div className="h-[572px] overflow-y-scroll scrollbar-hide flex flex-col justify-start items-center gap-[16px] py-[20px] text-[14px] font-[500] text-[Pretendard] text-[#414141]">
+            <div className="w-[292px] min-h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
+              <img
+                className="w-[292px] h-[165px] rounded-[10px]"
+                src={applicationData?.images?.[0]?.imageUrl}
+                alt="기업 대표 사진"
+              />
+            </div>
+            <div className="flex flex-col justify-around w-[297px] h-auto px-[16px] py-[10px] rounded-[13px] border-[1.3px] border-[#08D485]">
+              <span className="text-[16px] font-[600] pb-[12px]">
+                {applicationData?.title}
+              </span>
+              <div className="leading-[1.8]">
+                {viewData.map((data, idx) => {
+                  if (data.value) {
+                    return (
+                      <div key={idx} className="flex justify-between">
+                        <div className="min-w-[40px]">{data.label}</div>
+                        <div className="text-right">{data.value}</div>
+                      </div>
+                    );
+                  }
+                })}
               </div>
             </div>
-          </div>
-          <div className="flex flex-col justify-around w-[297px] h-[221px] px-[16px] py-[10px] rounded-[13px] border-[1.3px] border-[#08D485]">
-            <span className="text-[16px] textfont-[600] pb-[12px]">
-              기본 정보
-            </span>
-            <div className="leading-[1.8]">
-              <div className="flex justify-between">
-                <span>성함</span>
-                <span>{userInfo.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>성별</span>
-                <span>{userInfo.sex}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>나이</span>
-                <span>{userInfo.age}세</span>
-              </div>
-              <div className="flex justify-between">
-                <span>전화번호</span>
-                <span>{userInfo.phone}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>주민등록번호</span>
-                <span>{userInfo.residentNumber}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>거주지</span>
-                <span>{userInfo.address}</span>
+            <div className="flex flex-col justify-around w-[297px] h-[221px] px-[16px] py-[10px] rounded-[13px] border-[1.3px] border-[#08D485]">
+              <span className="text-[16px] textfont-[600] pb-[12px]">
+                기본 정보
+              </span>
+              <div className="leading-[1.8]">
+                <div className="flex justify-between">
+                  <span>성함</span>
+                  <span>{seniorData?.seniorName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>성별</span>
+                  <span>{seniorData?.gender}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>나이</span>
+                  <span>{'75'}세</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>전화번호</span>
+                  <span>{seniorData?.seniorPhone}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>거주지</span>
+                  <span>{seniorData?.roadAddress}</span>
+                </div>
               </div>
             </div>
+            {answerData.length > 0 ? (
+              <>
+                {answerData.map((answer, idx) => {
+                  if (answer.fieldType === 'IMAGE') {
+                    return (
+                      <ImageField
+                        key={idx}
+                        fieldName={answer.fieldName}
+                        answerContent={answer.answerContent as ImageObject}
+                      />
+                    );
+                  } else if (answer.fieldType === 'TEXT') {
+                    return (
+                      <TextField
+                        key={idx}
+                        fieldName={answer.fieldName}
+                        answerContent={answer.answerContent as string}
+                      />
+                    );
+                  }
+                })}
+              </>
+            ) : undefined}
           </div>
-          <div className="flex flex-col justify-around w-[297px] h-[134px] rounded-[13px] px-[16px] py-[10px] border-[1.3px] border-[#08D485]">
-            <span className="text-[16px] font-[600] pb-[12px]">지원 동기</span>
-            <div className="flex justify-between">
-              <span>{motivation.motivation}</span>
-            </div>
-          </div>
-          <div className="flex flex-col text-[14px] font-[Pretendard JP] font-[400]">
-            <label className="pb-[6px] text-[#747474]">
-              사회복지 자격증 이미지
-              <span className="text-[#FF0004]"> (필수)</span>
-            </label>
-            <div className="flex justify-center gap-[11px]">
-              <div className="flex justify-between items-center w-[225px] h-[45px] p-[12px] rounded-[8px] border-[1.3px] border-[#08D485]">
-                <span className="truncate">
-                  {fileName || '선택된 파일 없음'}
-                </span>
-                {fileName && (
-                  <button type="button" onClick={handleRemoveFile}>
-                    X
-                  </button>
-                )}
-              </div>
-              <label
-                htmlFor="file-upload"
-                className="flex justify-center items-center w-[61px] h-[45px] rounded-[8px] bg-[#08D485] text-black"
-              >
-                검색
-              </label>
-            </div>
-            <input
-              id="file-upload"
-              type="file"
-              accept="application/pdf"
-              className="hidden"
-              onChange={handleFileChange}
-            ></input>
-          </div>
-        </div>
+        )}
       </Topbar>
     </div>
   );
 };
 
 export default CareCheckApplicationDetail;
+
+interface ImageFieldProps {
+  fieldName: string;
+  answerContent: ImageObject;
+}
+
+interface TextFieldProps {
+  fieldName: string;
+  answerContent: string;
+}
+
+const ImageField = ({ fieldName, answerContent }: ImageFieldProps) => {
+  const handleViewFile = async (keyName: string) => {
+    try {
+      const res = await axiosInstance.get(
+        `/api/s3/presigned/download/${keyName}`
+      );
+      window.open(res.data.result.url, '_blank');
+    } catch (err) {
+      console.error('첨부파일 다운로드 실패', err);
+      toast.error('파일을 불러올 수 없습니다.');
+    }
+  };
+
+  return (
+    <div className="flex flex-col text-[14px] font-[Pretendard JP] font-[400]">
+      <div className="flex items-center gap-[4px] mb-[4px]">
+        <span className="text-[#747474]">{fieldName}</span>
+        <span className="text-[#FF0004]">(필수)</span>
+      </div>
+      <div className="flex justify-center gap-[11px]">
+        <div className="flex jusitfy-between items-center w-[297px] h-[45px] p-[12px] rounded-[8px] border-[1.3px] border-[#08D485]">
+          <span className="truncate">{answerContent.originalFileName}</span>
+          <MdOutlineFileDownload
+            size={32}
+            onClick={() => handleViewFile(answerContent.keyName)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TextField = ({ fieldName, answerContent }: TextFieldProps) => {
+  return (
+    <div className="flex flex-col justify-around w-[297px] h-[134px] rounded-[13px] px-[16px] py-[10px] border-[1.3px] border-[#08D485]">
+      <span className="text-[16px] font-[600] pb-[12px]">{fieldName}</span>
+      <div className="flex justify-between">
+        <span>{answerContent}</span>
+      </div>
+    </div>
+  );
+};
