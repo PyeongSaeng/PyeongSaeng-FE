@@ -6,6 +6,7 @@ import {
   JobBookmarkResult,
   BookmarkedJobsResponse,
   ProtectorApplicationItem,
+  JobTrendResponse,
 } from '../types/jobs';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -109,4 +110,18 @@ export async function apiGetProtectorJobDetail(
     `/api/job/protector/seniors/${seniorId}/posts/${jobPostId}`
   );
   return res.data.result;
+}
+// 요즘 뜨는 일자리 목록조희
+export async function apiGetJobTrends(
+  pageNumber: number = 1,
+  token?: string
+): Promise<JobTrendResponse> {
+  const { data } = await axios.get<ApiEnvelope<JobTrendResponse>>(
+    '/api/job/trend',
+    {
+      params: { pageNumber },
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }
+  );
+  return data.result;
 }

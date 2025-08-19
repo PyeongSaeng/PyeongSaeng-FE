@@ -87,10 +87,31 @@ export type ProtectorApplicationItem = {
     | 'APPROVED'
     | 'REJECTED';
 };
-
 export type ProtectorApplicationResponse = {
   isSuccess: boolean;
   code: string;
   message: string;
   result: ProtectorApplicationItem[];
+};
+// 요즘 뜨는 일자리 목록조희
+export type JobTrendItem = {
+  id: number;
+  title: string;
+  description: string;
+  address: string;
+  images: {
+    jobPostId: number;
+    keyName: string;
+    imageUrl: string;
+    originalFileName: string;
+  }[];
+};
+
+export type JobTrendResponse = {
+  jobPostList: JobTrendItem[];
+  listSize: number;
+  totalPage: number;
+  totalElements: number;
+  isFirst: boolean;
+  isLast: boolean;
 };
