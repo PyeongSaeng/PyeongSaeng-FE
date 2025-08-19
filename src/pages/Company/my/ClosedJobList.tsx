@@ -15,7 +15,7 @@ import { JobPost } from '../types/companyInfo';
 //   return closedJobList;
 // };
 
-const ClosedJopPosts = () => {
+const ClosedJopList = () => {
   const navigate = useNavigate();
   const [jobPostList, setJobPostList] = useState<JobPost[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -118,4 +118,4 @@ const ClosedJopPosts = () => {
   );
 };
 
-export default ClosedJopPosts;
+export default ClosedJopList;
