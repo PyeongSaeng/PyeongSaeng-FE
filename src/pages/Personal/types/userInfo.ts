@@ -91,7 +91,10 @@ export type CareInfo = {
 export type LinkedSenior = {
   seniorId: number;
   seniorName: string;
+  gender: 'MALE' | 'FEMALE';
   seniorPhone: string;
+  roadAddress: string;
+  detailAddress: string;
 };
 
 export type Image = {

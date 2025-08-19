@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import Loading from '../../../../../shared/components/Loading';
 import { Question, Answer } from '../../../types/userInfo';
 import axiosInstance from '../../../../../shared/apis/axiosInstance';
+import { getSeniorData } from '../../../apis/my/seniorMy';
+import { LinkedSenior } from '../../../types/userInfo';
 
 const makeOriginalPatchObject = (questionList: Question[]) => {
   return questionList.map((q) => ({
@@ -14,24 +16,29 @@ const makeOriginalPatchObject = (questionList: Question[]) => {
   }));
 };
 
-const filterChanged = (originalArr: Answer[], patchArr: Answer[]) => {
-  return patchArr.filter((p) => {
-    const original = originalArr.find((o) => o.questionId === p.questionId);
-    return original?.selectedOptionId !== p.selectedOptionId;
-  });
-};
-
 const SeniorExtraInfoEdit = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { seniorData, questionList } = location.state || {};
-  const [originalquestionArr, setOriginalquestionArr] = useState<Answer[]>();
+  const { questionList } = location.state || {};
+  const { seniorId } = useParams<{ seniorId: string }>();
+  const seniorIdNum = seniorId ? parseInt(seniorId, 10) : undefined;
+  const [seniorData, setSeniorData] = useState<LinkedSenior>();
+  const [, setOriginalquestionArr] = useState<Answer[]>();
   const [patchArr, setPatchArr] = useState<Answer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   console.log(questionList);
-  // }, [questionList]);
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData('/api/user/seniors')
+      .then((data) => {
+        const value = data.result.find(
+          (d: LinkedSenior) => d.seniorId === seniorIdNum
+        );
+        setSeniorData(value);
+      })
+      .catch((err) => console.error('시니어 데이터 조회 에러: ', err))
+      .finally(() => setLoading(false));
+  }, [seniorIdNum]);
 
   useEffect(() => {
     if (questionList) {
@@ -41,18 +48,8 @@ const SeniorExtraInfoEdit = () => {
     }
   }, [questionList]);
 
-  // useEffect(() => {
-  //   console.log('필터된: ', originalquestionArr);
-  // }, [originalquestionArr]);
-
-  useEffect(() => {
-    console.log('초기 패치 객체', patchArr);
-  }, [patchArr]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const changeArr = filterChanged(originalquestionArr!, patchArr);
     setLoading(true);
 
     try {
@@ -64,10 +61,10 @@ const SeniorExtraInfoEdit = () => {
         return;
       }
 
-      const res = await axiosInstance.patch(
-        `/api/seniors/${seniorData.seniorId}/answers`,
+      const res = await axiosInstance.put(
+        `/api/seniors/${seniorData?.seniorId}/answers`,
         {
-          answers: changeArr,
+          answers: patchArr,
         }
       );
       console.log(res.data);
@@ -75,9 +72,7 @@ const SeniorExtraInfoEdit = () => {
       console.error('추가 질문 수정 에러: ', err);
     } finally {
       setLoading(false);
-      navigate('/personal/care-my/senior/extra', {
-        state: { seniorData: seniorData },
-      });
+      navigate(`/personal/care-my/senior/${seniorIdNum}/extra`);
     }
   };
 
@@ -96,7 +91,7 @@ const SeniorExtraInfoEdit = () => {
               추가 정보 입력
             </div>
             <div className="flex justify-center items-center w-[309px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485] bg-[#ECF6F2] font-[Pretendard JP] font-[500] text-black text-[16px]">
-              {seniorData.seniorName} 님
+              {seniorData?.seniorName} 님
             </div>
             <div className="w-[302px] text-[16px] text-[#747474] mt-[10px]">
               <div className="h-[450px] overflow-y-scroll scrollbar-hide">

@@ -101,19 +101,19 @@ const AppRoutes = () => {
         element={<LinkingSenior />}
       ></Route>
       <Route
-        path="/personal/care-my/senior/application-results"
+        path="/personal/care-my/senior/:seniorId/application-results"
         element={<CareCheckApplicationResults />}
       ></Route>
       <Route
-        path="/personal/care-my/senior/application-results/:applicationId"
+        path="/personal/care-my/senior/:seniorId/application-results/:applicationId"
         element={<CareCheckApplicationDetail />}
       ></Route>
       <Route
-        path="/personal/care-my/senior/extra"
+        path="/personal/care-my/senior/:seniorId/extra"
         element={<SeniorExtraInfo />}
       ></Route>
       <Route
-        path="/personal/care-my/senior/extra/edit"
+        path="/personal/care-my/senior/:seniorId/extra/edit"
         element={<SeniorExtraInfoEdit />}
       ></Route>
       <Route
