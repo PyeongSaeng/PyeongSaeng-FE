@@ -48,42 +48,38 @@
 </table>
 
 ---
+
 ## 🛠 기술 스택
 <div align="center">
 <table width="100%">
+
 <tr>
 <th align="center">Frontend</th>
 <td align="left">
-<img height="50" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png">  
-<img height="50" src="https://user-images.githubusercontent.com/25181517/183891303-41f257f8-6b3d-487c-aa56-c497b880d0fb.png">
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/intellij.png">
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/elasticsearch.png">
+  <img height="50" alt="React" src="https://cdn.simpleicons.org/react/61DAFB" />
+  <img height="50" alt="Vite" src="https://cdn.simpleicons.org/vite/646CFF" />
+  <img height="50" alt="TypeScript" src="https://cdn.simpleicons.org/typescript/3178C6" />
 </td>
 </tr>
+
 <tr>
-<th align="center">Database</th>
+<th align="center">Data Fetching</th>
 <td align="left">
-<img height="50" src="https://user-images.githubusercontent.com/25181517/183896128-ec99105a-ec1a-4d85-b08b-1aa1620b2046.png"> 
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/redis.png">
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/postman.png">
+  <img height="50" alt="Axios" src="https://cdn.simpleicons.org/axios/5A29E4" />
+  <img height="50" alt="TanStack Query" src="https://cdn.simpleicons.org/reactquery/FF4154" />
 </td>
 </tr>
+
 <tr>
-<th align="center">CI/CD</th>
+<th align="center">Package Manager</th>
 <td align="left">
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/git.png">
+  <img height="50" alt="pnpm" src="https://cdn.simpleicons.org/pnpm/F69220" />
 </td>
 </tr>
-<tr>
-<th align="center">Deployment</th>
-<td align="left">
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/docker.png">
-<img height="50" src="https://user-images.githubusercontent.com/25181517/183896132-54262f2e-6d98-41e3-8888-e40ab5a17326.png">
-<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/swagger.png">
-</td>
-</tr>
+
 </table>
 </div>
+
 
 ---
 
