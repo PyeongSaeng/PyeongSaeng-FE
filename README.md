@@ -56,24 +56,24 @@
 <tr>
 <th align="center">Frontend</th>
 <td align="left">
-  <img height="50" alt="React" src="https://cdn.simpleicons.org/react/61DAFB" />
-  <img height="50" alt="Vite" src="https://cdn.simpleicons.org/vite/646CFF" />
-  <img height="50" alt="TypeScript" src="https://cdn.simpleicons.org/typescript/3178C6" />
+  <img height="200" alt="React" src="https://cdn.simpleicons.org/react/61DAFB" />
+  <img height="200" alt="Vite" src="https://cdn.simpleicons.org/vite/646CFF" />
+  <img height="200" alt="TypeScript" src="https://cdn.simpleicons.org/typescript/3178C6" />
 </td>
 </tr>
 
 <tr>
 <th align="center">Data Fetching</th>
 <td align="left">
-  <img height="50" alt="Axios" src="https://cdn.simpleicons.org/axios/5A29E4" />
-  <img height="50" alt="TanStack Query" src="https://cdn.simpleicons.org/reactquery/FF4154" />
+  <img height="200" alt="Axios" src="https://cdn.simpleicons.org/axios/5A29E4" />
+  <img height="200" alt="TanStack Query" src="https://cdn.simpleicons.org/reactquery/FF4154" />
 </td>
 </tr>
 
 <tr>
 <th align="center">Package Manager</th>
 <td align="left">
-  <img height="50" alt="pnpm" src="https://cdn.simpleicons.org/pnpm/F69220" />
+  <img height="200" alt="pnpm" src="https://cdn.simpleicons.org/pnpm/F69220" />
 </td>
 </tr>
 
