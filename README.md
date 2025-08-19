@@ -28,15 +28,15 @@
   <tbody>
     <tr>
       <td align="center"><img src="https://avatars.githubusercontent.com/joobogyeong" alt="주보경님 사진" width="200" height="200"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/leewatertrue" alt="박소이님 사진" width="200" height="200"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/soooii" alt="이연수님 사진" width="200" height="200"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/zzaengee" alt="정보미 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/soyyyyy" alt="박소이님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/yeonsu0327" alt="이연수님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/bomii1" alt="정보미 사진" width="200" height="200"></td>
     </tr>
     <tr>
-      <td align="center"><a href="https://github.com/wlgusqkr">@wlgusqkr</a></td>
-      <td align="center"><a href="https://github.com/leewatertrue">@leewatertrue</a></td>
-      <td align="center"><a href="https://github.com/soooii">@soooii</a></td>
-      <td align="center"><a href="https://github.com/zzaengee">@zzaengee</a></td>
+      <td align="center"><a href="https://github.com/joobogyeong">@joobogyeong</a></td>
+      <td align="center"><a href="https://github.com/soyyyyy">@soyyyyy</a></td>
+      <td align="center"><a href="https://github.com/yeonsu0327">@yeonsu0327</a></td>
+      <td align="center"><a href="https://github.com/bomii1">@bomii1</a></td>
     </tr>
     <tr>
       <td align="center">기업-[홈 화면]<br>기업-[신청서 입력 플로우]<br>기업-[받은 신청서 플로우]<br>개인-[일자리 신청 플로우]<br>CICD 배포 (AWS)</td>
@@ -52,7 +52,7 @@
 <div align="center">
 <table width="100%">
 <tr>
-<th align="center">Backend</th>
+<th align="center">Frontend</th>
 <td align="left">
 <img height="50" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png">  
 <img height="50" src="https://user-images.githubusercontent.com/25181517/183891303-41f257f8-6b3d-487c-aa56-c497b880d0fb.png">
