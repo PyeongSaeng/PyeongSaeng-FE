@@ -1,3 +1,5 @@
+![Uploading 평생 배너 사진.png…]()
+
 # PyeongSaeng-FE
 
 PyeongSaeng 팀의 프론트엔드 저장소입니다.  
