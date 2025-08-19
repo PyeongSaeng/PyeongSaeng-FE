@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
@@ -18,15 +18,15 @@ const makeOriginalPatchObject = (questionList: Question[]) => {
 
 const SeniorExtraInfoEdit = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { questionList } = location.state || {};
   const { seniorId } = useParams<{ seniorId: string }>();
   const seniorIdNum = seniorId ? parseInt(seniorId, 10) : undefined;
   const [seniorData, setSeniorData] = useState<LinkedSenior>();
+  const [questionList, setQuestionList] = useState<Question[]>([]);
   const [, setOriginalquestionArr] = useState<Answer[]>();
   const [patchArr, setPatchArr] = useState<Answer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // 시니어 데이터 조회
   useEffect(() => {
     setLoading(true);
     getSeniorData('/api/user/seniors')
@@ -40,6 +40,18 @@ const SeniorExtraInfoEdit = () => {
       .finally(() => setLoading(false));
   }, [seniorIdNum]);
 
+  // 추가질문 답변 리스트 조회
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData(`/api/seniors/${seniorIdNum}/questions`)
+      .then((data) => setQuestionList(data.result))
+      .catch((err) =>
+        console.error('시니어 추가질문 답변 리스트 조회 에러: ', err)
+      )
+      .finally(() => setLoading(false));
+  }, [seniorIdNum]);
+
+  // original & edit patch 객체 만들기
   useEffect(() => {
     if (questionList) {
       const value = makeOriginalPatchObject(questionList);

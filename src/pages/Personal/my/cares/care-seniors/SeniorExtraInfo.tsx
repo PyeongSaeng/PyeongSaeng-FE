@@ -14,6 +14,7 @@ const SeniorExtraInfo = () => {
   const [questionList, setQuestionList] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // 시니어 데이터 조회
   useEffect(() => {
     setLoading(true);
     getSeniorData('/api/user/seniors')
@@ -27,6 +28,7 @@ const SeniorExtraInfo = () => {
       .finally(() => setLoading(false));
   }, [seniorIdNum]);
 
+  // 추가질문 답변 리스트 조회
   useEffect(() => {
     setLoading(true);
     getSeniorData(`/api/seniors/${seniorIdNum}/questions`)
@@ -36,14 +38,6 @@ const SeniorExtraInfo = () => {
       )
       .finally(() => setLoading(false));
   }, [seniorIdNum]);
-
-  //   useEffect(() => {
-  //     console.log(questionList);
-  //   }, [questionList]);
-
-  useEffect(() => {
-    console.log(seniorData);
-  }, [seniorData]);
 
   return (
     <div>
@@ -95,9 +89,7 @@ const SeniorExtraInfo = () => {
               type="button"
               className="w-[309px] h-[45px] rounded-[8px] bg-[#08D485] text-white text-[16px] font-[pretendard] font-[400]"
               onClick={() =>
-                navigate(`/personal/care-my/senior/${seniorIdNum}/extra/edit`, {
-                  state: { questionList: questionList },
-                })
+                navigate(`/personal/care-my/senior/${seniorIdNum}/extra/edit`)
               }
             >
               수정

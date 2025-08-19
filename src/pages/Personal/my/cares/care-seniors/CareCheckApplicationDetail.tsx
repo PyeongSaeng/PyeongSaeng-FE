@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
@@ -9,13 +9,14 @@ import {
   ApplicationDetail,
   ImageObject,
   questionAndAnswer,
+  LinkedSenior,
 } from '../../../types/userInfo';
 import axiosInstance from '../../../../../shared/apis/axiosInstance';
 
 const CareCheckApplicationDetail = () => {
-  const location = useLocation();
-  const { seniorData } = location.state || {};
-  const { applicationId } = useParams();
+  const { seniorId, applicationId } = useParams();
+  const seniorIdNum = seniorId ? Number(seniorId) : undefined;
+  const [seniorData, setSeniorData] = useState<LinkedSenior>();
   const [applicationData, setApplicationData] =
     useState<ApplicationDetail | null>(null);
   const [answerData, setAnswerData] = useState<questionAndAnswer[]>([]);
@@ -34,10 +35,25 @@ const CareCheckApplicationDetail = () => {
     { label: '연봉', value: applicationData?.yearSalary },
   ];
 
+  // 시니어 데이터 조회
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData('/api/user/seniors')
+      .then((data) => {
+        const value = data.result.find(
+          (d: LinkedSenior) => d.seniorId === seniorIdNum
+        );
+        setSeniorData(value);
+      })
+      .catch((err) => console.error('시니어 데이터 조회 에러: ', err))
+      .finally(() => setLoading(false));
+  }, [seniorIdNum]);
+
+  // 지원서 상세 조회
   useEffect(() => {
     setLoading(true);
     getSeniorData(
-      `/api/applications/protector/senior/${seniorData.seniorId}/details/${applicationId}`
+      `/api/applications/protector/senior/${seniorId}/details/${applicationId}`
     )
       .then((data) => {
         const res = data.result;
@@ -46,7 +62,7 @@ const CareCheckApplicationDetail = () => {
       })
       .catch((err) => console.error('지원서 상세 조회 에러: ', err))
       .finally(() => setLoading(false));
-  }, [seniorData, applicationId]);
+  }, [seniorId, applicationId]);
 
   // useEffect(() => {
   //   console.log(applicationData);
@@ -93,23 +109,23 @@ const CareCheckApplicationDetail = () => {
               <div className="leading-[1.8]">
                 <div className="flex justify-between">
                   <span>성함</span>
-                  <span>{seniorData.seniorName}</span>
+                  <span>{seniorData?.seniorName}</span>
                 </div>
-                {/* <div className="flex justify-between">
+                <div className="flex justify-between">
                   <span>성별</span>
-                  <span>{'여자'}</span>
-                </div> */}
+                  <span>{seniorData?.gender}</span>
+                </div>
                 <div className="flex justify-between">
                   <span>나이</span>
                   <span>{'75'}세</span>
                 </div>
                 <div className="flex justify-between">
                   <span>전화번호</span>
-                  <span>{seniorData.seniorPhone}</span>
+                  <span>{seniorData?.seniorPhone}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>거주지</span>
-                  <span>{seniorData.roadAddress}</span>
+                  <span>{seniorData?.roadAddress}</span>
                 </div>
               </div>
             </div>
