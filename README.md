@@ -50,7 +50,7 @@
 ---
 
 ## 🛠 기술 스택
-
+<table align="center">
 | 역할 | 종류 | 선정 이유 |
 |------|------|-----------|
 | Library | <img src="https://cdn.simpleicons.org/react/61DAFB" height="28"/> **React** | 컴포넌트 기반 구조로 재사용성과 유지보수성이 높아 개발 효율 극대화 |
@@ -61,7 +61,7 @@
 | Data Fetching | <img src="https://cdn.simpleicons.org/axios/5A29E4" height="28"/> **Axios** | 직관적인 API 사용법과 자동 JSON 변환 기능으로 비동기 통신 간편 |
 | Server State 관리 | <img src="https://cdn.simpleicons.org/reactquery/FF4154" height="28"/> **TanStack Query** | 서버 상태 관리와 캐싱을 자동화하여 데이터 fetching/동기화를 효율적으로 처리 |
 | Deployment | <img src="https://cdn.simpleicons.org/vercel/000000" height="28"/> **Vercel** | Git 연동 자동 배포 및 최적화된 프론트엔드 배포 환경 제공 |
-
+</table>
 ---
 
 ## 📂 폴더 구조
