@@ -111,7 +111,6 @@ const CareCheckApplicationResults = () => {
                       className="flex flex-col items-center justify-center border-b-[1.3px] border-[#CCCCCC] py-[12px]"
                     >
                       <div className="flex justify-between w-[292px] pb-[10px]">
-                        <span>{apply.applicationId}</span>
                         <span>{apply.title}</span>
                         <span>
                           {formatDate(apply.deadline)} (
