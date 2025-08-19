@@ -20,17 +20,17 @@
   <thead>
     <tr>
       <th>보돌/주보경</th>
-      <th>/박소이</th>
-      <th>밀/이연수</th>
+      <th>라떼/박소이</th>
+      <th>밀라/이연수</th>
       <th>정봉이/정보미</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img src="https://avatars.githubusercontent.com/wlgusqkr" alt="박지현님 사진" width="200" height="200"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/leewatertrue" alt="이수진 사진" width="200" height="200"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/soooii" alt="안송희님 사진" width="200" height="200"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/zzaengee" alt="김우진님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/joobogyeong" alt="주보경님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/leewatertrue" alt="박소이님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/soooii" alt="이연수님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/zzaengee" alt="정보미 사진" width="200" height="200"></td>
     </tr>
     <tr>
       <td align="center"><a href="https://github.com/wlgusqkr">@wlgusqkr</a></td>
