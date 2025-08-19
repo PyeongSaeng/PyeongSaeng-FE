@@ -117,12 +117,10 @@ export async function apiGetJobTrends(
   token?: string
 ): Promise<JobTrendResponse> {
   const { data } = await axios.get<ApiEnvelope<JobTrendResponse>>(
-    "/api/job/trend",
+    '/api/job/trend',
     {
       params: { pageNumber },
-      headers: token
-        ? { Authorization: `Bearer ${token}` }
-        : undefined,
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     }
   );
   return data.result;

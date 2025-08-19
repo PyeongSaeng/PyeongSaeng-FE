@@ -91,7 +91,9 @@ const HomeAfterLogin = () => {
                   src={job.images?.[0]?.imageUrl ?? ''}
                   alt={job.title}
                 />
-                <span className="text-[14px] text-[#5f5f5f]">{job.address}</span>
+                <span className="text-[14px] text-[#5f5f5f]">
+                  {job.address}
+                </span>
               </div>
             ))}
           </div>

@@ -12,14 +12,12 @@ const PersonalHomePage = () => {
   }, []);
 
   if (isLoggedIn === null) {
-    return null; 
+    return null;
   }
 
   return (
     <div>
-      <Topbar>
-        {isLoggedIn ? <HomeAfterLogin /> : <HomeBeforeLogin />}
-      </Topbar>
+      <Topbar>{isLoggedIn ? <HomeAfterLogin /> : <HomeBeforeLogin />}</Topbar>
     </div>
   );
 };
