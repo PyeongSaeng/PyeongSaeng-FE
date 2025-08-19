@@ -50,36 +50,17 @@
 ---
 
 ## 🛠 기술 스택
-<div align="center">
-<table width="100%">
 
-<tr>
-<th align="center">Frontend</th>
-<td align="left">
-  <img width="100" height="200" alt="React" src="https://cdn.simpleicons.org/react/61DAFB" />
-  <img height="200" alt="Vite" src="https://cdn.simpleicons.org/vite/646CFF" />
-  <img height="200" alt="TypeScript" src="https://cdn.simpleicons.org/typescript/3178C6" />
-</td>
-</tr>
-
-<tr>
-<th align="center">Data Fetching</th>
-<td align="left">
-  <img height="200" alt="Axios" src="https://cdn.simpleicons.org/axios/5A29E4" />
-  <img height="200" alt="TanStack Query" src="https://cdn.simpleicons.org/reactquery/FF4154" />
-</td>
-</tr>
-
-<tr>
-<th align="center">Package Manager</th>
-<td align="left">
-  <img height="200" alt="pnpm" src="https://cdn.simpleicons.org/pnpm/F69220" />
-</td>
-</tr>
-
-</table>
-</div>
-
+| 역할 | 종류 | 선정 이유 |
+|------|------|-----------|
+| Library | <img src="https://cdn.simpleicons.org/react/61DAFB" height="28"/> **React** | 컴포넌트 기반 구조로 재사용성과 유지보수성이 높아 개발 효율 극대화 |
+| Bundler | <img src="https://cdn.simpleicons.org/vite/646CFF" height="28"/> **Vite** | 빠른 서버 시작과 모듈 번들링 성능으로 개발 생산성 향상 |
+| Programming Language | <img src="https://cdn.simpleicons.org/typescript/3178C6" height="28"/> **TypeScript** | 정적 타입 제공으로 코드 안정성과 가독성을 높이고, 개발 중 오류를 사전 방지 |
+| Styling | <img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" height="28"/> **TailwindCSS** | 유틸리티 클래스 기반 스타일링으로 CSS 반복을 줄이고 일관된 UI 구현 |
+| Package Manager | <img src="https://cdn.simpleicons.org/pnpm/F69220" height="28"/> **pnpm** | 고유한 패키지 캐싱 방식으로 설치 속도 향상 및 디스크 공간 절약 |
+| Data Fetching | <img src="https://cdn.simpleicons.org/axios/5A29E4" height="28"/> **Axios** | 직관적인 API 사용법과 자동 JSON 변환 기능으로 비동기 통신 간편 |
+| Server State 관리 | <img src="https://cdn.simpleicons.org/reactquery/FF4154" height="28"/> **TanStack Query** | 서버 상태 관리와 캐싱을 자동화하여 데이터 fetching/동기화를 효율적으로 처리 |
+| Deployment | <img src="https://cdn.simpleicons.org/vercel/000000" height="28"/> **Vercel** | Git 연동 자동 배포 및 최적화된 프론트엔드 배포 환경 제공 |
 
 ---
 
