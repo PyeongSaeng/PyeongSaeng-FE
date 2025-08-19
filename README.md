@@ -1,9 +1,89 @@
-![Uploading 평생 배너 사진.png…]()
+<div align="center">
+  <img src="https://i.postimg.cc/dVXK9Kqb/image.png" alt="프로젝트 이미지" />
+</div>
 
-# PyeongSaeng-FE
+---
 
-PyeongSaeng 팀의 프론트엔드 저장소입니다.  
-**Vite + React + TypeScript + Tailwind CSS** 기반으로 개발하고 있습니다.
+## 🫂 평생 프로젝트 개요
+
+### 서비스 소개
+" 평생, 당신과 함께 하니까 "
+
+자녀와 함께하는 시니어 일자리 추천 및 신청 도우미
+> **프로젝트 기간**: 2025.06.25 ~ 2025.08.22
+
+---
+
+## 🚀 프론트앤드 팀원 소개
+
+<table align="center">
+  <thead>
+    <tr>
+      <th>보돌/주보경</th>
+      <th>/박소이</th>
+      <th>밀/이연수</th>
+      <th>정봉이/정보미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><img src="https://avatars.githubusercontent.com/wlgusqkr" alt="박지현님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/leewatertrue" alt="이수진 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/soooii" alt="안송희님 사진" width="200" height="200"></td>
+      <td align="center"><img src="https://avatars.githubusercontent.com/zzaengee" alt="김우진님 사진" width="200" height="200"></td>
+    </tr>
+    <tr>
+      <td align="center"><a href="https://github.com/wlgusqkr">@wlgusqkr</a></td>
+      <td align="center"><a href="https://github.com/leewatertrue">@leewatertrue</a></td>
+      <td align="center"><a href="https://github.com/soooii">@soooii</a></td>
+      <td align="center"><a href="https://github.com/zzaengee">@zzaengee</a></td>
+    </tr>
+    <tr>
+      <td align="center">기업-[홈 화면]<br>기업-[신청서 입력 플로우]<br>기업-[받은 신청서 플로우]<br>개인-[일자리 신청 플로우]<br>CICD 배포 (AWS)</td>
+      <td align="center">개인-[로그인/회원가입<br> 플로우] 기업-[로그인/<br>회원가입 플로우] <br>개인-[내 정보 플로우]<br>기업-[내 기업 정보 플로우]<br>토큰, SMS</td>
+      <td align="center">개인-[일자리 추천 및 저장<br>플로우]에서 조회 기능<br>개인-[추가 질문 답변]<br>개인-[일자리 추천 및 <br>저장함 신청함 플로우]<br>[채용 공고 검색] 기능</td>
+      <td align="center">개인-[일자리 추천 및<br>저장 플로우]<br>일자리 신청 플로우에서<br>AI를 통해 질문 만들기</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+## 🛠 기술 스택
+<div align="center">
+<table width="100%">
+<tr>
+<th align="center">Backend</th>
+<td align="left">
+<img height="50" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png">  
+<img height="50" src="https://user-images.githubusercontent.com/25181517/183891303-41f257f8-6b3d-487c-aa56-c497b880d0fb.png">
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/intellij.png">
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/elasticsearch.png">
+</td>
+</tr>
+<tr>
+<th align="center">Database</th>
+<td align="left">
+<img height="50" src="https://user-images.githubusercontent.com/25181517/183896128-ec99105a-ec1a-4d85-b08b-1aa1620b2046.png"> 
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/redis.png">
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/postman.png">
+</td>
+</tr>
+<tr>
+<th align="center">CI/CD</th>
+<td align="left">
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/git.png">
+</td>
+</tr>
+<tr>
+<th align="center">Deployment</th>
+<td align="left">
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/docker.png">
+<img height="50" src="https://user-images.githubusercontent.com/25181517/183896132-54262f2e-6d98-41e3-8888-e40ab5a17326.png">
+<img height="50" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/swagger.png">
+</td>
+</tr>
+</table>
+</div>
 
 ---
 
@@ -82,8 +162,8 @@ src/
 
 ```bash
 # 의존성 설치
-npm install
+pnpm install
 
 # 개발 서버 실행
-npm run dev
+pnpm run dev
 ```
