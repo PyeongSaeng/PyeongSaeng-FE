@@ -19,8 +19,8 @@ const SeniorApplyResults = () => {
   // 무한 스크롤 상태
   const [page, setPage] = useState(1);
   const [isLast, setIsLast] = useState<boolean>(false);
-
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // 기본정보 조회
   useEffect(() => {
@@ -37,7 +37,13 @@ const SeniorApplyResults = () => {
   useEffect(() => {
     if (isLast) return;
 
-    setLoading(true);
+    // 첫 페이지일 땐 loading, 그 외에는 isFetching
+    if (page === 1) {
+      setLoading(true);
+    } else {
+      setIsFetching(true);
+    }
+
     getSeniorData(`/api/applications/me/submitted?page=${page}`)
       .then((data) => {
         const result = data.result;
@@ -48,7 +54,10 @@ const SeniorApplyResults = () => {
         setIsLast(result.isLast);
       })
       .catch((err) => console.error('지원서 조회 에러', err))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setIsFetching(false);
+      });
   }, [page, isLast]);
 
   // Intersection Observer로 페이지 증가
@@ -60,7 +69,7 @@ const SeniorApplyResults = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting && !loading) {
+        if (entries[0]?.isIntersecting && !isFetching) {
           setPage((prev) => prev + 1);
         }
       },
@@ -73,7 +82,7 @@ const SeniorApplyResults = () => {
       observer.unobserve(target);
       observer.disconnect();
     };
-  }, [isLast, loading]);
+  }, [isLast, isFetching]);
 
   return (
     <div>
@@ -134,11 +143,7 @@ const SeniorApplyResults = () => {
                     </div>
                   </div>
                 ))}
-
-                {/* 로딩 표시 */}
-                {loading && <Loading />}
-
-                {/* 무한 스크롤 트리거 */}
+                {isFetching && <Loading />}
                 {!isLast && <div ref={loaderRef} style={{ height: '20px' }} />}
               </>
             )}
