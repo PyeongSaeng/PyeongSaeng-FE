@@ -56,7 +56,7 @@
 <tr>
 <th align="center">Frontend</th>
 <td align="left">
-  <img height="200" alt="React" src="https://cdn.simpleicons.org/react/61DAFB" />
+  <img width="200" height="200" alt="React" src="https://cdn.simpleicons.org/react/61DAFB" />
   <img height="200" alt="Vite" src="https://cdn.simpleicons.org/vite/646CFF" />
   <img height="200" alt="TypeScript" src="https://cdn.simpleicons.org/typescript/3178C6" />
 </td>
