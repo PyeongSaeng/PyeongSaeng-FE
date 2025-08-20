@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
 import { IoChevronForward } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import MenuNavButton from '../MenuNavButton';
+import { getSeniorData } from '../../../../../pages/Personal/apis/my/seniorMy';
+import { getCareBasicInfo } from '../../../../../pages/Personal/apis/my/careMy';
 
 type MenuType =
   | 'main'
@@ -22,6 +25,22 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
 
   const myMenu = role === 'SENIOR' ? 'seniorMy' : 'careMy';
 
+  const [name, setName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    if (role === 'SENIOR') {
+      getSeniorData('/api/user/senior/me')
+        .then((res) => setName(res.result.name))
+        .catch((err) => console.error('시니어 이름 가져오기 실패:', err));
+    } else if (role === 'PROTECTOR') {
+      getCareBasicInfo('/api/user/protector/me')
+        .then((res) => setName(res.result.name))
+        .catch((err) => console.error('보호자 이름 가져오기 실패:', err));
+    }
+  }, [accessToken, role]);
+
   return (
     <div className="px-[8px]">
       <button
@@ -36,9 +55,21 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
                 : null;
         }}
       >
-        {accessToken ? `${username}님 안녕하세요` : '로그인 하세요'}
+        {accessToken ? (
+          name ? (
+            <span>
+              <span className="font-bold">{name}</span>님 안녕하세요
+            </span>
+          ) : (
+            '불러오는 중...'
+          )
+        ) : (
+          '로그인 하세요'
+        )}
+
         <IoChevronForward className="size-[30px]" />
       </button>
+
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
         {/* 시니어일 때만 보이는 메뉴 */}
         {role === 'SENIOR' && (
