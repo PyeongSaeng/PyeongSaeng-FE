@@ -24,18 +24,12 @@ http.interceptors.request.use((config) => {
   config.headers.Accept = 'application/json';
   return config;
 });
-//공통 GET helper
-async function getResult<T>(url: string, params?: Record<string, any>) {
-  const { data } = await http.get<ApiEnvelope<T>>(url, { params });
-  return data.result;
-}
 //맞춤 채용공고 추천
 export const apiGetRecommendedJobs = (userId: number) => {
   return axiosInstance.get<ApiEnvelope<JobRecommendation[]>>(
     `/api/job/recommendations?userId=${userId}`
   );
 };
-
 // 일자리 상세조회
 export async function apiGetJobDetail(jobPostId: number) {
   const { data } = await http.get<ApiEnvelope<JobDetail>>(

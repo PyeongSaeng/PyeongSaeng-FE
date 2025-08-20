@@ -31,9 +31,7 @@ export default function ApplicationDetailPage() {
 
   const navigate = useNavigate();
   const location = useLocation() as { state: LocState };
-  const [jobAddress] = useState<string>(
-    location.state?.jobPostAddress ?? ''
-  );
+  const [jobAddress] = useState<string>(location.state?.jobPostAddress ?? '');
   const [jobTitle, setJobTitle] = useState<string>(
     location.state?.jobPostTitle ?? ''
   );
