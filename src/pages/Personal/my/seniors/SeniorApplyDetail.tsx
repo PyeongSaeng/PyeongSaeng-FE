@@ -123,7 +123,7 @@ const SeniorApplyDetail = () => {
             <span className="text-[16px] font-[600] pb-[12px]">지원 내용</span>
             <div className="flex justify-between">
               <span>
-                {applicationDetail?.questionAndAnswerList.map((answer) => {
+                {applicationDetail?.questionAndAnswerList?.map((answer) => {
                   if (answer.fieldType === 'IMAGE') return null;
                   return (
                     <div className="leading-[1.8]" key={answer.fieldName}>
@@ -144,7 +144,7 @@ const SeniorApplyDetail = () => {
               첨부 파일
             </label>
 
-            {applicationDetail?.questionAndAnswerList.some(
+            {applicationDetail?.questionAndAnswerList?.some(
               (answer) => answer.fieldType === 'IMAGE'
             ) ? (
               <div className="flex flex-col gap-[8px] mt-[8px]">

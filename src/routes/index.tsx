@@ -33,7 +33,7 @@ import CareInfoEdit from '../pages/Personal/my/cares/info/CareInfoEdit';
 import LinkingSenior from '../pages/Personal/my/cares/care-seniors/LinkingSenior';
 import CompanyDeleteAccount from '../pages/Company/my/CompanyDeleteAccount';
 import CompanyDeleteAccountDone from '../pages/Company/my/CompanyDeleteAccountDone';
-import JobPostRepost from '../pages/Company/my/JobPostRepost';
+import ClosedJopPosts from '../pages/Company/my/ClosedJobPosts';
 import CompanyInfo from '../pages/Company/my/CompanyInfo';
 import CompanyInfoEdit from '../pages/Company/my/CompanyInfoEdit';
 import CompanyPasswordEdit from '../pages/Company/my/CompanyPasswordEdit';
@@ -42,6 +42,10 @@ import CareCheckApplicationDetail from '../pages/Personal/my/cares/care-seniors/
 import CareCheckApplicationResults from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationResults';
 import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults';
 import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
+import ClosedJobRepostStep1 from '../pages/Company/my/ClosedJobRepostStep1';
+import ClosedJobRepostStep2 from '../pages/Company/my/ClosedJobRePostStep2';
+import SeniorExtraInfo from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfo';
+import SeniorExtraInfoEdit from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfoEdit';
 
 const AppRoutes = () => {
   return (
@@ -97,14 +101,21 @@ const AppRoutes = () => {
         element={<LinkingSenior />}
       ></Route>
       <Route
-        path="/personal/care-my/application-results"
+        path="/personal/care-my/senior/:seniorId/application-results"
         element={<CareCheckApplicationResults />}
       ></Route>
       <Route
-        path="/personal/care-my/application-results/:applicationId"
+        path="/personal/care-my/senior/:seniorId/application-results/:applicationId"
         element={<CareCheckApplicationDetail />}
       ></Route>
-      {/* <Route path="/personal/care-my/extra" element={<></>}></Route> */}
+      <Route
+        path="/personal/care-my/senior/:seniorId/extra"
+        element={<SeniorExtraInfo />}
+      ></Route>
+      <Route
+        path="/personal/care-my/senior/:seniorId/extra/edit"
+        element={<SeniorExtraInfoEdit />}
+      ></Route>
       <Route
         path="/personal/password-edit"
         element={<PersonalPasswordEdit />}
@@ -145,7 +156,15 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:jobPostId/results"
         element={<ApplicationResultsPage />}
       ></Route>
-      <Route path="/company/my/repost" element={<JobPostRepost />}></Route>
+      <Route path="/company/jobs/closed" element={<ClosedJopPosts />}></Route>
+      <Route
+        path="/company/jobs/repost/:applicationId/step1"
+        element={<ClosedJobRepostStep1 />}
+      ></Route>
+      <Route
+        path="/company/jobs/repost/:applicationId/step2"
+        element={<ClosedJobRepostStep2 />}
+      ></Route>
       <Route path="/company/my/info" element={<CompanyInfo />}></Route>
       <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>
       <Route
