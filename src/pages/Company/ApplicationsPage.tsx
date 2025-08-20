@@ -5,7 +5,7 @@ import Topbar from '../../shared/components/topbar/Topbar';
 import PageHeader from '../../shared/components/PageHeader';
 import { getMyJobPosts } from './apis/applications';
 
-type PostItem = { id: number; title: string };
+type PostItem = { id: number; title: string; roadAddress: string };
 
 export default function ApplicationsPage() {
   const navigate = useNavigate();
@@ -20,7 +20,13 @@ export default function ApplicationsPage() {
         setError(null);
 
         const res = await getMyJobPosts({ page: 1, state: 'RECRUITING' });
-        setPosts(res.jobPostList.map((p) => ({ id: p.id, title: p.title })));
+        setPosts(
+          res.jobPostList.map((p) => ({
+            id: p.id,
+            title: p.title,
+            roadAddress: p.roadAddress,
+          }))
+        );
       } catch (e: any) {
         setError(e?.message || '목록을 불러오지 못했습니다.');
         console.error('공고 목록 로드 실패', e?.response ?? e);
@@ -53,13 +59,16 @@ export default function ApplicationsPage() {
                   className="w-full cursor-pointer"
                   onClick={() =>
                     navigate(`/company/jobs/applications/${post.id}`, {
-                      state: { jobPostTitle: post.title },
+                      state: {
+                        jobPostTitle: post.title,
+                        jobPostAddress: post.roadAddress,
+                      },
                     })
                   }
                 >
                   <div className="flex items-center">
                     <span className="text-[16px] text-black font-normal">
-                      {post.title}
+                      {post.roadAddress}
                     </span>
                     <FiChevronRight className="text-[20px] text-black ml-[12px]" />
                   </div>

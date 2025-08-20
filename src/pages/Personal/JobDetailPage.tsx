@@ -74,7 +74,7 @@ const JobDetailPage = () => {
           {/* 정보 카드 */}
           <div className="w-[297px] px-[17px] py-[17px] mt-[19px] border-[1.3px] border-[var(--main-green)] rounded-[13px] bg-white text-[14px] font-normal text-[var(--gray-800)]">
             <p className="text-[16px] font-semibold text-[var(--gray-800)] mb-[22px]">
-              {job.title}
+              {job.roadAddress}
             </p>
             <div className="flex justify-between mb-1">
               <span>거리</span>
