@@ -96,7 +96,9 @@ const JobRecommendationPage = () => {
               {isError && <p className="text-red-400">오류가 발생했습니다</p>}
 
               {!isLoading && mappedJobs?.length === 0 && (
-                <p className="text-gray-400 text-[16px]">검색 결과가 없습니다.</p>
+                <p className="text-gray-400 text-[16px]">
+                  검색 결과가 없습니다.
+                </p>
               )}
 
               {mappedJobs?.map((job) => (
@@ -105,7 +107,9 @@ const JobRecommendationPage = () => {
                   className="cursor-pointer"
                   onClick={() => navigate(`/personal/jobs/recommend/${job.id}`)}
                 >
-                  <p className="text-[14px] text-[#000000] text-center">{job.address}</p>
+                  <p className="text-[14px] text-[#000000] text-center">
+                    {job.address}
+                  </p>
                   <img
                     src={job.imageUrl}
                     alt={job.title}

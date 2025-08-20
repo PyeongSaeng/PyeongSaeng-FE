@@ -82,11 +82,11 @@ export type ProtectorApplicationItem = {
   jobPostId: number;
   seniorName: string;
   applicationStatus:
-  | 'NON_STARTED'
-  | 'DRAFT'
-  | 'SUBMITTED'
-  | 'APPROVED'
-  | 'REJECTED';
+    | 'NON_STARTED'
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
 };
 export type ProtectorApplicationResponse = {
   isSuccess: boolean;

@@ -137,7 +137,9 @@ const JobSavedPage = () => {
                       <div className="flex justify-between text-[11px] text-[#414141]">
                         <span>월급</span>
                         <span>
-                          {job.monthlySalary ? `${job.monthlySalary.toLocaleString()}원` : '-'}
+                          {job.monthlySalary
+                            ? `${job.monthlySalary.toLocaleString()}원`
+                            : '-'}
                         </span>
                       </div>
                     </div>
@@ -153,16 +155,18 @@ const JobSavedPage = () => {
           <button
             onClick={goApplyDirect}
             disabled={!selectedJobPostId}
-            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black ${!selectedJobPostId ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[16px] font-medium text-black ${
+              !selectedJobPostId ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             직접 신청
           </button>
           <button
             onClick={goApplyDelegate}
             disabled={!selectedJobPostId}
-            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium ${!selectedJobPostId ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+            className={`w-[144px] h-[45px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[16px] font-medium ${
+              !selectedJobPostId ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             보호자 신청
           </button>

@@ -79,11 +79,11 @@ export type ApplicationItem = {
   applicationId: number;
   jobPostId: number;
   applicationStatus:
-  | 'NON_STARTED'
-  | 'DRAFT'
-  | 'SUBMITTED'
-  | 'APPROVED'
-  | 'REJECTED';
+    | 'NON_STARTED'
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
 };
 
 export const apiGetMyApplications = async (): Promise<ApplicationItem[]> => {
@@ -137,4 +137,3 @@ export const apiSearchJobs = (body: SearchJobRequest) => {
     body
   );
 };
-

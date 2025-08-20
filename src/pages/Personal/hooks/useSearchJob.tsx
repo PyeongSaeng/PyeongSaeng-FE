@@ -2,10 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiSearchJobs } from '../apis/jobapi';
 import { SearchJobResponse } from '../types/jobs';
 
-export const useSearchJobs = (
-  keyword: string,
-  enabled: boolean = false
-) => {
+export const useSearchJobs = (keyword: string, enabled: boolean = false) => {
   return useQuery<SearchJobResponse>({
     queryKey: ['jobs', 'search', keyword],
     queryFn: () =>

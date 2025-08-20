@@ -181,10 +181,11 @@ function JobDraftLayout({
         {['작성 전', '작성중'].map((label, idx) => (
           <button
             key={label}
-            className={`flex-1 h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium ${selectedTab === idx
-              ? 'bg-[#ECF6F2] border-[#08D485]'
-              : 'bg-white border-[#08D485]'
-              }`}
+            className={`flex-1 h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium ${
+              selectedTab === idx
+                ? 'bg-[#ECF6F2] border-[#08D485]'
+                : 'bg-white border-[#08D485]'
+            }`}
             onClick={() => {
               setSelectedTab(idx as 0 | 1);
               setSelectedAppId(null);
@@ -262,10 +263,11 @@ function JobDraftLayout({
                   )}
                   {/* 카드 */}
                   <div
-                    className={`w-[291px] h-[362px] mt-[7px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center ${isSelected
-                      ? 'border-[#08D485] bg-[#ECF6F2]'
-                      : 'border-[#08D485] bg-white'
-                      }`}
+                    className={`w-[291px] h-[362px] mt-[7px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center ${
+                      isSelected
+                        ? 'border-[#08D485] bg-[#ECF6F2]'
+                        : 'border-[#08D485] bg-white'
+                    }`}
                     onClick={() =>
                       setSelectedAppId(
                         isSelected ? null : application.applicationId
@@ -300,7 +302,9 @@ function JobDraftLayout({
                       <div className="flex justify-between text-[11px] text-[#414141]">
                         <span>월급</span>
                         <span>
-                          {job.monthlySalary ? `${job.monthlySalary.toLocaleString()}원` : '-'}
+                          {job.monthlySalary
+                            ? `${job.monthlySalary.toLocaleString()}원`
+                            : '-'}
                         </span>
                       </div>
                       {application.seniorName && (

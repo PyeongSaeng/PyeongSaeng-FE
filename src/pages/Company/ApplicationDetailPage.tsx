@@ -11,7 +11,11 @@ import PageHeader from '../../shared/components/PageHeader';
 import { getApplications, getApplicationDetails } from './apis/applications';
 
 type BtnState = 'init' | 'check' | 'complete';
-type LocState = { updatedId?: number; jobPostTitle?: string; jobPostAddress?: string;} | null;
+type LocState = {
+  updatedId?: number;
+  jobPostTitle?: string;
+  jobPostAddress?: string;
+} | null;
 
 export default function ApplicationDetailPage() {
   // --- jobPostId 폴백 ---
