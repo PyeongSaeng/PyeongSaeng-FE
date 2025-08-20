@@ -70,7 +70,6 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
       </button>
 
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        {/* 시니어일 때만 보이는 메뉴 */}
         {role === 'SENIOR' && (
           <>
             <MenuNavButton
