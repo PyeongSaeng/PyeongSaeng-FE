@@ -2,20 +2,52 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useSearchJobs } from './hooks/useSearchJob';
+import { useRecommendedJobs } from './hooks/useRecommend';
+import { SearchJobItem } from './types/jobs';
 
 const JobRecommendationPage = () => {
   const navigate = useNavigate();
+  const userId = 1;
 
+  // 검색어 상태 및 디바운싱
   const [search, setSearch] = useState('');
   const [debouncedKeyword, setDebouncedKeyword] = useState('');
-  const { data, isLoading, isError } = useSearchJobs(debouncedKeyword, !!debouncedKeyword);
 
+  // 검색 API
+  const {
+    data: searchResult,
+    isLoading: isSearchLoading,
+    isError: isSearchError,
+  } = useSearchJobs(debouncedKeyword, !!debouncedKeyword);
+
+  // 추천 API
+  const {
+    data: recommended,
+    isLoading: isRecommendedLoading,
+    isError: isRecommendedError,
+  } = useRecommendedJobs(userId, debouncedKeyword === '');
+
+  // 디바운싱 적용
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedKeyword(search.trim());
     }, 600);
     return () => clearTimeout(timer);
   }, [search]);
+
+  // 공통 타입으로 매핑
+  const mappedJobs: SearchJobItem[] | undefined = debouncedKeyword
+    ? searchResult?.results
+    : recommended?.slice(0, 10).map((job) => ({
+        id: job.jobPostId,
+        title: job.workplaceName,
+        address: job.description,
+        imageUrl: job.imageUrl,
+        displayApplicationCount: 0,
+      }));
+
+  const isLoading = debouncedKeyword ? isSearchLoading : isRecommendedLoading;
+  const isError = debouncedKeyword ? isSearchError : isRecommendedError;
 
   return (
     <Topbar>
@@ -53,7 +85,7 @@ const JobRecommendationPage = () => {
 
           {/* 결과 리스트 */}
           <div
-            className="mt-[17px] flex-1 w-full flex justify-center "
+            className="mt-[17px] flex-1 w-full flex justify-center"
             style={{ minHeight: 0 }}
           >
             <div
@@ -63,19 +95,17 @@ const JobRecommendationPage = () => {
               {isLoading && <p className="text-gray-400">불러오는 중...</p>}
               {isError && <p className="text-red-400">오류가 발생했습니다</p>}
 
-              {!isLoading && data?.results.length === 0 && (
+              {!isLoading && mappedJobs?.length === 0 && (
                 <p className="text-gray-400 text-[16px]">검색 결과가 없습니다.</p>
               )}
 
-              {data?.results.map((job) => (
+              {mappedJobs?.map((job) => (
                 <div
                   key={job.id}
                   className="cursor-pointer"
                   onClick={() => navigate(`/personal/jobs/recommend/${job.id}`)}
                 >
-                  <p className="text-[14px] text-[#000000] text-center">
-                    {job.address}
-                  </p>
+                  <p className="text-[14px] text-[#000000] text-center">{job.address}</p>
                   <img
                     src={job.imageUrl}
                     alt={job.title}

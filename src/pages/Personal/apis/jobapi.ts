@@ -30,9 +30,12 @@ async function getResult<T>(url: string, params?: Record<string, any>) {
   return data.result;
 }
 //맞춤 채용공고 추천
-export function apiGetRecommendations(userId: number) {
-  return getResult<JobRecommendation[]>('/api/job/recommendations', { userId });
-}
+export const apiGetRecommendedJobs = (userId: number) => {
+  return axiosInstance.get<ApiEnvelope<JobRecommendation[]>>(
+    `/api/job/recommendations?userId=${userId}`
+  );
+};
+
 // 일자리 상세조회
 export async function apiGetJobDetail(jobPostId: number) {
   const { data } = await http.get<ApiEnvelope<JobDetail>>(
@@ -76,11 +79,11 @@ export type ApplicationItem = {
   applicationId: number;
   jobPostId: number;
   applicationStatus:
-    | 'NON_STARTED'
-    | 'DRAFT'
-    | 'SUBMITTED'
-    | 'APPROVED'
-    | 'REJECTED';
+  | 'NON_STARTED'
+  | 'DRAFT'
+  | 'SUBMITTED'
+  | 'APPROVED'
+  | 'REJECTED';
 };
 
 export const apiGetMyApplications = async (): Promise<ApplicationItem[]> => {

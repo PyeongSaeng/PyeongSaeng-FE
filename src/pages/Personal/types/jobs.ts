@@ -5,7 +5,7 @@ export type ApiEnvelope<T> = {
   message: string;
   result: T;
 };
-//일자리 추천 관련 타입 정의
+//일자리 맞춤 채용공고 추천 타입 정의
 export type JobRecommendation = {
   jobPostId: number;
   workplaceName: string;
@@ -13,6 +13,7 @@ export type JobRecommendation = {
   imageUrl: string;
   distanceKm: number;
 };
+export type JobRecommendationResponse = JobRecommendation[];
 // 일자리 상세조회 타입 정의
 export type JobImage = {
   jobPostId: number;
@@ -81,11 +82,11 @@ export type ProtectorApplicationItem = {
   jobPostId: number;
   seniorName: string;
   applicationStatus:
-    | 'NON_STARTED'
-    | 'DRAFT'
-    | 'SUBMITTED'
-    | 'APPROVED'
-    | 'REJECTED';
+  | 'NON_STARTED'
+  | 'DRAFT'
+  | 'SUBMITTED'
+  | 'APPROVED'
+  | 'REJECTED';
 };
 export type ProtectorApplicationResponse = {
   isSuccess: boolean;
