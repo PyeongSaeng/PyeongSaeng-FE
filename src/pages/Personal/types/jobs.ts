@@ -115,3 +115,26 @@ export type JobTrendResponse = {
   isFirst: boolean;
   isLast: boolean;
 };
+//// 일자리 검색
+// 검색 요청 바디
+export type SearchJobRequest = {
+  keyword: string;
+  sort?: 'DISTANCE_ASC' | 'POPULARITY_DESC';
+  searchAfter?: number[] | null;
+  size?: number;
+};
+// 검색 응답 아이템
+export type SearchJobItem = {
+  id: number;
+  title: string;
+  address: string;
+  imageUrl: string;
+  displayApplicationCount: number;
+};
+// 검색 응답 전체 타입
+export type SearchJobResponse = {
+  results: SearchJobItem[];
+  searchAfter: number[];
+  totalCount: number;
+  hasNext: boolean;
+};

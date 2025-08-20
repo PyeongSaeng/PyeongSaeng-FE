@@ -7,6 +7,8 @@ import {
   BookmarkedJobsResponse,
   ProtectorApplicationItem,
   JobTrendResponse,
+  SearchJobRequest,
+  SearchJobResponse,
 } from '../types/jobs';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -125,3 +127,11 @@ export async function apiGetJobTrends(
   );
   return data.result;
 }
+// 일자리 검색
+export const apiSearchJobs = (body: SearchJobRequest) => {
+  return axiosInstance.post<ApiEnvelope<SearchJobResponse>>(
+    '/api/jobs/search',
+    body
+  );
+};
+

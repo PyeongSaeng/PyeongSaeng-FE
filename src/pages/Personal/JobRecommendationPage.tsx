@@ -1,29 +1,21 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
-import { useRecommendedJobs } from './hooks/useRecommend';
+import { useSearchJobs } from './hooks/useSearchJob';
 
 const JobRecommendationPage = () => {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const { jobs, isLoading, isError } = useRecommendedJobs();
-  // const { jobs, isLoading, isError, refetch } = useRecommendedJobs();
 
-  // 검색어 필터링 (디바운스 + memoized)
-  const [kw, setKw] = useState('');
+  const [search, setSearch] = useState('');
+  const [debouncedKeyword, setDebouncedKeyword] = useState('');
+  const { data, isLoading, isError } = useSearchJobs(debouncedKeyword, !!debouncedKeyword);
+
   useEffect(() => {
-    const timer = setTimeout(() => setKw(search.trim().toLowerCase()), 300);
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(search.trim());
+    }, 600);
     return () => clearTimeout(timer);
   }, [search]);
-
-  const filteredJobs = useMemo(() => {
-    if (!kw) return jobs;
-    return jobs.filter(
-      (job) =>
-        job.workplaceName.toLowerCase().includes(kw) ||
-        job.description.toLowerCase().includes(kw)
-    );
-  }, [jobs, kw]);
 
   return (
     <Topbar>
@@ -35,7 +27,7 @@ const JobRecommendationPage = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="키워드를 입력하세요"
+              placeholder="필요한 일자리를 찾아보세요"
               className="w-full h-full pl-[20px] pr-[40px] py-[12px]
                          rounded-[23px] border-[3px] border-[#00CB89]
                          bg-white text-[16px] focus:outline-none"
@@ -59,46 +51,38 @@ const JobRecommendationPage = () => {
             </p>
           </div>
 
-          {/* 스크롤 영역 */}
+          {/* 결과 리스트 */}
           <div
-            className="mt-[17px] flex-1 w-full flex justify-center"
+            className="mt-[17px] flex-1 w-full flex justify-center "
             style={{ minHeight: 0 }}
           >
             <div
               className="flex flex-col items-center overflow-y-auto gap-[41px] scrollbar-hide"
               style={{ maxHeight: '400px' }}
             >
-              {/* 로딩 상태 */}
               {isLoading && <p className="text-gray-400">불러오는 중...</p>}
+              {isError && <p className="text-red-400">오류가 발생했습니다</p>}
 
-              {/* 결과 없음 */}
-              {!isLoading && !isError && filteredJobs.length === 0 && (
-                <p className="text-gray-400 text-[16px]">
-                  검색 결과가 없습니다.
-                </p>
+              {!isLoading && data?.results.length === 0 && (
+                <p className="text-gray-400 text-[16px]">검색 결과가 없습니다.</p>
               )}
 
-              {/* 결과 리스트 */}
-              {!isLoading &&
-                !isError &&
-                filteredJobs.map((job) => (
-                  <div
-                    key={job.jobPostId}
-                    className="cursor-pointer"
-                    onClick={() =>
-                      navigate(`/personal/jobs/recommend/${job.jobPostId}`)
-                    }
-                  >
-                    <p className="text-[14px] font-normal text-black text-center">
-                      {job.workplaceName}
-                    </p>
-                    <img
-                      src={job.imageUrl}
-                      alt={job.workplaceName}
-                      className="w-[230px] h-auto mt-[10px] rounded-[8px] border border-gray-200"
-                    />
-                  </div>
-                ))}
+              {data?.results.map((job) => (
+                <div
+                  key={job.id}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/personal/jobs/recommend/${job.id}`)}
+                >
+                  <p className="text-[14px] text-[#000000] text-center">
+                    {job.address}
+                  </p>
+                  <img
+                    src={job.imageUrl}
+                    alt={job.title}
+                    className="w-[230px] h-[130px] mx-auto mt-[9px] rounded-[8px] border-[1px] border-[#A4A4A4] object-cover"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

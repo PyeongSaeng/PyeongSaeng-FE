@@ -281,7 +281,6 @@ function JobDraftLayout({
                         />
                       </div>
                     </div>
-
                     <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
                       <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">
                         {job.roadAddress}
