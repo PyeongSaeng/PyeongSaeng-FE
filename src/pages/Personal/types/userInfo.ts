@@ -91,11 +91,14 @@ export type CareInfo = {
 export type LinkedSenior = {
   seniorId: number;
   seniorName: string;
+  gender: 'MALE' | 'FEMALE';
   seniorPhone: string;
+  roadAddress: string;
+  detailAddress: string;
 };
 
 export type Image = {
-  imageId: number;
+  jobPostId: number;
   keyName: string;
   imageUrl: string;
   originalFileName: string;
@@ -113,6 +116,7 @@ export type ApplicationType = {
   deadline: string;
   applicationStatus: 'SUBMITTED' | 'APPROVED' | 'REJECTED';
   images: Image[];
+  jobPostId: any;
 };
 
 export type ImageObject = {
@@ -143,7 +147,7 @@ export type ApplicationDetail = {
   images: Image[];
   travelTime: string;
   applicationStatus: string;
-  questionAndAnswerList: questionAndAnswer[];
+  questionAndAnswerList?: questionAndAnswer[];
 };
 
 // 공통

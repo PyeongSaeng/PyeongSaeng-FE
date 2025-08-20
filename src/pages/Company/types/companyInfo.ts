@@ -22,37 +22,51 @@ export type UpdateCompanyInfo = {
 // 회사구인공고 재업
 
 // 이미지 타입
-export interface JobPostImage {
+export type JobPostImage = {
   jobPostId: number;
   keyName: string;
   imageUrl: string;
   originalFileName: string;
-}
+};
 
-// jobPostList의 단일 아이템 타입
-// export interface JobPostListItem {
-//   id: number;
-//   state: JobPostState;
-//   title: string;
-//   images: JobPostImage[];
-// }
+// 목록 조회시 필요
+export type JobPost = {
+  id: string;
+  state: string;
+  title: string;
+  roadAddress: string;
+  description: string;
+  images: JobPostImage[];
+};
 
-// result 페이징 메타 + 리스트
-export interface JobPostListResult {
-  jobPostList: JobPostList;
-  listSize: number;
-  totalPage: number;
-  totalElements: number;
-  isFirst: boolean;
-  isLast: boolean;
-}
+// 회사구인공고 리포스트
 
-// 전체 응답 타입
-export interface JobPostListResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: JobPostListResult;
-}
+export type RepostImage = {
+  keyName: string;
+  originalFileName: string;
+};
 
-export type JobPostList = {};
+export type RepostFormField = {
+  fieldName: string;
+  fieldType: 'TEXT' | 'IMAGE';
+};
+
+export type RepostJob = {
+  id: number;
+  state: string;
+  title: string;
+  address?: string;
+  detailAddress: string;
+  roadAddress: string;
+  zipcode: string;
+  hourlyWage: number;
+  monthlySalary: number | null;
+  yearSalary: number | null;
+  description: string;
+  workingTime: string;
+  deadline: string;
+  recruitCount: number;
+  note: string;
+  jobPostImageList: JobPostImage[];
+  formFieldList: RepostFormField[];
+};
