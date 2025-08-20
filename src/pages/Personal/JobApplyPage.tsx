@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -9,7 +10,13 @@ import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormS
 import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
-import { postGenerateAnswer, type QAOption } from './apis/ai';
+
+import {
+  postGenerateAnswer,
+  postGenerateUpdatedAnswer,
+  type QAOption,
+} from './apis/ai';
+
 import {
   postApplicationsEnsure,
   postApplicationDirect,
@@ -18,6 +25,7 @@ import { uploadFileAndGetKey } from './apis/files';
 import { getQuestionsDirect, pickExtraFields } from './apis/questions';
 import { apiGetJobDetail } from './apis/jobapi';
 import axiosInstance from '../../shared/apis/axiosInstance';
+
 import type { FieldAndAnswer } from './types/applications';
 import type { Info } from './types/userInfo';
 
@@ -74,6 +82,10 @@ export default function JobApplyPage() {
   const [isLoadingScaffold, setIsLoadingScaffold] = useState(false);
   const [scaffoldError, setScaffoldError] = useState<string | null>(null);
 
+  // ✅ 보강 API 호출 로딩/에러
+  const [isComposing, setIsComposing] = useState(false);
+  const [composeError, setComposeError] = useState<string | null>(null);
+
   // <33> 최종 문장
   const [finalText, setFinalText] = useState('');
 
@@ -82,7 +94,7 @@ export default function JobApplyPage() {
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ✅ 공고별 실제 필드 ID
+  // 공고별 실제 필드 ID
   const [motivationFieldId, setMotivationFieldId] = useState<number | null>(
     null
   );
@@ -291,16 +303,34 @@ export default function JobApplyPage() {
     }
   };
 
-  // <32> → <33> (로컬 병합)
-  const handleAiCompose = () => {
+  // <32> → <33> (보강 API 호출)
+  const handleAiCompose = async () => {
     const base = scaffoldText.trim();
+    const exp = personalInput.trim();
     if (!base) return toast.warning('AI 문장을 먼저 생성해 주세요.');
-    const merged = [base, personalInput.trim()]
-      .filter(Boolean)
-      .join('\n\n[경험]\n')
-      .trim();
-    setFinalText(merged);
-    setStep('final');
+    if (!exp) return toast.warning('관련된 경험을 입력해 주세요.');
+
+    setIsComposing(true);
+    setComposeError(null);
+    try {
+      const composed = await postGenerateUpdatedAnswer({
+        answers: answersBase,
+        question: MAIN_QUESTION,
+        generatedAnswer: base, // 스캐폴드
+        addedExperience: exp, // 개인경험
+      });
+      setFinalText(composed);
+      setStep('final');
+    } catch (e: any) {
+      const msg =
+        e?.response?.data?.message ??
+        e?.message ??
+        '보강 문장 생성 중 오류가 발생했습니다.';
+      setComposeError(msg);
+      toast.error(msg);
+    } finally {
+      setIsComposing(false);
+    }
   };
 
   // 임시저장(DRAFT)
@@ -437,7 +467,7 @@ export default function JobApplyPage() {
     );
   }
 
-  // 리뷰/완료 공용 요약 섹션
+  // 리뷰/완료 공용 요약 석션
   const renderSummary = (mode: 'review' | 'complete') => (
     <>
       <JobInfoSection jobName={jobTitle || '채용공고'} info={jobInfoProps} />
@@ -609,15 +639,21 @@ export default function JobApplyPage() {
                 onChange={setPersonalInput}
                 placeholder="여기에 입력해주세요"
               />
+              {composeError && (
+                <div className="text-sm text-red-500 mt-2">
+                  [오류] {composeError}
+                </div>
+              )}
               <NextButton
                 onClick={handleAiCompose}
                 disabled={
                   isLoadingScaffold ||
+                  isComposing || // ✅ 로딩 반영
                   !scaffoldText.trim() ||
                   !personalInput.trim()
                 }
               >
-                AI 자동 작성
+                {isComposing ? '작성 중…' : 'AI 자동 작성'}
               </NextButton>
             </div>
           )}
