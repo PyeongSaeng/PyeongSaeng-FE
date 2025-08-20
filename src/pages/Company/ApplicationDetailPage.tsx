@@ -31,7 +31,7 @@ export default function ApplicationDetailPage() {
 
   const navigate = useNavigate();
   const location = useLocation() as { state: LocState };
-  const [jobAdress, setjobAdress] = useState<string>(
+  const [jobAddress] = useState<string>(
     location.state?.jobPostAddress ?? ''
   );
   const [jobTitle, setJobTitle] = useState<string>(
@@ -140,8 +140,8 @@ export default function ApplicationDetailPage() {
       <Topbar />
       <div className="flex flex-col items-center w-full max-w-[320px] self-center px-4 pt-10">
         <PageHeader title="받은 신청서" />
-        {jobAdress ? (
-          <PageHeader title={jobAdress} />
+        {jobAddress ? (
+          <PageHeader title={jobAddress} />
         ) : (
           <PageHeader title={jobPostId ? `공고 ID ${jobPostId}` : ''} />
         )}
