@@ -21,7 +21,6 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
 
   const role = localStorage.getItem('userRole'); // SENIOR | PROTECTOR
   const accessToken = localStorage.getItem('accessToken');
-  const username = localStorage.getItem('username');
 
   const myMenu = role === 'SENIOR' ? 'seniorMy' : 'careMy';
 
