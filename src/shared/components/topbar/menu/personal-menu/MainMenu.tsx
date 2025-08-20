@@ -16,8 +16,9 @@ interface MainMenuProps {
 const MainMenu = ({ handleMenu }: MainMenuProps) => {
   const navigate = useNavigate();
 
-  const role = localStorage.getItem('userRole');
+  const role = localStorage.getItem('userRole'); // SENIOR | PROTECTOR
   const accessToken = localStorage.getItem('accessToken');
+  const username = localStorage.getItem('username');
 
   const myMenu = role === 'SENIOR' ? 'seniorMy' : 'careMy';
 
@@ -35,20 +36,25 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
                 : null;
         }}
       >
-        {accessToken ? '안녕하세요' : '로그인 하세요'}
+        {accessToken ? `${username}님 안녕하세요` : '로그인 하세요'}
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
-        <MenuNavButton
-          url={accessToken ? '/personal/jobs/recommend' : '/personal/login'}
-        >
-          일자리 추천
-        </MenuNavButton>
-        <MenuNavButton
-          url={accessToken ? '/personal/jobs/saved' : '/personal/login'}
-        >
-          일자리 저장함
-        </MenuNavButton>
+        {/* 시니어일 때만 보이는 메뉴 */}
+        {role === 'SENIOR' && (
+          <>
+            <MenuNavButton
+              url={accessToken ? '/personal/jobs/recommend' : '/personal/login'}
+            >
+              일자리 추천
+            </MenuNavButton>
+            <MenuNavButton
+              url={accessToken ? '/personal/jobs/saved' : '/personal/login'}
+            >
+              일자리 저장함
+            </MenuNavButton>
+          </>
+        )}
         <MenuNavButton
           url={accessToken ? '/personal/jobs/drafts' : '/personal/login'}
         >
@@ -70,6 +76,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         >
           내 정보
         </MenuNavButton>
+
         <MenuNavButton isLogout={true}>로그아웃</MenuNavButton>
         {accessToken && (
           <MenuNavButton url="/personal/delete-account">회원탈퇴</MenuNavButton>
