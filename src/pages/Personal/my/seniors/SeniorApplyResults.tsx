@@ -93,7 +93,9 @@ const SeniorApplyResults = () => {
           </div>
 
           <div className="h-[572px] overflow-y-scroll scrollbar-hide">
-            {!loading && applicationList.length === 0 ? (
+            {loading ? (
+              <Loading />
+            ) : !loading && applicationList.length === 0 ? (
               <div className="h-full flex justify-center items-center font-[Pretendard JP] font-[600] text-[#747474] text-[18px]">
                 지원 목록이 존재하지 않습니다
               </div>

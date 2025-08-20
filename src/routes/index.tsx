@@ -42,10 +42,11 @@ import CareCheckApplicationDetail from '../pages/Personal/my/cares/care-seniors/
 import CareCheckApplicationResults from '../pages/Personal/my/cares/care-seniors/CareCheckApplicationResults';
 import SeniorApplyResults from '../pages/Personal/my/seniors/SeniorApplyResults';
 import SeniorApplyDetail from '../pages/Personal/my/seniors/SeniorApplyDetail';
-import ClosedJobRepostStep1 from '../pages/Company/my/ClosedJobRepostStep1';
-import ClosedJobRepostStep2 from '../pages/Company/my/ClosedJobRePostStep2';
+import RepostStep1 from '../pages/Company/my/RepostStep1';
+import RepostStep2 from '../pages/Company/my/RePostStep2';
 import SeniorExtraInfo from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfo';
 import SeniorExtraInfoEdit from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfoEdit';
+import ClosedJobRepostDetail from '../pages/Company/my/ClosedJobRepostDetail';
 
 const AppRoutes = () => {
   return (
@@ -156,18 +157,14 @@ const AppRoutes = () => {
         path="/company/jobs/applications/:jobPostId/results"
         element={<ApplicationResultsPage />}
       ></Route>
-      <Route path="/company/jobs/closed" element={<ClosedJopList />}></Route>
+      <Route path="/company/jobs/repost" element={<ClosedJopList />}></Route>
       <Route
-        path="/company/jobs/repost/:applicationId"
-        element={<ClosedJopList />}
+        path="/company/jobs/repost/:jobPostId"
+        element={<ClosedJobRepostDetail />}
       >
-        <Route path="step1" element={<></>}></Route>
-        <Route path="step2" element={<></>}></Route>
+        <Route path="step1" element={<RepostStep1 />}></Route>
+        <Route path="step2" element={<RepostStep2 />}></Route>
       </Route>
-      <Route
-        path="/company/jobs/repost/:applicationId/step2"
-        element={<ClosedJobRepostStep2 />}
-      ></Route>
       <Route path="/company/my/info" element={<CompanyInfo />}></Route>
       <Route path="/company/my/info/edit" element={<CompanyInfoEdit />}></Route>
       <Route
