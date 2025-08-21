@@ -85,22 +85,22 @@ const CompanyInfoEdit = () => {
 
     // 유효성 검사
     if (!editedInfo.ownerName) {
-      alert('사업자명을 입력해주세요.');
+      toast.warning('사업자명을 입력해주세요.');
       ownerNameRef.current?.focus();
       return;
     }
     if (!editedInfo.phone) {
-      alert('전화번호를 입력해주세요.');
+      toast.warning('전화번호를 입력해주세요.');
       phoneRef.current?.focus();
       return;
     }
     if (!editedInfo.companyName) {
-      alert('기업명을 입력해주세요.');
+      toast.warning('기업명을 입력해주세요.');
       companyNameRef.current?.focus();
       return;
     }
     if (!editedInfo.businessNo) {
-      alert('사업자등록번호를 입력해주세요.');
+      toast.warning('사업자등록번호를 입력해주세요.');
       businessRef.current?.focus();
       return;
     }
