@@ -4,9 +4,8 @@ import { usePopularJobs } from '../hooks/usePopularJobs';
 import HomeTopButton from '../../../shared/components/buttons/HomeTopButton';
 
 const HomeAfterLogin = () => {
-  const token = localStorage.getItem('accessToken') ?? undefined;
   const page = 1;
-  const { jobs, fetchPopular, loading, error } = usePopularJobs(token);
+  const { jobs, fetchPopular, loading, error } = usePopularJobs();
   const navigate = useNavigate();
 
   useEffect(() => {

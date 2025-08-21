@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 import type { JobListDTO } from '../types/job';
 
-export function usePopularJobs(token?: string) {
+export function usePopularJobs() {
   const [jobs, setJobs] = useState<JobListDTO['result']['jobPostList']>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -19,34 +19,29 @@ export function usePopularJobs(token?: string) {
     isLast: true,
   });
 
-  const fetchPopular = useCallback(
-    async (page: number = 1) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axiosInstance.get<JobListDTO>(
-          `/api/job/companies/me/posts/popularity`,
-          {
-            params: { page },
-          }
-        );
-        const r = res.data.result;
-        setJobs(r.jobPostList ?? []);
-        setMeta({
-          listSize: r.listSize,
-          totalPage: r.totalPage,
-          totalElements: r.totalElements,
-          isFirst: r.isFirst,
-          isLast: r.isLast,
-        });
-      } catch (e) {
-        setError(e as Error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [token]
-  );
+  const fetchPopular = useCallback(async (page: number = 1) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axiosInstance.get<JobListDTO>(
+        '/api/job/companies/me/posts/popularity',
+        { params: { page } }
+      );
+      const r = res.data.result;
+      setJobs(r.jobPostList ?? []);
+      setMeta({
+        listSize: r.listSize,
+        totalPage: r.totalPage,
+        totalElements: r.totalElements,
+        isFirst: r.isFirst,
+        isLast: r.isLast,
+      });
+    } catch (e) {
+      setError(e as Error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return { jobs, meta, fetchPopular, loading, error };
 }
