@@ -6,7 +6,7 @@ import LoginMainPage from '../pages/Personal/LoginMain';
 import SignIn from '../pages/Personal/SignIn';
 import SeniorSignIn from '../pages/Personal/components/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/components/user/signIn/Care/CareSignIn';
-import JobApplyPage from '../pages/Personal/JobApplyPage';
+//import JobApplyPage from '../pages/Personal/JobApplyPage';
 import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
