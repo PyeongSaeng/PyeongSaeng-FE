@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
+import clsx from 'clsx';
+import { useLocation } from 'react-router-dom';
 import MainMenu from './MainMenu';
 import SeniorMyMenu from './SeniorMyMenu';
 import CareMyMenu from './CareMyMenu';
@@ -19,6 +21,9 @@ type MenuState = { menu: MenuType; seniorData?: LinkedSenior };
 const PersonalMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [menuStack, setMenuStack] = useState<MenuState[]>([{ menu: 'main' }]);
+
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const goToMyMenu = (menu: MenuType, seniorData?: LinkedSenior) => {
     setMenuStack((prev) => [...prev, { menu, seniorData }]);
@@ -46,7 +51,12 @@ const PersonalMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[703px] bg-white">
+        <div
+          className={clsx(
+            currentPath !== '/' ? 'h-[700px]' : 'h-[703px]',
+            'absolute top-[-25px] left-[-9px] z-40 w-[330px] bg-white'
+          )}
+        >
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             {currentMenu.menu !== 'main' ? (
               <IoChevronBackOutline size={27} onClick={goBack} />
@@ -75,3 +85,5 @@ const PersonalMenu = () => {
 };
 
 export default PersonalMenu;
+
+// "absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[701px] bg-white"
