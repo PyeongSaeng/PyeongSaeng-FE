@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronForward } from 'react-icons/io5';
 import MenuNavButton from '../MenuNavButton';
+import { getCompanyData } from '../../../../../pages/Company/apis/companyMy';
 
 interface AfterLoginMainMenuProps {
   goNext: () => void;
@@ -8,6 +10,16 @@ interface AfterLoginMainMenuProps {
 
 const AfterLoginMainMenu = ({ goNext }: AfterLoginMainMenuProps) => {
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
+  const [companyName, setCompanyName] = useState<string>('');
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    getCompanyData('/api/companies/profile')
+      .then((data) => setCompanyName(data.result.username))
+      .catch((err) => console.error('기업 정보 조회 에러: ', err));
+  }, [accessToken]);
 
   return (
     <div className="px-[8px]">
@@ -17,7 +29,7 @@ const AfterLoginMainMenu = ({ goNext }: AfterLoginMainMenuProps) => {
           navigate('/company/login');
         }}
       >
-        계정
+        <span className="font-bold">{companyName}</span> 계정
         <IoChevronForward className="size-[30px]" />
       </button>
       <div className="flex flex-col items-start gap-[23px] text-[16px]">
