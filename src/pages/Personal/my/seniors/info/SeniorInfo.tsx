@@ -61,22 +61,22 @@ const SeniorInfo = () => {
     if (prevPath === 'basic') {
       try {
         if (!editedInfo?.phone) {
-          alert('연락처를 입력해주세요.');
+          toast.warning('연락처를 입력해주세요.');
           phoneRef.current?.focus();
           return;
         }
         if (!editedInfo?.detailAddress) {
-          alert('상세주소를 입력해주세요.');
+          toast.warning('상세주소를 입력해주세요.');
           detailAddressRef.current?.focus();
           return;
         }
         if (!editedInfo?.job) {
-          alert('직무를 선택해주세요.');
+          toast.warning('직무를 선택해주세요.');
           jobRef.current?.focus();
           return;
         }
         if (!editedInfo?.experiencePeriod) {
-          alert('기간을 선택해주세요.');
+          toast.warning('기간을 선택해주세요.');
           experiencePeriodRef.current?.focus();
           return;
         }
