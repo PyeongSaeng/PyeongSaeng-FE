@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
 import Topbar from '../../shared/components/topbar/Topbar';
 import FormTitleSection from '../../shared/components/FormTitleSection';
 import JobInfoSection from '../../shared/components/JobInfoSection';
@@ -10,7 +9,6 @@ import QuestionWriteFormSection from '../../shared/components/QuestionWriteFormS
 import EvidenceSection from '../../shared/components/EvidenceSection';
 import NextButton from '../../shared/components/NextButton';
 import TwoButtonGroup from '../../shared/components/TwoButtonGroup';
-
 import {
   postGenerateAnswer,
   postGenerateUpdatedAnswer,
@@ -26,7 +24,6 @@ import { getQuestionsDirect, pickExtraFields } from './apis/questions';
 import { getQuestionsDelegate } from './apis/questionsDelegate';
 import { getMySenior, getConnectedSeniors, pickSenior } from './apis/guardian';
 import { apiGetJobDetail } from './apis/jobapi';
-
 import type { FieldAndAnswer } from './types/applications';
 import type { Info } from './types/userInfo';
 
