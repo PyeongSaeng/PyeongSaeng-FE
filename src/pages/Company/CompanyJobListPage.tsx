@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import CompanyCreateJobPage from './CompanyCreateJobPage';
 import CompanyCreateFormPage from './CompanyCreateFormPage';
+import ReadyModal from './components/Modal/readyModal';
 import {
   EMPTY_JOB_DRAFT,
   BASE_FORM_FIELDS,
@@ -36,6 +37,9 @@ export default function CompanyJobListPage() {
 
   // --- 페이지 흐름 상태 ---
   const [step, setStep] = useState<Step>(0);
+  // --- 모달 상태 추가 ---
+  const [isReadyModalOpen, setIsReadyModalOpen] = useState(false);
+
   const [draft, setDraft] = useState<JobDraft>(() => {
     // 새로고침 복구(선택): 있으면 사용, 없으면 기본
     const saved = localStorage.getItem('jobDraft');
@@ -103,6 +107,11 @@ export default function CompanyJobListPage() {
         fetchJobs();
       },
     });
+  };
+
+  // --- 수정 버튼 클릭 핸들러 추가 ---
+  const handleEdit = () => {
+    setIsReadyModalOpen(true);
   };
 
   // --- 최종 제출 ---
@@ -249,7 +258,11 @@ export default function CompanyJobListPage() {
                           : '삭제'}
                       </button>
 
-                      <button className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-[#0D29B7] text-[16px] font-medium text-white">
+                      {/* 수정 버튼 */}
+                      <button
+                        onClick={handleEdit}
+                        className="w-[144px] h-[45px] border-[1.3px] border-[#0D29B7] rounded-[8px] bg-[#0D29B7] text-[16px] font-medium text-white"
+                      >
                         수정
                       </button>
                     </div>
@@ -285,6 +298,12 @@ export default function CompanyJobListPage() {
           )}
         </div>
       </Topbar>
+
+      {/* ReadyModal 추가 */}
+      <ReadyModal
+        isOpen={isReadyModalOpen}
+        onClose={() => setIsReadyModalOpen(false)}
+      />
     </div>
   );
 }
