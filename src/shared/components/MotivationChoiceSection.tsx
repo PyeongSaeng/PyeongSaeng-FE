@@ -6,9 +6,8 @@ interface MotivationChoiceSectionProps {
   question: string;
   selected: string;
   onSelect: (value: string) => void;
-  // AI 키워드 생성을 위한 기본 QA 옵션들
+  onAISelect?: (selectedKeyword: string) => void;
   baseQAOptions?: QAOption[];
-  // 초기 로딩 상태를 부모에서 전달
   isLoadingData?: boolean;
 }
 
@@ -16,25 +15,27 @@ export default function MotivationChoiceSection({
   question,
   selected,
   onSelect,
+  onAISelect,
   baseQAOptions = [],
   isLoadingData = false,
 }: MotivationChoiceSectionProps) {
   const [customInput, setCustomInput] = useState('');
   const [aiChoices, setAiChoices] = useState<string[]>([]);
   const [isLoadingChoices, setIsLoadingChoices] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // baseQAOptions의 이전 값을 추적하기 위한 ref
-  const prevBaseQAOptionsRef = useRef<QAOption[]>([]);
+  // 중복 호출 방지를 위한 ref
+  const hasGeneratedRef = useRef(false);
+  const lastGeneratedOptionsRef = useRef<string>('');
 
   // AI 키워드 생성 뮤테이션
-  const { mutate } = useMutation({
-    mutationFn: (qaOptions: QAOption[]) =>
-      postGenerateKeywords({ answers: qaOptions, question }),
+  const generateKeywordsMutation = useMutation({
+    mutationFn: async (qaOptions: QAOption[]) => {
+      return await postGenerateKeywords({ answers: qaOptions, question });
+    },
     onSuccess: (keywords) => {
       setAiChoices([...keywords, '직접 입력해주세요']);
       setIsLoadingChoices(false);
-      setHasInitialized(true);
+      hasGeneratedRef.current = true;
     },
     onError: () => {
       setAiChoices([
@@ -44,54 +45,43 @@ export default function MotivationChoiceSection({
         '직접 입력해주세요',
       ]);
       setIsLoadingChoices(false);
-      setHasInitialized(true);
+      hasGeneratedRef.current = true;
     },
   });
 
-  // baseQAOptions가 실제로 변경되었는지 확인하는 함수
-  const hasBaseQAOptionsChanged = useCallback((newOptions: QAOption[]) => {
-    const prevOptions = prevBaseQAOptionsRef.current;
-
-    if (newOptions.length !== prevOptions.length) return true;
-
-    return newOptions.some((option, index) => {
-      const prevOption = prevOptions[index];
-      return (
-        !prevOption ||
-        option.question !== prevOption.question ||
-        option.option !== prevOption.option
-      );
-    });
-  }, []);
-
+  // 중복 호출 방지 로직
   useEffect(() => {
     if (isLoadingData) return;
-    if (hasInitialized && !hasBaseQAOptionsChanged(baseQAOptions)) return;
 
-    // baseQAOptions 업데이트
-    prevBaseQAOptionsRef.current = baseQAOptions;
+    const currentOptionsString = JSON.stringify(baseQAOptions);
+
+    if (
+      lastGeneratedOptionsRef.current === currentOptionsString &&
+      hasGeneratedRef.current
+    ) {
+      return;
+    }
+
+    lastGeneratedOptionsRef.current = currentOptionsString;
+    hasGeneratedRef.current = false;
 
     if (baseQAOptions.length > 0) {
       setIsLoadingChoices(true);
-      setHasInitialized(false); // 새로운 데이터로 다시 초기화
-      mutate(baseQAOptions);
+      const timer = setTimeout(() => {
+        generateKeywordsMutation.mutate(baseQAOptions);
+      }, 100);
+
+      return () => clearTimeout(timer);
     } else {
-      // baseQAOptions가 없으면 기본 선택지 사용
       setAiChoices([
         '경제적으로 도움을 얻으려고',
         '사람들과 만나려고',
         '사회에 도움이 되려고',
         '직접 입력해주세요',
       ]);
-      setHasInitialized(true);
+      hasGeneratedRef.current = true;
     }
-  }, [
-    baseQAOptions,
-    mutate,
-    isLoadingData,
-    hasInitialized,
-    hasBaseQAOptionsChanged,
-  ]);
+  }, [baseQAOptions, question, isLoadingData]);
 
   const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -102,14 +92,32 @@ export default function MotivationChoiceSection({
   // 선택지 재생성 함수
   const regenerateChoices = useCallback(() => {
     if (baseQAOptions.length > 0) {
+      hasGeneratedRef.current = false;
       setIsLoadingChoices(true);
-      setHasInitialized(false);
-      mutate(baseQAOptions);
+      generateKeywordsMutation.mutate(baseQAOptions);
     }
-  }, [baseQAOptions, mutate]);
+  }, [baseQAOptions, generateKeywordsMutation]);
 
-  // 전체 로딩 상태 (데이터 로딩 + AI 생성 로딩)
+  // AI 자동 작성 버튼 클릭 시
+  const handleAIWriteClick = () => {
+    if (onAISelect && selected && selected !== '직접 입력해주세요') {
+      onAISelect(selected);
+    } else {
+      alert('먼저 지원동기를 선택해주세요.');
+    }
+  };
+
+  // 로딩 메시지
+  const getLoadingMessage = () => {
+    if (isLoadingData) {
+      return '사용자 정보를 불러오는 중...';
+    }
+    return 'AI가 맞춤 선택지를 생성하고 있습니다...';
+  };
+
+  // 전체 로딩 상태
   const isLoading = isLoadingData || isLoadingChoices;
+  const showContent = !isLoading && aiChoices.length > 0;
 
   return (
     <div className="w-full">
@@ -117,19 +125,15 @@ export default function MotivationChoiceSection({
         {question}
       </p>
 
-      {/* 전체 로딩 중 표시 */}
+      {/* 로딩 표시  */}
       {isLoading && (
         <div className="text-center mb-4">
-          <p className="text-[14px] text-[#747474]">
-            {isLoadingData
-              ? '사용자 정보를 불러오는 중...'
-              : 'AI가 맞춤 선택지를 생성하고 있습니다...'}
-          </p>
+          <p className="text-[14px] text-[#747474]">{getLoadingMessage()}</p>
         </div>
       )}
 
       {/* 재생성 버튼 */}
-      {!isLoading && baseQAOptions.length > 0 && hasInitialized && (
+      {!isLoading && baseQAOptions.length > 0 && hasGeneratedRef.current && (
         <div className="text-center mb-4">
           <button
             onClick={regenerateChoices}
@@ -140,53 +144,65 @@ export default function MotivationChoiceSection({
         </div>
       )}
 
-      {/* 선택지들 - 로딩 중이 아닐 때만 표시 */}
-      {!isLoading && (
-        <div className="flex flex-col gap-4 w-full">
-          {aiChoices.map((choice) => {
-            if (choice === '직접 입력해주세요') {
+      {/* 선택지들 */}
+      {showContent && (
+        <>
+          <div className="flex flex-col gap-4 w-full">
+            {aiChoices.map((choice) => {
+              if (choice === '직접 입력해주세요') {
+                return (
+                  <div
+                    key="custom-input"
+                    className={`w-full border rounded-[8px] px-4 py-4 flex items-center
+                      ${
+                        selected === customInput && customInput.length > 0
+                          ? 'border-[#08D485] bg-[#ECF6F2]'
+                          : 'border-[#08D485]'
+                      }
+                    `}
+                  >
+                    <input
+                      type="text"
+                      placeholder="직접 입력해주세요"
+                      value={customInput}
+                      onChange={handleCustomChange}
+                      className="w-full text-[16px] text-[#333] focus:outline-none bg-transparent"
+                    />
+                  </div>
+                );
+              }
+
               return (
-                <div
-                  key="custom-input"
-                  className={`w-full border rounded-[8px] px-4 py-4 flex items-center
+                <button
+                  key={choice}
+                  onClick={() => {
+                    onSelect(choice);
+                    setCustomInput('');
+                  }}
+                  className={`text-[16px] font-medium w-full text-left rounded-[8px] px-4 py-4 border transition hover:bg-[#ECF6F2]
                     ${
-                      selected === customInput && customInput.length > 0
-                        ? 'border-[#08D485] bg-[#ECF6F2]'
-                        : 'border-[#08D485]'
+                      selected === choice
+                        ? 'border-[#08D485] bg-[#ECF6F2] text-[#08D485]'
+                        : 'border-[#08D485] text-[#747474]'
                     }
                   `}
                 >
-                  <input
-                    type="text"
-                    placeholder="직접 입력해주세요"
-                    value={customInput}
-                    onChange={handleCustomChange}
-                    className="w-full text-[16px] text-[#333] focus:outline-none bg-transparent"
-                  />
-                </div>
+                  {choice}
+                </button>
               );
-            }
+            })}
+          </div>
 
-            return (
-              <button
-                key={choice}
-                onClick={() => {
-                  onSelect(choice);
-                  setCustomInput('');
-                }}
-                className={`text-[16px] font-medium w-full text-left rounded-[8px] px-4 py-4 border transition hover:bg-[#ECF6F2]
-                  ${
-                    selected === choice
-                      ? 'border-[#08D485] bg-[#ECF6F2] text-[#08D485]'
-                      : 'border-[#08D485] text-[#747474]'
-                  }
-                `}
-              >
-                {choice}
-              </button>
-            );
-          })}
-        </div>
+          {/* AI 자동 작성 버튼 */}
+          {selected && selected !== '직접 입력해주세요' && (
+            <button
+              onClick={handleAIWriteClick}
+              className="w-full h-[45px] mt-[16px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000]"
+            >
+              AI 자동 작성
+            </button>
+          )}
+        </>
       )}
     </div>
   );

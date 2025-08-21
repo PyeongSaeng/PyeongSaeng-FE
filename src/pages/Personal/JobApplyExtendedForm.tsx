@@ -7,8 +7,9 @@ import { useSubmitApplication } from './hooks/useSubmitApplication';
 import { QAOption } from './apis/ai';
 import { useSeniorInfo } from './hooks/useSeniorInfo'; // 공통 훅 사용
 import { JobTypeLabel, ExperiencePeriodLabel } from './types/userInfo';
+import MotivationAIWritePage from './components/MotivationAIWritePage';
 
-type Step = 'motivation' | 'text' | 'image' | 'done';
+type Step = 'motivation' | 'ai-write' | 'text' | 'image' | 'done';
 
 type Props = {
   formFields: FormField[];
@@ -32,6 +33,9 @@ const JobApplyExtendedForm = ({
 
   // 지원동기 관련 상태
   const [selectedMotivation, setSelectedMotivation] = useState<string>('');
+
+  // AI 작성 관련 상태 추가
+  const [selectedKeywordForAI, setSelectedKeywordForAI] = useState<string>('');
 
   // 공통 훅으로 시니어 정보 조회
   const {
@@ -197,7 +201,53 @@ const JobApplyExtendedForm = ({
     });
   };
 
-  // 지원동기 선택 화면에서 공통 훅의 로딩 상태 사용
+  // 지원동기에서 AI 작성 선택 시 호출
+  const handleAIWriteSelection = (selectedKeyword: string) => {
+    setSelectedKeywordForAI(selectedKeyword);
+    setStep('ai-write');
+  };
+
+  // AI 작성 완료 시 호출
+  const handleAIWriteComplete = (finalAnswer: string) => {
+    setSelectedMotivation(finalAnswer);
+
+    // AI 작성 완료 후 answers에도 저장
+    if (currentField) {
+      setAnswers((prev) => ({
+        ...prev,
+        [currentField.id]: finalAnswer,
+      }));
+    }
+
+    // AI 작성 완료 후 다음 단계로 이동
+    if (currentStepIndex < additionalFields.length - 1) {
+      const nextIndex = currentStepIndex + 1;
+      setCurrentStepIndex(nextIndex);
+      setStep(typeToStep(additionalFields[nextIndex].fieldType));
+    } else {
+      setStep('done');
+    }
+  };
+
+  // AI 작성 취소 시 호출
+  const handleAIWriteCancel = () => {
+    setStep('motivation'); // 취소 시에만 지원동기 화면으로
+  };
+
+  // AI 작성 화면
+  if (step === 'ai-write') {
+    return (
+      <MotivationAIWritePage
+        selectedKeyword={selectedKeywordForAI}
+        question={currentField?.fieldName || 'Q1. 지원 동기가 무엇인가요?'}
+        onComplete={handleAIWriteComplete}
+        onCancel={handleAIWriteCancel}
+        baseQAOptions={baseQAOptions}
+      />
+    );
+  }
+
+  // 지원동기 선택 화면 (기존)
   if (step === 'motivation') {
     return (
       <Topbar>
@@ -218,6 +268,7 @@ const JobApplyExtendedForm = ({
               }
               selected={selectedMotivation}
               onSelect={setSelectedMotivation}
+              onAISelect={handleAIWriteSelection} // AI 선택 핸들러 추가
               baseQAOptions={baseQAOptions}
               isLoadingData={isLoadingSeniorData}
             />
@@ -376,7 +427,7 @@ const JobApplyExtendedForm = ({
               <div className="w-full border-[1.3px] border-[#08D485] rounded-[8px] bg-white text-[#000000] mt-[21px] p-4">
                 {field.fieldType === 'TEXT' ? (
                   <p className="text-[14px] whitespace-pre-wrap">
-                    {answers[field.id] ?? (
+                    {answers[field.id] || (
                       <span className="text-gray-400">미작성</span>
                     )}
                   </p>
@@ -418,7 +469,6 @@ const JobApplyExtendedForm = ({
               <button
                 onClick={() => {
                   // 임시 저장 로직 (필요시 구현)
-                  console.log('임시 저장:', answers);
                 }}
                 className="w-1/2 h-[45px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] text-[#000000]"
               >

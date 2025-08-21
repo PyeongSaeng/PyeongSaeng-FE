@@ -45,7 +45,7 @@ export default function QuestionWriteFormSection({
         placeholder={placeholder}
         readOnly={readOnly}
         className={clsx(
-          'w-full max-w-[320px] resize-none rounded-[8px] border border-[#08D485] p-4 text-[14px] font-medium placeholder:text-[#A3A3A3]',
+          'w-full max-w-[320px] h-[18.6rem] resize-none rounded-[8px] border border-[#08D485] p-4 text-[14px] font-medium placeholder:text-[#A3A3A3]',
           heightClass,
           mbClass,
           readOnly ? 'bg-gray-100 text-[#555]' : 'text-[#222]'
