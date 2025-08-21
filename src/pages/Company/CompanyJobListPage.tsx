@@ -238,12 +238,11 @@ export default function CompanyJobListPage() {
                         onClick={() => handleDelete(job.id)}
                         disabled={deleting && deletingId === job.id}
                         className={`w-[144px] h-[45px] border-[1.3px] rounded-[8px] text-[16px] font-medium
-                                                ${
-                                                  deleting &&
-                                                  deletingId === job.id
-                                                    ? 'border-[#cccccc] bg-[#f5f5f5] text-[#9e9e9e] cursor-not-allowed'
-                                                    : 'border-[#0D29B7] bg-white text-black hover:bg-[#DBDFF4]'
-                                                }`}
+                          ${
+                            deleting && deletingId === job.id
+                              ? 'border-[#cccccc] bg-[#f5f5f5] text-[#9e9e9e] cursor-not-allowed'
+                              : 'border-[#0D29B7] bg-white text-black hover:bg-[#DBDFF4]'
+                          }`}
                       >
                         {deleting && deletingId === job.id
                           ? '삭제 중…'
