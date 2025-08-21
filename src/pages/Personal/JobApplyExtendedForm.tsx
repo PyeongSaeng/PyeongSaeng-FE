@@ -181,7 +181,7 @@ const JobApplyExtendedForm = ({
           </div>
 
           <textarea
-            className="mt-[16px] border p-2 w-full h-[120px]"
+            className="mt-[16px] w-full h-[200px] p-6 border-[1.3px] border-[#08D485] rounded-[13px] resize-none text-[14px] text-[#333] placeholder:text-[#A3A3A3] focus:outline-none focus:border-[#08D485] bg-white"
             value={currentField ? answers[currentField.id] || '' : ''}
             onChange={(e) => {
               if (currentField) {
@@ -191,7 +191,7 @@ const JobApplyExtendedForm = ({
                 }));
               }
             }}
-            placeholder="내용을 입력하세요"
+            placeholder="여기에 작성해 주세요..."
           />
 
           <div className="flex justify-between gap-[13px] mt-[32px]">
