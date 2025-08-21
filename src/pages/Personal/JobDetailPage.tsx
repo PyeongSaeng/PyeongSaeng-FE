@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
 import { useSaveToggle } from './hooks/useSaveToggle';
 import { useShow } from './hooks/useShow';
 import { useApplication } from './hooks/useApplication';
+
 
 const JobDetailPage = () => {
   const { jobId } = useParams();
@@ -17,7 +19,7 @@ const JobDetailPage = () => {
   const isSaved = savedJobs?.some(
     (bookmark) => bookmark.jobPostDetailDTO.images[0]?.jobPostId === jobPostId
   );
-
+  const queryClient = useQueryClient();
   const handleSave = () => {
     if (!isSaved) {
       saveJob();
@@ -30,6 +32,7 @@ const JobDetailPage = () => {
   const handleApply = () => {
     ensureApplication(jobPostId, {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['applications', 'mine'] });
         navigate('/personal/jobs/drafts');
       },
       onError: () => {
