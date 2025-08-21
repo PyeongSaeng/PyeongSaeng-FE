@@ -92,6 +92,7 @@ export type LinkedSenior = {
   seniorId: number;
   seniorName: string;
   gender: 'MALE' | 'FEMALE';
+  age: number;
   seniorPhone: string;
   roadAddress: string;
   detailAddress: string;

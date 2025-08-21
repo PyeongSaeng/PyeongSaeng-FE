@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { MdOutlineFileDownload } from 'react-icons/md';
-import { toast } from 'react-toastify';
+import ImageField from '../../../../../shared/components/field/ImageField';
+import TextField from '../../../../../shared/components/field/TextField';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
 import { getSeniorData } from '../../../apis/my/seniorMy';
 import Loading from '../../../../../shared/components/Loading';
@@ -11,7 +11,12 @@ import {
   questionAndAnswer,
   LinkedSenior,
 } from '../../../types/userInfo';
-import axiosInstance from '../../../../../shared/apis/axiosInstance';
+import { formatPhone } from '../../../../../shared/utils/userInfoUtils';
+
+const Gender = {
+  FEMALE: '여성',
+  MALE: '남성',
+} as const;
 
 const CareCheckApplicationDetail = () => {
   const { seniorId, applicationId } = useParams();
@@ -29,10 +34,10 @@ const CareCheckApplicationDetail = () => {
       value:
         applicationData?.roadAddress + ' ' + applicationData?.detailAddress,
     },
-    { label: '시급', value: applicationData?.hourlyWage },
+    { label: '시급', value: applicationData?.hourlyWage, unit: '원' },
     { label: '근무시간', value: applicationData?.workingTime },
-    { label: '월급', value: applicationData?.monthlySalary },
-    { label: '연봉', value: applicationData?.yearSalary },
+    { label: '월급', value: applicationData?.monthlySalary, unit: '원' },
+    { label: '연봉', value: applicationData?.yearSalary, unit: '원' },
   ];
 
   // 시니어 데이터 조회
@@ -63,10 +68,6 @@ const CareCheckApplicationDetail = () => {
       .catch((err) => console.error('지원서 상세 조회 에러: ', err))
       .finally(() => setLoading(false));
   }, [seniorId, applicationId]);
-
-  // useEffect(() => {
-  //   console.log(applicationData);
-  // }, [applicationData]);
 
   return (
     <div className="flex flex-col">
@@ -113,19 +114,26 @@ const CareCheckApplicationDetail = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>성별</span>
-                  <span>{seniorData?.gender}</span>
+                  <span>
+                    {seniorData?.gender ? Gender[seniorData.gender] : ''}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>나이</span>
-                  <span>{'75'}세</span>
+                  <span>{seniorData?.age}세</span>
                 </div>
                 <div className="flex justify-between">
                   <span>전화번호</span>
-                  <span>{seniorData?.seniorPhone}</span>
+                  <span>
+                    {seniorData?.seniorPhone &&
+                      formatPhone(seniorData?.seniorPhone)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>거주지</span>
-                  <span>{seniorData?.roadAddress}</span>
+                  <span>
+                    {seniorData?.roadAddress + ' ' + seniorData?.detailAddress}
+                  </span>
                 </div>
               </div>
             </div>
@@ -160,56 +168,3 @@ const CareCheckApplicationDetail = () => {
 };
 
 export default CareCheckApplicationDetail;
-
-interface ImageFieldProps {
-  fieldName: string;
-  answerContent: ImageObject;
-}
-
-interface TextFieldProps {
-  fieldName: string;
-  answerContent: string;
-}
-
-const ImageField = ({ fieldName, answerContent }: ImageFieldProps) => {
-  const handleViewFile = async (keyName: string) => {
-    try {
-      const res = await axiosInstance.get(
-        `/api/s3/presigned/download/${keyName}`
-      );
-      window.open(res.data.result.url, '_blank');
-    } catch (err) {
-      console.error('첨부파일 다운로드 실패', err);
-      toast.error('파일을 불러올 수 없습니다.');
-    }
-  };
-
-  return (
-    <div className="flex flex-col text-[14px] font-[Pretendard JP] font-[400]">
-      <div className="flex items-center gap-[4px] mb-[4px]">
-        <span className="text-[#747474]">{fieldName}</span>
-        <span className="text-[#FF0004]">(필수)</span>
-      </div>
-      <div className="flex justify-center gap-[11px]">
-        <div className="flex jusitfy-between items-center w-[297px] h-[45px] p-[12px] rounded-[8px] border-[1.3px] border-[#08D485]">
-          <span className="truncate">{answerContent.originalFileName}</span>
-          <MdOutlineFileDownload
-            size={32}
-            onClick={() => handleViewFile(answerContent.keyName)}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const TextField = ({ fieldName, answerContent }: TextFieldProps) => {
-  return (
-    <div className="flex flex-col justify-around w-[297px] h-[134px] rounded-[13px] px-[16px] py-[10px] border-[1.3px] border-[#08D485]">
-      <span className="text-[16px] font-[600] pb-[12px]">{fieldName}</span>
-      <div className="flex justify-between">
-        <span>{answerContent}</span>
-      </div>
-    </div>
-  );
-};

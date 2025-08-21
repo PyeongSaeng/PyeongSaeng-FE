@@ -1,21 +1,39 @@
 import { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Topbar from '../../../../shared/components/topbar/Topbar';
 import { getSeniorData } from '../../apis/my/seniorMy';
-import { ApplicationDetail, ImageObject } from '../../types/userInfo';
+import { ApplicationDetail, ImageObject, Info } from '../../types/userInfo';
 import { formatPhone } from '../../../../shared/utils/userInfoUtils';
 import axiosInstance from '../../../../shared/apis/axiosInstance';
+import ImageField from '../../../../shared/components/field/ImageField';
+import TextField from '../../../../shared/components/field/TextField';
+import { questionAndAnswer } from '../../types/userInfo';
 
 const SeniorApplyDetail = () => {
-  const location = useLocation();
-  const { seniorData } = location.state || {};
+  const [seniorData, setSeniorData] = useState<Info | null>(null);
   const { applicationId } = useParams();
   const [applicationDetail, setApplicationDetail] =
     useState<ApplicationDetail | null>();
+  const [answerData, setAnswerData] = useState<questionAndAnswer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
+  // 시니어 데이터 조회
+  useEffect(() => {
+    setLoading(true);
+    getSeniorData('/api/user/senior/me')
+      .then((data) => setSeniorData(data.result))
+      .catch((err) => console.error('시니어 데이터 조회 에러: ', err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // 시니어 지원서 상세조회
   useEffect(() => {
     getSeniorData(`/api/applications/me/details/${applicationId}`)
-      .then((data) => setApplicationDetail(data.result as ApplicationDetail))
+      .then((data) => {
+        const res = data.result;
+        setApplicationDetail(res as ApplicationDetail);
+        setAnswerData(res.questionAndAnswerList);
+      })
       .catch((err) => console.error('지원정보 조회 에러', err));
   }, [applicationId]);
 
@@ -23,6 +41,38 @@ const SeniorApplyDetail = () => {
     console.log(applicationDetail);
   }, [applicationDetail]);
 
+  const viewData = [
+    {
+      label: '거리',
+      value: applicationDetail?.travelTime,
+    },
+    {
+      label: '주소',
+      value:
+        applicationDetail?.roadAddress + ' ' + applicationDetail?.detailAddress,
+    },
+    {
+      label: '시급',
+      value: applicationDetail?.hourlyWage,
+      unit: '원',
+    },
+    {
+      label: '근무시간',
+      value: applicationDetail?.workingTime,
+    },
+    {
+      label: '월급',
+      value: applicationDetail?.monthlySalary,
+      unit: '원',
+    },
+    {
+      label: '연봉',
+      value: applicationDetail?.yearSalary,
+      unit: '원',
+    },
+  ];
+
+  // 첨부 파일 조회
   const handleFileView = async (keyName: string) => {
     try {
       const res = await axiosInstance.get('/api/s3/presigned/download', {
@@ -60,118 +110,75 @@ const SeniorApplyDetail = () => {
               {applicationDetail?.title}
             </span>
             <div className="leading-[1.8]">
-              <div className="flex justify-between">
-                <span>거리</span>
-                <span>{applicationDetail?.travelTime}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>시급</span>
-                <span>{applicationDetail?.hourlyWage}원</span>
-              </div>
-              <div className="flex justify-between">
-                <span>근무시간</span>
-                <span>{applicationDetail?.workingTime}</span>
-              </div>
-              {applicationDetail?.yearSalary && (
-                <div className="flex justify-between">
-                  <span>연봉</span>
-                  <span>{applicationDetail?.yearSalary}만원</span>
-                </div>
-              )}
-              {applicationDetail?.monthlySalary && (
-                <div className="flex justify-between">
-                  <span>월급</span>
-                  <span>{applicationDetail?.monthlySalary}만원</span>
-                </div>
-              )}
+              {viewData.map((data, idx) => {
+                if (data.value) {
+                  return (
+                    <div key={idx} className="flex justify-between">
+                      <span>{data.label}</span>
+                      <div>
+                        <span>{data.value}</span>
+                        {data.unit && <span>{data.unit}</span>}
+                      </div>
+                    </div>
+                  );
+                }
+              })}
             </div>
           </div>
           <div className="flex flex-col justify-around w-[297px] h-auto px-[16px] py-[10px] rounded-[13px] border-[1.3px] border-[#08D485]">
-            <span className="text-[16px] textfont-[600] pb-[12px]">
+            <span className="text-[16px] font-[pretendard JP] font-[600] pb-[12px]">
               기본 정보
             </span>
             <div className="leading-[1.8]">
               <div className="flex gap-[5px]">
                 <div className="w-[80px]">성함</div>
-                <div className="w-[180px]">{seniorData?.userName}</div>
+                <div className="w-[180px]">{seniorData?.name}</div>
               </div>
+              {/* <div className="flex gap-[5px]">
+                <div className="w-[80px]">성별</div>
+                <div className="w-[180px]">{seniorData?.gender}</div>
+              </div> */}
               <div className="flex gap-[5px]">
                 <div className="w-[80px]">나이</div>
-                <div className="w-[180px]">{seniorData?.age}세</div>
+                <div className="w-[180px]">{seniorData?.age}</div>
               </div>
               <div className="flex gap-[5px]">
                 <div className="w-[80px]">전화번호</div>
                 <div className="w-[180px]">
-                  {formatPhone(seniorData?.phone)}
-                </div>
-              </div>
-              <div className="flex gap-[5px]">
-                <div className="w-[80px]">주민등록번호</div>
-                <div className="w-[180px]">
-                  {applicationDetail?.zipcode + '-*******'}
+                  {seniorData?.phone && formatPhone(seniorData?.phone)}
                 </div>
               </div>
               <div className="flex gap-[5px]">
                 <div className="w-[80px]">거주지</div>
                 <div className="w-[180px]">
-                  {seniorData?.roadAddress} {seniorData?.detailAddress}
+                  {seniorData?.roadAddress + ' ' + seniorData?.detailAddress}
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-col justify-around w-[297px] h-auto rounded-[13px] px-[16px] py-[10px] border-[1.3px] border-[#08D485]">
-            <span className="text-[16px] font-[600] pb-[12px]">지원 내용</span>
-            <div className="flex justify-between">
-              <span>
-                {applicationDetail?.questionAndAnswerList?.map((answer) => {
-                  if (answer.fieldType === 'IMAGE') return null;
+          {answerData?.length > 0 ? (
+            <>
+              {answerData?.map((answer, idx) => {
+                if (answer.fieldType === 'IMAGE') {
                   return (
-                    <div className="leading-[1.8]" key={answer.fieldName}>
-                      <div className="flex gap-[5px]">
-                        <div className="w-[80px]">{answer.fieldName}</div>
-                        <div className="w-[180px]">
-                          {answer.answerContent as string}
-                        </div>
-                      </div>
-                    </div>
+                    <ImageField
+                      key={idx}
+                      fieldName={answer.fieldName}
+                      answerContent={answer.answerContent as ImageObject}
+                    />
                   );
-                })}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col text-[14px] font-[Pretendard JP] font-[400] w-[297px] h-auto">
-            <label className="flex justify-start items-center text-[#747474]">
-              첨부 파일
-            </label>
-
-            {applicationDetail?.questionAndAnswerList?.some(
-              (answer) => answer.fieldType === 'IMAGE'
-            ) ? (
-              <div className="flex flex-col gap-[8px] mt-[8px]">
-                {applicationDetail?.questionAndAnswerList
-                  .filter((answer) => answer.fieldType === 'IMAGE')
-                  .map((answer) => {
-                    const imageObj = answer.answerContent as ImageObject;
-                    return (
-                      <div
-                        key={answer.fieldName}
-                        className="flex justify-between items-center w-full h-[45px] p-[12px] rounded-[8px] border-[1.3px] border-[#08D485] cursor-pointer"
-                        onClick={() => handleFileView(imageObj.keyName)}
-                      >
-                        <span className="truncate">{answer.fieldName}</span>
-                        <span className="text-blue-500 underline truncate max-w-[150px]">
-                          {imageObj.originalFileName}
-                        </span>
-                      </div>
-                    );
-                  })}
-              </div>
-            ) : (
-              <span className="mt-[8px] text-center text-gray-500">
-                첨부된 파일 없음
-              </span>
-            )}
-          </div>
+                } else if (answer.fieldType === 'TEXT') {
+                  return (
+                    <TextField
+                      key={idx}
+                      fieldName={answer.fieldName}
+                      answerContent={answer.answerContent as string}
+                    />
+                  );
+                }
+              })}
+            </>
+          ) : undefined}
         </div>
       </Topbar>
     </div>
