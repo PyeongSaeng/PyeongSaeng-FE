@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom'; // useLocation 추가
 import { useJobDetail } from './hooks/useDetail';
 import { useFormFields } from './hooks/useFormField';
 import JobApplyExtendedForm from './JobApplyExtendedForm';
@@ -6,6 +6,7 @@ import JobApplyDefaultForm from './JobApplyDefaultForm';
 
 const JobApplyPageTest = () => {
   const { jobId } = useParams();
+  const location = useLocation();
   const id = Number(jobId);
 
   const {
@@ -33,6 +34,9 @@ const JobApplyPageTest = () => {
       formFields={formFieldList}
       roadAddress={roadAddress}
       jobPostId={id}
+      // location.state를 props로 전달
+      isDraft={location.state?.isDraft || false}
+      draftData={location.state?.draftData || null}
     />
   ) : (
     <JobApplyDefaultForm

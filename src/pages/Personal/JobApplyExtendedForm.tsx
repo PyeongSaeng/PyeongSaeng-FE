@@ -1,13 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import MotivationChoiceSection from '../../shared/components/MotivationChoiceSection';
 import { FormField } from './types/jobs';
-import { useSubmitApplication } from './hooks/useSubmitApplication';
 import { QAOption } from './apis/ai';
-import { useSeniorInfo } from './hooks/useSeniorInfo'; // 공통 훅 사용
+import { useSeniorInfo } from './hooks/useSeniorInfo';
 import { JobTypeLabel, ExperiencePeriodLabel } from './types/userInfo';
 import MotivationAIWritePage from './components/MotivationAIWritePage';
+import {
+  apiPostApplicationDirect,
+  apiPostApplicationDelegate,
+} from './apis/jobapplicationapi';
+import { PostApplicationDirectRequest } from './types/jobapplication';
 
 type Step = 'motivation' | 'ai-write' | 'text' | 'image' | 'done';
 
@@ -15,16 +20,21 @@ type Props = {
   formFields: FormField[];
   roadAddress: string;
   jobPostId: number;
+  isDraft?: boolean; // 임시저장 상태인지 여부
+  draftData?: any;
 };
 
 const JobApplyExtendedForm = ({
   formFields,
   roadAddress,
   jobPostId,
+  isDraft = false,
+  draftData,
 }: Props) => {
   const navigate = useNavigate();
-  const { mutate: submitApplication, isPending: isSubmitting } =
-    useSubmitApplication();
+  // useSubmitApplication 제거
+  // const { mutate: submitApplication, isPending: isSubmitting } =
+  //   useSubmitApplication();
 
   const additionalFields = useMemo(() => formFields.slice(4), [formFields]);
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -37,7 +47,7 @@ const JobApplyExtendedForm = ({
   // AI 작성 관련 상태 추가
   const [selectedKeywordForAI, setSelectedKeywordForAI] = useState<string>('');
 
-  // 공통 훅으로 시니어 정보 조회
+  // 보호자 모드 관련 상태 제거하고 간단하게 처리
   const {
     seniorInfo,
     seniorQuestions,
@@ -118,14 +128,39 @@ const JobApplyExtendedForm = ({
     additionalFields[0]?.fieldName?.includes('동기') ||
     additionalFields[0]?.fieldName?.includes('지원');
 
-  const initialStep: Step =
-    additionalFields.length === 0
+  // 초기 단계 설정 - 임시저장된 경우 done부터 시작
+  const initialStep: Step = isDraft
+    ? 'done' // 임시저장된 경우 done 단계부터 시작
+    : additionalFields.length === 0
       ? 'done'
       : isMotivationField
         ? 'motivation'
         : typeToStep(additionalFields[0].fieldType);
 
   const [step, setStep] = useState<Step>(initialStep);
+
+  // 임시저장된 데이터가 있으면 answers 상태에 로드
+  useEffect(() => {
+    if (isDraft && draftData) {
+      console.log('📋 임시저장 데이터 로드:', draftData);
+
+      // draftData에서 answers 정보를 추출하여 설정
+      const draftAnswers: Record<number, string> = {};
+      draftData.fieldAndAnswer?.forEach((item: any) => {
+        if (item.fieldType === 'IMAGE' && Array.isArray(item.answer)) {
+          // IMAGE 타입인 경우 첫 번째 파일명 사용
+          draftAnswers[item.formFieldId] =
+            item.answer[0]?.originalFileName || '';
+        } else {
+          // TEXT 타입인 경우 그대로 사용
+          draftAnswers[item.formFieldId] = item.answer || '';
+        }
+      });
+
+      console.log('📝 로드된 answers:', draftAnswers);
+      setAnswers(draftAnswers);
+    }
+  }, [isDraft, draftData]);
 
   const currentField = additionalFields[currentStepIndex];
   const isFirst = currentStepIndex === 0;
@@ -181,24 +216,47 @@ const JobApplyExtendedForm = ({
   };
 
   // 최종 제출
-  const handleSubmit = () => {
-    const payload = {
-      jobPostId,
-      applicationStatus: 'SUBMITTED' as const,
-      fieldAndAnswer: formFields.map((field) => ({
-        formFieldId: field.id,
-        fieldType: field.fieldType,
-        answer: answers[field.id] ?? field.answer ?? '',
-      })),
-    };
+  const handleSubmit = async () => {
+    try {
+      // fieldAndAnswer를 올바른 타입으로 구성
+      const fieldAndAnswer = formFields.map((field) => {
+        if (field.fieldType === 'IMAGE') {
+          // IMAGE 타입인 경우 ImageAnswer 타입으로
+          const imageAnswer = answers[field.id] || field.answer;
+          return {
+            formFieldId: field.id,
+            fieldType: 'IMAGE' as const,
+            answer: imageAnswer
+              ? [{ keyName: imageAnswer, originalFileName: imageAnswer }]
+              : [],
+          };
+        } else {
+          // TEXT 타입인 경우 TextAnswer 타입으로
+          return {
+            formFieldId: field.id,
+            fieldType: 'TEXT' as const,
+            answer: answers[field.id] ?? field.answer ?? '',
+          };
+        }
+      });
 
-    submitApplication(payload, {
-      onSuccess: () => {
-        setSubmitted(true);
-        setStep('done');
-      },
-      onError: () => alert('신청서 제출에 실패했습니다.'),
-    });
+      const payload: PostApplicationDirectRequest = {
+        jobPostId,
+        applicationStatus: 'SUBMITTED',
+        fieldAndAnswer: fieldAndAnswer,
+      };
+
+      console.log('최종 제출 데이터:', payload);
+
+      await apiPostApplicationDirect(payload);
+
+      setSubmitted(true);
+      setStep('done');
+      toast.success('신청서가 제출되었습니다.');
+    } catch (error) {
+      console.error('신청서 제출 실패:', error);
+      toast.error('신청서 제출에 실패했습니다.');
+    }
   };
 
   // 지원동기에서 AI 작성 선택 시 호출
@@ -232,6 +290,52 @@ const JobApplyExtendedForm = ({
   // AI 작성 취소 시 호출
   const handleAIWriteCancel = () => {
     setStep('motivation'); // 취소 시에만 지원동기 화면으로
+  };
+
+  // 임시저장 함수
+  const handleTemporarySave = async () => {
+    try {
+      const payload = {
+        jobPostId,
+        applicationStatus: 'DRAFT' as const,
+        fieldAndAnswer: formFields.map((field) => {
+          if (field.fieldType === 'IMAGE') {
+            // IMAGE 타입인 경우 배열 형태로 처리
+            const imageAnswer = answers[field.id] || field.answer;
+            return {
+              formFieldId: field.id,
+              fieldType: field.fieldType,
+              answer: imageAnswer
+                ? [
+                    {
+                      keyName: imageAnswer,
+                      originalFileName: imageAnswer,
+                    },
+                  ]
+                : [],
+            };
+          } else {
+            // TEXT 타입인 경우 문자열로 처리
+            return {
+              formFieldId: field.id,
+              fieldType: field.fieldType,
+              answer: answers[field.id] ?? field.answer ?? '',
+            };
+          }
+        }),
+      };
+
+      console.log('임시저장 요청 데이터:', payload);
+
+      // 일단 개인 모드로만 처리
+      await apiPostApplicationDirect(payload);
+
+      toast.success('임시저장 되었습니다.');
+      setStep('done'); // 임시저장 성공 후 done 단계로 이동
+    } catch (error) {
+      console.error('임시저장 실패:', error);
+      toast.error('임시저장에 실패했습니다.');
+    }
   };
 
   // AI 작성 화면
@@ -323,7 +427,7 @@ const JobApplyExtendedForm = ({
             </button>
             <button
               onClick={goNext}
-              className="w-1/2 h-[45px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000]"
+              className="w-1/2 h-[45px] text-[16px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000]"
             >
               {isLast ? '다음' : '다음'}
             </button>
@@ -378,7 +482,7 @@ const JobApplyExtendedForm = ({
             </button>
             <button
               onClick={goNext}
-              className="w-1/2 h-[45px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000]"
+              className="w-1/2 h-[45px] text-[16px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000]"
             >
               {isLast ? '다음' : '다음'}
             </button>
@@ -467,9 +571,7 @@ const JobApplyExtendedForm = ({
           ) : (
             <div className="flex justify-between gap-[13px] mt-[24px]">
               <button
-                onClick={() => {
-                  // 임시 저장 로직 (필요시 구현)
-                }}
+                onClick={handleTemporarySave}
                 className="w-1/2 h-[45px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] text-[#000000]"
               >
                 임시 저장
@@ -477,9 +579,9 @@ const JobApplyExtendedForm = ({
               <button
                 className="w-1/2 h-[45px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000]"
                 onClick={handleSubmit}
-                disabled={isSubmitting}
+                // disabled={isSubmitting} 제거
               >
-                {isSubmitting ? '제출 중...' : '제출'}
+                제출
               </button>
             </div>
           )}
