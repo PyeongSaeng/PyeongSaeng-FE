@@ -43,8 +43,8 @@ const CompanyMenu = () => {
       {isOpen && (
         <div
           className={clsx(
-            currentPath === '/company' ? 'h-[746px]' : 'h-[700px]',
-            'absolute top-[-25px] left-[-9px] z-40 w-[330px] bg-white'
+            currentPath !== '/company' ? 'h-[684px]' : 'h-[731px]',
+            'absolute top-[-10px] left-[-9px] z-40 w-[330px] bg-white'
           )}
         >
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
