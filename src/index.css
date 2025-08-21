@@ -65,3 +65,7 @@ button {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
+
+.Toastify__toast {
+  font-size: 1.6rem;
+}
