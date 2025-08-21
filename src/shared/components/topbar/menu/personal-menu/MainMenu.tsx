@@ -62,7 +62,7 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         }}
       >
         {accessToken ? (
-          name ? (
+          name || prevName ? (
             <span>
               <span className="font-bold">{name}</span>님 안녕하세요
             </span>
