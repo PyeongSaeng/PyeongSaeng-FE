@@ -25,17 +25,24 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
   const myMenu = role === 'SENIOR' ? 'seniorMy' : 'careMy';
 
   const [name, setName] = useState<string | null>(null);
+  const [prevName, setPrevName] = useState<string | null>(null);
 
   useEffect(() => {
     if (!accessToken) return;
 
     if (role === 'SENIOR') {
       getSeniorData('/api/user/senior/me')
-        .then((res) => setName(res.result.name))
+        .then((res) => {
+          setName(res.result.name);
+          setPrevName(res.result.name);
+        })
         .catch((err) => console.error('시니어 이름 가져오기 실패:', err));
     } else if (role === 'PROTECTOR') {
       getCareBasicInfo('/api/user/protector/me')
-        .then((res) => setName(res.result.name))
+        .then((res) => {
+          setName(res.result.name);
+          setPrevName(res.result.name);
+        })
         .catch((err) => console.error('보호자 이름 가져오기 실패:', err));
     }
   }, [accessToken, role]);
@@ -55,12 +62,12 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         }}
       >
         {accessToken ? (
-          name ? (
+          name || prevName ? (
             <span>
               <span className="font-bold">{name}</span>님 안녕하세요
             </span>
           ) : (
-            '불러오는 중...'
+            <span className="loader w-3 h-3 border-2 border-t-transparent rounded-full animate-spin"></span>
           )
         ) : (
           '로그인 하세요'
