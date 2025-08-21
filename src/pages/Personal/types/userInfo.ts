@@ -5,6 +5,7 @@ export type Info = {
   name: string;
   phone: string;
   age: number;
+  gender: 'MALE' | 'FEMALE';
   password: string;
   roadAddress: string;
   detailAddress: string;

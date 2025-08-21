@@ -12,6 +12,11 @@ import TextField from '../../../../shared/components/field/TextField';
 import { questionAndAnswer } from '../../types/userInfo';
 import Loading from '../../../../shared/components/Loading';
 
+const Gender = {
+  FEMALE: '여성',
+  MALE: '남성',
+} as const;
+
 const SeniorApplyDetail = () => {
   const [seniorData, setSeniorData] = useState<Info | null>(null);
   const { applicationId } = useParams();
@@ -125,10 +130,12 @@ const SeniorApplyDetail = () => {
                   <div className="w-[80px]">성함</div>
                   <div className="w-[180px]">{seniorData?.name}</div>
                 </div>
-                {/* <div className="flex gap-[5px]">
-                <div className="w-[80px]">성별</div>
-                <div className="w-[180px]">{seniorData?.gender}</div>
-              </div> */}
+                <div className="flex gap-[5px]">
+                  <div className="w-[80px]">성별</div>
+                  <div className="w-[180px]">
+                    {seniorData?.gender ? Gender[seniorData.gender] : ''}
+                  </div>
+                </div>
                 <div className="flex gap-[5px]">
                   <div className="w-[80px]">나이</div>
                   <div className="w-[180px]">{seniorData?.age}세</div>
