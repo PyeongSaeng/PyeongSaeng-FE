@@ -143,7 +143,7 @@ export type SearchJobResponse = {
 export type FormField = {
   id: number;
   fieldName: string;
-  fieldType: 'TEXT' | 'IMAGE' ;
+  fieldType: 'TEXT' | 'IMAGE';
   answer?: string;
 };
 export type FormFieldListResponse = {
