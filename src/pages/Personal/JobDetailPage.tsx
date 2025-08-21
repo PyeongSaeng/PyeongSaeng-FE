@@ -8,7 +8,6 @@ import { useSaveToggle } from './hooks/useSaveToggle';
 import { useShow } from './hooks/useShow';
 import { useApplication } from './hooks/useApplication';
 
-
 const JobDetailPage = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
@@ -20,7 +19,8 @@ const JobDetailPage = () => {
   const queryClient = useQueryClient();
 
   const { useEnsureApplication, useGetMyApplications } = useApplication();
-  const { mutate: ensureApplication, isPending: isApplying } = useEnsureApplication();
+  const { mutate: ensureApplication, isPending: isApplying } =
+    useEnsureApplication();
   const { data: myApplications } = useGetMyApplications();
 
   const isSaved = savedJobs?.some(
@@ -28,7 +28,8 @@ const JobDetailPage = () => {
   );
 
   const isAlreadyApplied = myApplications?.some(
-    (app) => app.jobPostId === jobPostId && app.applicationStatus === 'SUBMITTED'
+    (app) =>
+      app.jobPostId === jobPostId && app.applicationStatus === 'SUBMITTED'
   );
 
   const handleSave = () => {
@@ -131,11 +132,7 @@ const JobDetailPage = () => {
                 isAlreadyApplied ? 'bg-[#ccc]' : 'bg-white'
               }`}
             >
-              {isAlreadyApplied
-                ? '신청함'
-                : isApplying
-                ? '신청 중...'
-                : '신청'}
+              {isAlreadyApplied ? '신청함' : isApplying ? '신청 중...' : '신청'}
             </button>
             <button
               onClick={handleSave}

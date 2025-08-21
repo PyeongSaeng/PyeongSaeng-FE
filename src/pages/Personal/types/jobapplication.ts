@@ -18,7 +18,7 @@ export type FieldAndAnswer = TextAnswer | ImageAnswer;
 
 export type PostApplicationDirectRequest = {
   jobPostId: number;
-  applicationStatus:  
+  applicationStatus:
     | 'NON_STARTED'
     | 'DRAFT'
     | 'SUBMITTED'
