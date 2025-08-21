@@ -115,10 +115,10 @@ export async function getResult<T>(
 }
 
 // jobapplicationapi.tsx에서 가져온 함수들 (호환성 유지)
-export { 
-  apiEnsureApplication, 
-  apiGetMyApplications, 
+export {
+  apiEnsureApplication,
+  apiGetMyApplications,
   apiDeleteApplication,
   apiGetProtectorApplications,
-  type ApplicationItem 
+  type ApplicationItem,
 } from './jobapplicationapi';

@@ -17,7 +17,7 @@ export const postApplicationDirect = async (
   body: ReqSubmitApplicationDirect
 ): Promise<ResSubmitApplication['result']> => {
   const { data } = await axiosInstance.post<ResSubmitApplication>(
-    '/api/applications/direct', 
+    '/api/applications/direct'
   );
   return data.result;
 };
