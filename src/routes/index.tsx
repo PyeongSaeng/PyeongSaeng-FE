@@ -6,7 +6,7 @@ import LoginMainPage from '../pages/Personal/LoginMain';
 import SignIn from '../pages/Personal/SignIn';
 import SeniorSignIn from '../pages/Personal/components/user/signIn/Senior/SeniorSignIn';
 import CareSignIn from '../pages/Personal/components/user/signIn/Care/CareSignIn';
-import JobApplyPage from '../pages/Personal/JobApplyPage';
+//import JobApplyPage from '../pages/Personal/JobApplyPage';
 import CompanyHomePage from '../pages/Company/home/CompanyHomePage';
 import JobSavedPage from '../pages/Personal/JobSavedPage';
 import JobDraftsPage from '../pages/Personal/JobDraftsPage';
@@ -47,6 +47,7 @@ import RepostStep2 from '../pages/Company/my/RePostStep2';
 import SeniorExtraInfo from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfo';
 import SeniorExtraInfoEdit from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfoEdit';
 import ClosedJobRepostDetail from '../pages/Company/my/ClosedJobRepostDetail';
+import JobApplyPageTest from '../pages/Personal/JobApplyPageTest';
 
 const AppRoutes = () => {
   return (
@@ -68,7 +69,7 @@ const AppRoutes = () => {
       ></Route>
       <Route
         path="/personal/jobs/recommend/:jobId/apply"
-        element={<JobApplyPage />}
+        element={<JobApplyPageTest />}
       ></Route>
       <Route
         path="/personal/jobs/recommend/:jobId/apply/question"

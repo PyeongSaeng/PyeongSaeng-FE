@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
@@ -15,26 +16,47 @@ const JobDetailPage = () => {
   const { data: job, isLoading, isError } = useJobDetail(jobPostId);
   const { mutate: saveJob, isPending } = useSaveToggle(jobPostId);
   const { data: savedJobs } = useShow();
+  const queryClient = useQueryClient();
+
+  const { useEnsureApplication, useGetMyApplications } = useApplication();
+  const { mutate: ensureApplication, isPending: isApplying } =
+    useEnsureApplication();
+  const { data: myApplications } = useGetMyApplications();
+
   const isSaved = savedJobs?.some(
     (bookmark) => bookmark.jobPostDetailDTO.images[0]?.jobPostId === jobPostId
   );
-  const queryClient = useQueryClient();
+
+  const isAlreadyApplied = myApplications?.some(
+    (app) =>
+      app.jobPostId === jobPostId && app.applicationStatus === 'SUBMITTED'
+  );
+
   const handleSave = () => {
     if (!isSaved) {
       saveJob();
     }
   };
-  const { useEnsureApplication } = useApplication();
-  const { mutate: ensureApplication, isPending: isApplying } =
-    useEnsureApplication();
 
   const handleApply = () => {
+    if (isAlreadyApplied) {
+      toast.info('이미 신청한 공고입니다.');
+      return;
+    }
+
     ensureApplication(jobPostId, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['applications', 'mine'] });
         navigate('/personal/jobs/drafts');
       },
-      onError: () => {
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          const msg = error.response?.data?.message;
+          if (msg?.includes('이미 신청')) {
+            toast.info('이미 신청한 공고입니다.');
+            return;
+          }
+        }
         toast.error('신청에 실패했습니다.');
       },
     });
@@ -55,6 +77,7 @@ const JobDetailPage = () => {
       </Topbar>
     );
   }
+
   return (
     <div>
       <div className="w-full h-full">
@@ -103,11 +126,13 @@ const JobDetailPage = () => {
           {/* 하단 버튼 */}
           <div className="w-[301px] flex gap-[13px] mt-[36px]">
             <button
-              onClick={handleApply}
-              disabled={isApplying}
-              className="w-[144px] h-[45px] border-[1.3px] border-[var(--main-green)] rounded-[8px] bg-white text-[16px] font-medium text-black"
+              onClick={isAlreadyApplied ? undefined : handleApply}
+              disabled={isAlreadyApplied || isApplying}
+              className={`w-[144px] h-[45px] border-[1.3px] border-[var(--main-green)] rounded-[8px] text-[16px] font-medium text-black ${
+                isAlreadyApplied ? 'bg-[#ccc]' : 'bg-white'
+              }`}
             >
-              {isApplying ? '신청 중...' : '신청'}
+              {isAlreadyApplied ? '신청함' : isApplying ? '신청 중...' : '신청'}
             </button>
             <button
               onClick={handleSave}

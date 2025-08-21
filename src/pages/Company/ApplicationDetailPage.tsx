@@ -122,15 +122,18 @@ export default function ApplicationDetailPage() {
 
   // 버튼 플로우: init→check(첫 클릭), check→결과 페이지 이동(둘째 클릭)
   const handleButtonClick = (id: number) => {
-    setStatusMap((prev) => {
-      const current = prev[id];
-      if (current === 'init') return { ...prev, [id]: 'check' };
-      if (current === 'check') {
-        const name = apps.find((a) => a.id === id)?.name ?? '';
-        goToResultPage(id, name);
-      }
-      return prev;
-    });
+    const current = statusMap[id];
+
+    if (current === 'init') {
+      setStatusMap((prev) => ({ ...prev, [id]: 'check' }));
+      return;
+    }
+
+    if (current === 'check') {
+      const name = apps.find((a) => a.id === id)?.name ?? '';
+      goToResultPage(id, name);
+      return;
+    }
   };
 
   return (
