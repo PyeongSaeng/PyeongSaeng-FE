@@ -59,7 +59,7 @@ export type RepostJob = {
   detailAddress: string;
   roadAddress: string;
   zipcode: string;
-  hourlyWage: number;
+  hourlyWage: number | null;
   monthlySalary: number | null;
   yearSalary: number | null;
   description: string;
