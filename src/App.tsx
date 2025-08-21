@@ -10,7 +10,7 @@ const App = () => {
         <AppRoutes />
         <ToastContainer
           position="top-center"
-          autoClose={3000}
+          autoClose={2000}
           closeOnClick={true}
           pauseOnHover={false}
         />
