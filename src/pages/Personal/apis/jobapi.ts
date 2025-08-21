@@ -5,7 +5,6 @@ import {
   JobDetail,
   JobBookmarkResult,
   BookmarkedJobsResponse,
-  ProtectorApplicationItem,
   JobTrendResponse,
   SearchJobRequest,
   SearchJobResponse,
@@ -24,12 +23,14 @@ http.interceptors.request.use((config) => {
   config.headers.Accept = 'application/json';
   return config;
 });
+
 //맞춤 채용공고 추천
 export const apiGetRecommendedJobs = (userId: number) => {
   return axiosInstance.get<ApiEnvelope<JobRecommendation[]>>(
     `/api/job/recommendations?userId=${userId}`
   );
 };
+
 // 일자리 상세조회
 export async function apiGetJobDetail(jobPostId: number) {
   const { data } = await http.get<ApiEnvelope<JobDetail>>(
@@ -40,67 +41,8 @@ export async function apiGetJobDetail(jobPostId: number) {
   }
   return data.result;
 }
-// 일자리 저장토글
-export const apiSaveBookmark = async (jobPostId: number) => {
-  const res = await axiosInstance.post<ApiEnvelope<JobBookmarkResult>>(
-    `/api/bookmarks/${jobPostId}`
-  );
-  return res.data.result;
-};
-// 일자리 저장
-export const apiGetSavedJobs = async () => {
-  const res = await axiosInstance.get<ApiEnvelope<BookmarkedJobsResponse>>(
-    '/api/bookmarks/mine'
-  );
-  return res.data.result.bookmarkSummaryDTOList;
-};
-// 일자리 삭제
-export const apiDeleteBookmark = async (jobPostId: number) => {
-  const res = await axiosInstance.delete<ApiEnvelope<string>>(
-    `/api/bookmarks/${jobPostId}`
-  );
-  return res.data.result;
-};
-// 일자리 신청
-export const apiEnsureApplication = async (jobPostId: number) => {
-  const res = await axiosInstance.post('/api/applications/ensure', null, {
-    params: { jobPostId },
-  });
-  return res.data.result;
-};
-// 일자리 신청상태 목록
-export type ApplicationItem = {
-  applicationId: number;
-  jobPostId: number;
-  applicationStatus:
-    | 'NON_STARTED'
-    | 'DRAFT'
-    | 'SUBMITTED'
-    | 'APPROVED'
-    | 'REJECTED';
-};
 
-export const apiGetMyApplications = async (): Promise<ApplicationItem[]> => {
-  const res = await axiosInstance.get<ApiEnvelope<ApplicationItem[]>>(
-    '/api/applications/mine'
-  );
-  return res.data.result;
-};
-// 일자리 신청 삭제
-export const apiDeleteApplication = async (applicationId: number) => {
-  const res = await axiosInstance.delete(`/api/applications/${applicationId}`);
-  return res.data.result;
-};
-// 일자리 신청[보호자]
-export async function apiGetProtectorApplications(): Promise<
-  ProtectorApplicationItem[]
-> {
-  const res = await axiosInstance.get<ApiEnvelope<ProtectorApplicationItem[]>>(
-    '/api/applications/protector'
-  );
-  return res.data.result ?? [];
-}
-
+// 보호자용 일자리 상세조회 (이건 그대로 유지)
 export async function apiGetProtectorJobDetail(
   seniorId: number,
   jobPostId: number
@@ -110,7 +52,32 @@ export async function apiGetProtectorJobDetail(
   );
   return res.data.result;
 }
-// 요즘 뜨는 일자리 목록조희
+
+// 일자리 저장토글
+export const apiSaveBookmark = async (jobPostId: number) => {
+  const res = await axiosInstance.post<ApiEnvelope<JobBookmarkResult>>(
+    `/api/bookmarks/${jobPostId}`
+  );
+  return res.data.result;
+};
+
+// 일자리 저장
+export const apiGetSavedJobs = async () => {
+  const res = await axiosInstance.get<ApiEnvelope<BookmarkedJobsResponse>>(
+    '/api/bookmarks/mine'
+  );
+  return res.data.result.bookmarkSummaryDTOList;
+};
+
+// 일자리 삭제
+export const apiDeleteBookmark = async (jobPostId: number) => {
+  const res = await axiosInstance.delete<ApiEnvelope<string>>(
+    `/api/bookmarks/${jobPostId}`
+  );
+  return res.data.result;
+};
+
+// 요즘 뜨는 일자리 목록조회
 export async function apiGetJobTrends(
   pageNumber: number = 1,
   token?: string
@@ -124,6 +91,7 @@ export async function apiGetJobTrends(
   );
   return data.result;
 }
+
 // 일자리 검색
 export const apiSearchJobs = (body: SearchJobRequest) => {
   return axiosInstance.post<ApiEnvelope<SearchJobResponse>>(
@@ -131,6 +99,7 @@ export const apiSearchJobs = (body: SearchJobRequest) => {
     body
   );
 };
+
 //신청서 폼 필드 타입 정의
 export async function getResult<T>(
   url: string,
@@ -144,3 +113,12 @@ export async function getResult<T>(
   }
   return res.data.result;
 }
+
+// jobapplicationapi.tsx에서 가져온 함수들 (호환성 유지)
+export { 
+  apiEnsureApplication, 
+  apiGetMyApplications, 
+  apiDeleteApplication,
+  apiGetProtectorApplications,
+  type ApplicationItem 
+} from './jobapplicationapi';
