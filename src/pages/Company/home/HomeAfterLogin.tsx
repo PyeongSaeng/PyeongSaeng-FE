@@ -1,16 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePopularJobs } from '../hooks/usePopularJobs';
 import HomeTopButton from '../../../shared/components/buttons/HomeTopButton';
+import axiosInstance from '../../../shared/apis/axiosInstance';
+import { RepostJob } from '../types/companyInfo';
+import { formatDateForCom } from '../../../shared/utils/userInfoUtils';
 
 const HomeAfterLogin = () => {
   const page = 1;
   const { jobs, fetchPopular, loading, error } = usePopularJobs();
   const navigate = useNavigate();
 
+  const [firstApplication, setFirstApplication] = useState<RepostJob>();
+  const [applicationLoading, setApplicationLoading] = useState<boolean>(false);
+  const [deadline, setDeadLine] = useState<string>('');
+
   useEffect(() => {
     fetchPopular(page);
   }, [fetchPopular, page]);
+
+  // 현재 회사에서 채용중인 공고목록 조회
+  useEffect(() => {
+    setApplicationLoading(true);
+    axiosInstance
+      .get(`/api/job/companies/me/posts?page=1&state=RECRUITING`)
+      .then((data: any) => setFirstApplication(data.data.result.jobPostList[0]))
+      .catch((err) => console.error('회사 채용 목록 조회 에러: ', err))
+      .finally(() => setApplicationLoading(false));
+  }, []);
+
+  // 마감기한을 위한 채용공고 상세조회
+  useEffect(() => {
+    if (!firstApplication?.id) return;
+
+    setApplicationLoading(true);
+    axiosInstance
+      .get(`/api/job/posts/${firstApplication?.id}/detail`)
+      .then((data) => setDeadLine(data.data.result.deadline as string))
+      .catch((err) => console.error('채용공고 상세 조회 에러: ', err))
+      .finally(() => setApplicationLoading(false));
+  }, [firstApplication]);
 
   return (
     <div className="flex justify-center text-[16px]">
@@ -46,15 +75,32 @@ const HomeAfterLogin = () => {
               내 기업에서 구직 중인 공고
             </div>
             <div className="flex flex-col">
-              <div className="px-[8px] py-[8px]">
-                죽전도서관 사서 업무 (~7/25)
+              <div className="flex gap-[8px] px-[8px] py-[8px]">
+                <span>{firstApplication?.description}</span>
+                <span>~({deadline && formatDateForCom(deadline)})</span>
               </div>
               <div className="flex gap-[10px] justify-center items-center">
-                <button className="flex flex-col justify-center items-center w-[122px] h-[53px] rounded-[8px] border-[1.3px] border-[#0D29B7] leading-tight">
+                <button
+                  type="button"
+                  className="flex flex-col justify-center items-center w-[122px] h-[53px] rounded-[8px] border-[1.3px] border-[#0D29B7] leading-tight"
+                  onClick={() =>
+                    navigate(
+                      `/company/jobs/applications/${firstApplication?.id}`
+                    )
+                  }
+                >
                   <span>받은 신청서</span>
                   <span>확인하기</span>
                 </button>
-                <button className="w-[122px] h-[53px] rounded-[8px] border-[1.3px] border-[#0D29B7]">
+                <button
+                  type="button"
+                  className="w-[122px] h-[53px] rounded-[8px] border-[1.3px] border-[#0D29B7]"
+                  onClick={() =>
+                    navigate(
+                      `/company/jobs/applications/${firstApplication?.id}/results`
+                    )
+                  }
+                >
                   합불 입력하기
                 </button>
               </div>

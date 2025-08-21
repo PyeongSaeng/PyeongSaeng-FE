@@ -5,17 +5,6 @@ import { getCompanyData } from '../apis/companyMy';
 import { JobPost } from '../types/companyInfo';
 import Loading from '../../../shared/components/Loading';
 
-// api 확인해보기
-// const filterClosed = (object: JobPost[]) => {
-//   const closedJobList: JobPost[] = [];
-//   object.map((ob: any) => {
-//     if (ob.state === 'CLOSED') {
-//       closedJobList.push(ob);
-//     }
-//   });
-//   return closedJobList;
-// };
-
 const ClosedJopList = () => {
   const navigate = useNavigate();
   const [jobPostList, setJobPostList] = useState<JobPost[]>([]);
