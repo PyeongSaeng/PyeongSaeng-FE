@@ -7,7 +7,6 @@ import { useSaveToggle } from './hooks/useSaveToggle';
 import { useShow } from './hooks/useShow';
 import { useApplication } from './hooks/useApplication';
 
-
 const JobDetailPage = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
