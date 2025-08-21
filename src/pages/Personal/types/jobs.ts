@@ -139,3 +139,13 @@ export type SearchJobResponse = {
   totalCount: number;
   hasNext: boolean;
 };
+//신청서 폼 필드 타입 정의
+export type FormField = {
+  id: number;
+  fieldName: string;
+  fieldType: 'TEXT' | 'IMAGE' ;
+  answer?: string;
+};
+export type FormFieldListResponse = {
+  formFieldList: FormField[];
+};

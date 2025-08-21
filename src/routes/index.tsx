@@ -47,6 +47,7 @@ import RepostStep2 from '../pages/Company/my/RePostStep2';
 import SeniorExtraInfo from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfo';
 import SeniorExtraInfoEdit from '../pages/Personal/my/cares/care-seniors/SeniorExtraInfoEdit';
 import ClosedJobRepostDetail from '../pages/Company/my/ClosedJobRepostDetail';
+import JobApplyPageTest from '../pages/Personal/JobApplyPageTest';
 
 const AppRoutes = () => {
   return (
@@ -68,7 +69,7 @@ const AppRoutes = () => {
       ></Route>
       <Route
         path="/personal/jobs/recommend/:jobId/apply"
-        element={<JobApplyPage />}
+        element={<JobApplyPageTest />}
       ></Route>
       <Route
         path="/personal/jobs/recommend/:jobId/apply/question"
