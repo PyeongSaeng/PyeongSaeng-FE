@@ -144,7 +144,12 @@ const SeniorInfo = () => {
                 setChanges,
                 editedInfo,
                 setEditedInfo,
-                refs: { phoneRef, jobRef },
+                refs: {
+                  phoneRef,
+                  detailAddressRef,
+                  jobRef,
+                  experiencePeriodRef,
+                },
               }}
               key={location.pathname}
             />
