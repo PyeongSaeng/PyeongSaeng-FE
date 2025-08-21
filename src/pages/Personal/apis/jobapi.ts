@@ -6,6 +6,9 @@ import {
   JobBookmarkResult,
   BookmarkedJobsResponse,
   ProtectorApplicationItem,
+  JobTrendResponse,
+  SearchJobRequest,
+  SearchJobResponse,
 } from '../types/jobs';
 import axiosInstance from '../../../shared/apis/axiosInstance';
 
@@ -21,15 +24,12 @@ http.interceptors.request.use((config) => {
   config.headers.Accept = 'application/json';
   return config;
 });
-//공통 GET helper
-async function getResult<T>(url: string, params?: Record<string, any>) {
-  const { data } = await http.get<ApiEnvelope<T>>(url, { params });
-  return data.result;
-}
 //맞춤 채용공고 추천
-export function apiGetRecommendations(userId: number) {
-  return getResult<JobRecommendation[]>('/api/job/recommendations', { userId });
-}
+export const apiGetRecommendedJobs = (userId: number) => {
+  return axiosInstance.get<ApiEnvelope<JobRecommendation[]>>(
+    `/api/job/recommendations?userId=${userId}`
+  );
+};
 // 일자리 상세조회
 export async function apiGetJobDetail(jobPostId: number) {
   const { data } = await http.get<ApiEnvelope<JobDetail>>(
@@ -110,3 +110,24 @@ export async function apiGetProtectorJobDetail(
   );
   return res.data.result;
 }
+// 요즘 뜨는 일자리 목록조희
+export async function apiGetJobTrends(
+  pageNumber: number = 1,
+  token?: string
+): Promise<JobTrendResponse> {
+  const { data } = await axios.get<ApiEnvelope<JobTrendResponse>>(
+    '/api/job/trend',
+    {
+      params: { pageNumber },
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }
+  );
+  return data.result;
+}
+// 일자리 검색
+export const apiSearchJobs = (body: SearchJobRequest) => {
+  return axiosInstance.post<ApiEnvelope<SearchJobResponse>>(
+    '/api/jobs/search',
+    body
+  );
+};

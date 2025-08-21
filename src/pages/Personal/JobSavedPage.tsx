@@ -120,19 +120,28 @@ const JobSavedPage = () => {
 
                     <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
                       <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">
-                        {job?.title}
+                        {job.roadAddress}
                       </p>
-                      <p className="text-[11px] font-normal text-[#414141] whitespace-pre-line">
-                        거리: {job?.travelTime}
-                        {'\n'}
-                        시급: {job?.hourlyWage?.toLocaleString?.()}원{'\n'}
-                        근무시간: {job?.workingTime}
-                        {'\n'}
-                        월급:{' '}
-                        {job?.monthlySalary
-                          ? `${job.monthlySalary.toLocaleString()}원`
-                          : '-'}
-                      </p>
+                      <div className="flex justify-between text-[11px] text-[#414141] mb-[2px]">
+                        <span>거리</span>
+                        <span>{job.travelTime}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-[#414141] mb-[2px]">
+                        <span>시급</span>
+                        <span>{job.hourlyWage?.toLocaleString()}원</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-[#414141] mb-[2px]">
+                        <span>근무시간</span>
+                        <span>{job.workingTime}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-[#414141]">
+                        <span>월급</span>
+                        <span>
+                          {job.monthlySalary
+                            ? `${job.monthlySalary.toLocaleString()}원`
+                            : '-'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

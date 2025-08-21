@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useJobDetail } from './hooks/useDetail';
@@ -17,7 +18,7 @@ const JobDetailPage = () => {
   const isSaved = savedJobs?.some(
     (bookmark) => bookmark.jobPostDetailDTO.images[0]?.jobPostId === jobPostId
   );
-
+  const queryClient = useQueryClient();
   const handleSave = () => {
     if (!isSaved) {
       saveJob();
@@ -30,6 +31,7 @@ const JobDetailPage = () => {
   const handleApply = () => {
     ensureApplication(jobPostId, {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['applications', 'mine'] });
         navigate('/personal/jobs/drafts');
       },
       onError: () => {
@@ -74,7 +76,7 @@ const JobDetailPage = () => {
           {/* 정보 카드 */}
           <div className="w-[297px] px-[17px] py-[17px] mt-[19px] border-[1.3px] border-[var(--main-green)] rounded-[13px] bg-white text-[14px] font-normal text-[var(--gray-800)]">
             <p className="text-[16px] font-semibold text-[var(--gray-800)] mb-[22px]">
-              {job.title}
+              {job.roadAddress}
             </p>
             <div className="flex justify-between mb-1">
               <span>거리</span>

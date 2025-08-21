@@ -19,8 +19,8 @@ const SeniorApplyResults = () => {
   // 무한 스크롤 상태
   const [page, setPage] = useState(1);
   const [isLast, setIsLast] = useState<boolean>(false);
-
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // 기본정보 조회
   useEffect(() => {
@@ -33,11 +33,17 @@ const SeniorApplyResults = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // 지원서 목록 조회 (페이지 변경 시)
+  // 지원서 목록 조회 (페이지 변경)
   useEffect(() => {
     if (isLast) return;
 
-    setLoading(true);
+    // 첫 페이지일 땐 loading, 그 외에는 isFetching
+    if (page === 1) {
+      setLoading(true);
+    } else {
+      setIsFetching(true);
+    }
+
     getSeniorData(`/api/applications/me/submitted?page=${page}`)
       .then((data) => {
         const result = data.result;
@@ -48,19 +54,22 @@ const SeniorApplyResults = () => {
         setIsLast(result.isLast);
       })
       .catch((err) => console.error('지원서 조회 에러', err))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setIsFetching(false);
+      });
   }, [page, isLast]);
 
   // Intersection Observer로 페이지 증가
   useEffect(() => {
     if (isLast) return;
 
-    const target = loaderRef.current; // ★ ref snapshot
+    const target = loaderRef.current;
     if (!target) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting && !loading) {
+        if (entries[0]?.isIntersecting && !isFetching) {
           setPage((prev) => prev + 1);
         }
       },
@@ -70,11 +79,10 @@ const SeniorApplyResults = () => {
     observer.observe(target);
 
     return () => {
-      // ★ cleanup에서도 snapshot 사용 (loaderRef.current 직접 접근 X)
       observer.unobserve(target);
       observer.disconnect();
     };
-  }, [isLast, loading]);
+  }, [isLast, isFetching]);
 
   return (
     <div>
@@ -85,7 +93,9 @@ const SeniorApplyResults = () => {
           </div>
 
           <div className="h-[572px] overflow-y-scroll scrollbar-hide">
-            {!loading && applicationList.length === 0 ? (
+            {loading ? (
+              <Loading />
+            ) : !loading && applicationList.length === 0 ? (
               <div className="h-full flex justify-center items-center font-[Pretendard JP] font-[600] text-[#747474] text-[18px]">
                 지원 목록이 존재하지 않습니다
               </div>
@@ -135,11 +145,7 @@ const SeniorApplyResults = () => {
                     </div>
                   </div>
                 ))}
-
-                {/* 로딩 표시 */}
-                {loading && <Loading />}
-
-                {/* 무한 스크롤 트리거 */}
+                {isFetching && <Loading />}
                 {!isLast && <div ref={loaderRef} style={{ height: '20px' }} />}
               </>
             )}
