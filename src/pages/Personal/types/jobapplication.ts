@@ -18,6 +18,11 @@ export type FieldAndAnswer = TextAnswer | ImageAnswer;
 
 export type PostApplicationDirectRequest = {
   jobPostId: number;
-  applicationStatus: 'NON_STARTED' | 'SUBMITTED';
+  applicationStatus:
+    | 'NON_STARTED'
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'APPROVED'
+    | 'REJECTED';
   fieldAndAnswer: FieldAndAnswer[];
 };
