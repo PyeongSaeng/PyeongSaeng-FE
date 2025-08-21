@@ -20,6 +20,8 @@ const ExtraInfo = () => {
 
   // 시니어 추가질문 정보 조회
   useEffect(() => {
+    if (!info?.id) return;
+
     setLoading(true);
     getSeniorData(`/api/seniors/${info?.id}/questions`)
       .then((data) => {
