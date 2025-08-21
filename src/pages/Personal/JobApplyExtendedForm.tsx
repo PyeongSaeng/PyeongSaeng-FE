@@ -4,6 +4,7 @@ import { FormField } from "./types/jobs";
 type Props = {
     formFields: FormField[];
     roadAddress: string;
+    jobPostId: number;
 };
 
 const JobApplyExtendedForm = ({ formFields }: Props) => {

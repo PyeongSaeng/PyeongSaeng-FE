@@ -20,9 +20,9 @@ const JobApplyPageTest = () => {
     const roadAddress = jobDetail.roadAddress ?? '주소 없음';
 
     return hasExtraQuestions ? (
-        <JobApplyExtendedForm formFields={formFieldList} roadAddress={roadAddress} />
+        <JobApplyExtendedForm formFields={formFieldList} roadAddress={roadAddress} jobPostId={id} />
     ) : (
-        <JobApplyDefaultForm formFields={formFieldList} roadAddress={roadAddress} />
+        <JobApplyDefaultForm formFields={formFieldList} roadAddress={roadAddress} jobPostId={id} />
     );
 };
 
