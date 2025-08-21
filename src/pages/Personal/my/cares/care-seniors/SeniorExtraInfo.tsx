@@ -24,7 +24,7 @@ const SeniorExtraInfo = () => {
         );
         setSeniorData(value);
       })
-      .catch((err) => console.error('시니어 데이터 조회 에러: ', err))
+      .catch((err) => console.error('시니어 기본 정보 조회 실패: ', err))
       .finally(() => setLoading(false));
   }, [seniorIdNum]);
 
@@ -34,7 +34,7 @@ const SeniorExtraInfo = () => {
     getSeniorData(`/api/seniors/${seniorIdNum}/questions`)
       .then((data) => setQuestionList(data.result))
       .catch((err) =>
-        console.error('시니어 추가질문 답변 리스트 조회 에러: ', err)
+        console.error('시니어 추가질문 답변 리스트 조회 실패: ', err)
       )
       .finally(() => setLoading(false));
   }, [seniorIdNum]);

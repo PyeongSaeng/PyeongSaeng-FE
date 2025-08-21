@@ -39,3 +39,8 @@ export const formatDate = (dateString: string) => {
 
   return date;
 };
+
+// 원 단위 형식으로 만들기
+export const formatMoney = (money: number) => {
+  return money.toLocaleString('ko-KR');
+};

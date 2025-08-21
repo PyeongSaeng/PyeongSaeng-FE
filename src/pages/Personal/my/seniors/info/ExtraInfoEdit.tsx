@@ -41,6 +41,8 @@ const ExtraInfoEdit = () => {
 
   // 사용자 질문 리스트 패치
   useEffect(() => {
+    if (!info?.id) return;
+
     setLoading(true);
     getSeniorData(`/api/seniors/${info?.id}/questions`)
       .then((data) => {
