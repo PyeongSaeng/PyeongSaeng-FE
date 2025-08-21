@@ -82,7 +82,7 @@ const HomeAfterLogin = () => {
             {data?.jobPostList.slice(0, 5).map((job) => (
               <div
                 key={job.id}
-                onClick={() => navigate(`/personal/jobs/recommend/${job.id}`)} 
+                onClick={() => navigate(`/personal/jobs/recommend/${job.id}`)}
                 className="cursor-pointer w-[298px] h-[196px] mb-[17px] flex flex-col items-center justify-center gap-[12px] rounded-[13px] border-[1px] border-[#D3D3D3]"
               >
                 <span className="text-center mt-[17px]">{job.description}</span>
