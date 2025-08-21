@@ -1,6 +1,4 @@
-// import logo from '../../assets/logo.svg';
-import logo from '../../assets/new-logo.svg';
-// import watermark from '../../assets/watermark.svg';
+import logo from '../../assets/logo.svg';
 
 const Logo = () => {
   return (
