@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
 import { Info } from '../../../types/userInfo';
@@ -11,15 +11,30 @@ import {
 } from '../../../../../shared/utils/userInfoUtils';
 import Loading from '../../../../../shared/components/Loading';
 
-type OutletContext = { setChanges: (changes: Partial<Info>) => void };
+// type OutletContext = { setChanges: (changes: Partial<Info>) => void };
 
 const BasicInfoEdit = () => {
   const navigate = useNavigate();
-  const { setChanges } = useOutletContext<OutletContext>();
+  const { setChanges, editedInfo, setEditedInfo, refs } = useOutletContext<{
+    setChanges: (changes: Partial<Info>) => void;
+    editedInfo: Info | null;
+    setEditedInfo: React.Dispatch<React.SetStateAction<Info | null>>;
+    refs: {
+      ageRef: React.RefObject<HTMLInputElement>;
+      phoneRef: React.RefObject<HTMLInputElement>;
+      jobRef: React.RefObject<HTMLSelectElement>;
+    };
+  }>();
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
-  const [editedInfo, setEditedInfo] = useState<Info | null>(null);
+  // const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
   const [isPostcodeOpen, setIsPostCodeOpen] = useState<boolean>(false);
+
+  // ref
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const detailAddressRef = useRef<HTMLInputElement>(null);
+  const jobRef = useRef<HTMLSelectElement>(null);
+  const experiencePeriodRef = useRef<HTMLSelectElement>(null);
 
   const handleRoadAddress = (data: any) => {
     handleChange('roadAddress', data.roadAddress);
@@ -34,14 +49,14 @@ const BasicInfoEdit = () => {
         setEditedInfo(me);
       })
       .catch((err) => console.error('시니어 정보 조회 실패: ', err));
-  }, []);
+  }, [setEditedInfo]);
 
   // 뷰전용 데이터 로드
   const infoData = useMemo(() => {
     if (!editedInfo) return [];
     return [
       { label: '이름', value: editedInfo.name },
-      { label: 'id', value: editedInfo.username },
+      { label: '아이디', value: editedInfo.username },
       { label: '비밀번호', value: '' },
       { label: '나이', value: String(editedInfo.age) },
       { label: '연락처', value: formatPhone(editedInfo.phone) },
@@ -110,6 +125,7 @@ const BasicInfoEdit = () => {
                   </div>
                 ) : label === '연락처' ? (
                   <input
+                    ref={phoneRef}
                     className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                     value={
                       isPhoneEditing
@@ -129,6 +145,7 @@ const BasicInfoEdit = () => {
                   />
                 ) : label === '상세주소' ? (
                   <input
+                    ref={detailAddressRef}
                     className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                     value={editedInfo?.detailAddress ?? ''}
                     onChange={(e) =>
@@ -138,6 +155,7 @@ const BasicInfoEdit = () => {
                 ) : // 드롭다운메뉴 사용파트
                 label === '직무' ? (
                   <select
+                    ref={jobRef}
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black focus:outline-black"
                     value={editedInfo?.job ?? ''}
                     onChange={(e) =>
@@ -154,6 +172,7 @@ const BasicInfoEdit = () => {
                   </select>
                 ) : label === '기간' ? (
                   <select
+                    ref={experiencePeriodRef}
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black focus:outline-black"
                     value={editedInfo?.experiencePeriod}
                     onChange={(e) =>

@@ -73,13 +73,9 @@ const SeniorExtraInfoEdit = () => {
         return;
       }
 
-      const res = await axiosInstance.put(
-        `/api/seniors/${seniorData?.seniorId}/answers`,
-        {
-          answers: patchArr,
-        }
-      );
-      console.log(res.data);
+      await axiosInstance.put(`/api/seniors/${seniorData?.seniorId}/answers`, {
+        answers: patchArr,
+      });
     } catch (err) {
       console.error('추가 질문 수정 에러: ', err);
     } finally {

@@ -11,7 +11,10 @@ import {
   questionAndAnswer,
   LinkedSenior,
 } from '../../../types/userInfo';
-import { formatPhone } from '../../../../../shared/utils/userInfoUtils';
+import {
+  formatMoney,
+  formatPhone,
+} from '../../../../../shared/utils/userInfoUtils';
 
 const Gender = {
   FEMALE: '여성',
@@ -34,10 +37,26 @@ const CareCheckApplicationDetail = () => {
       value:
         applicationData?.roadAddress + ' ' + applicationData?.detailAddress,
     },
-    { label: '시급', value: applicationData?.hourlyWage, unit: '원' },
+    {
+      label: '시급',
+      value:
+        applicationData?.hourlyWage && formatMoney(applicationData?.hourlyWage),
+      unit: '원',
+    },
     { label: '근무시간', value: applicationData?.workingTime },
-    { label: '월급', value: applicationData?.monthlySalary, unit: '원' },
-    { label: '연봉', value: applicationData?.yearSalary, unit: '원' },
+    {
+      label: '월급',
+      value:
+        applicationData?.monthlySalary &&
+        formatMoney(applicationData?.monthlySalary),
+      unit: '원',
+    },
+    {
+      label: '연봉',
+      value:
+        applicationData?.yearSalary && formatMoney(applicationData?.yearSalary),
+      unit: '원',
+    },
   ];
 
   // 시니어 데이터 조회
