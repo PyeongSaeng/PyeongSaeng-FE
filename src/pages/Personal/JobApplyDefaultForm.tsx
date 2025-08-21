@@ -6,10 +6,10 @@ import Topbar from '../../shared/components/topbar/Topbar';
 
 type Props = {
     formFields: FormField[];
-    address: string;
+    roadAddress: string;
 };
 
-const JobApplyDefaultForm = ({ formFields, address }: Props) => {
+const JobApplyDefaultForm = ({ formFields, roadAddress }: Props) => {
     const [step, setStep] = useState<1 | 2>(1);
     const navigate = useNavigate();
     return (
@@ -21,8 +21,8 @@ const JobApplyDefaultForm = ({ formFields, address }: Props) => {
                     <>
                         <p className="text-[16px] text-[#747474] font-semibold mt-[27px]">신청서에 추가할 항목이 없습니다.<br />제출하시겠습니까?</p>
 
-                        <button className="w-[294px] h-[45px] mt-[21px] border-[1.3px] border-[#08D485] rounded-[8px] text-[#747474]">
-                            {address}
+                        <button className="w-[294px] h-[45px] mt-[21px] text-[16px] text-[#747474] border-[1.3px] border-[#08D485] rounded-[8px] text-[#747474]">
+                            {roadAddress}
                         </button>
 
                         <div className="p-[18px] border-[1.3px] border-[#08D485] rounded-[13px] mt-[23px]">
@@ -58,7 +58,7 @@ const JobApplyDefaultForm = ({ formFields, address }: Props) => {
                         <p className="text-[16px] text-[#747474] font-semibold mt-[27px]">신청 완료되었습니다</p>
 
                         <button className="w-[294px] h-[45px] mt-[44px] border-[1.3px] border-[#08D485] rounded-[8px] text-[#747474]">
-                            {address}
+                            {roadAddress}
                         </button>
 
                         <div className="p-[18px] border-[1.3px] border-[#08D485] rounded-[13px] mt-[23px]">

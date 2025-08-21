@@ -1,29 +1,29 @@
 import { useParams } from 'react-router-dom';
+import { useJobDetail } from './hooks/useDetail';
 import { useFormFields } from './hooks/useFormField';
 import JobApplyExtendedForm from './JobApplyExtendedForm';
 import JobApplyDefaultForm from './JobApplyDefaultForm';
 
 const JobApplyPageTest = () => {
-  const { jobId } = useParams();
-  const id = Number(jobId);
+    const { jobId } = useParams();
+    const id = Number(jobId);
 
-  const { data, isLoading, isError } = useFormFields(id);
+    const { data: formData, isLoading: isLoadingForm, isError: isErrorForm } = useFormFields(id);
+    const { data: jobDetail, isLoading: isLoadingDetail, isError: isErrorDetail } = useJobDetail(id);
 
-  if (isLoading) return <div className="p-4">로딩 중입니다...</div>;
-  if (isError || !data) return <div className="p-4">에러가 발생했습니다.</div>;
+    if (isLoadingForm || isLoadingDetail) return <div>로딩 중...</div>;
+    if (!formData || !jobDetail || isErrorForm || isErrorDetail) return <div>에러 발생</div>;
 
-  const formFieldList = data.formFieldList;
-  const hasExtraQuestions = formFieldList.length > 4;
+    const formFieldList = formData.formFieldList;
+    const hasExtraQuestions = formFieldList.length > 4;
 
-  return (
-    <>
-      {hasExtraQuestions ? (
-        <JobApplyExtendedForm formFields={formFieldList} />
-      ) : (
-        <JobApplyDefaultForm formFields={formFieldList} />
-      )}
-    </>
-  );
+    const roadAddress = jobDetail.roadAddress ?? '주소 없음';
+
+    return hasExtraQuestions ? (
+        <JobApplyExtendedForm formFields={formFieldList} roadAddress={roadAddress} />
+    ) : (
+        <JobApplyDefaultForm formFields={formFieldList} roadAddress={roadAddress} />
+    );
 };
 
 export default JobApplyPageTest;

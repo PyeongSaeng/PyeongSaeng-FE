@@ -3,6 +3,7 @@ import { FormField } from "./types/jobs";
 
 type Props = {
     formFields: FormField[];
+    roadAddress: string;
 };
 
 const JobApplyExtendedForm = ({ formFields }: Props) => {
