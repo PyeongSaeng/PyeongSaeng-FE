@@ -8,10 +8,7 @@ import { QAOption } from './apis/ai';
 import { useSeniorInfo } from './hooks/useSeniorInfo';
 import { JobTypeLabel, ExperiencePeriodLabel } from './types/userInfo';
 import MotivationAIWritePage from './components/MotivationAIWritePage';
-import {
-  apiPostApplicationDirect,
-  apiPostApplicationDelegate,
-} from './apis/jobapplicationapi';
+import { apiPostApplicationDirect } from './apis/jobapplicationapi';
 import { PostApplicationDirectRequest } from './types/jobapplication';
 
 type Step = 'motivation' | 'ai-write' | 'text' | 'image' | 'done';

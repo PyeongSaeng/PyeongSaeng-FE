@@ -13,14 +13,14 @@ export const postApplicationsEnsure = async (jobPostId: number) => {
 };
 
 /** 개인(본인) 제출/임시저장 */
-export const postApplicationDirect = async (
-  body: ReqSubmitApplicationDirect
-): Promise<ResSubmitApplication['result']> => {
-  const { data } = await axiosInstance.post<ResSubmitApplication>(
-    '/api/applications/direct'
-  );
-  return data.result;
-};
+// export const postApplicationDirect = async (
+//   body: ReqSubmitApplicationDirect
+// ): Promise<ResSubmitApplication['result']> => {
+//   const { data } = await axiosInstance.post<ResSubmitApplication>(
+//     '/api/applications/direct'
+//   );
+//   return data.result;
+// };
 
 /** 보호자 대리 제출/임시저장 */
 export const postApplicationDelegate = async (
