@@ -11,7 +11,11 @@ import PageHeader from '../../shared/components/PageHeader';
 import { getApplications, getApplicationDetails } from './apis/applications';
 
 type BtnState = 'init' | 'check' | 'complete';
-type LocState = { updatedId?: number; jobPostTitle?: string } | null;
+type LocState = {
+  updatedId?: number;
+  jobPostTitle?: string;
+  jobPostAddress?: string;
+} | null;
 
 export default function ApplicationDetailPage() {
   // --- jobPostId 폴백 ---
@@ -27,7 +31,7 @@ export default function ApplicationDetailPage() {
 
   const navigate = useNavigate();
   const location = useLocation() as { state: LocState };
-
+  const [jobAddress] = useState<string>(location.state?.jobPostAddress ?? '');
   const [jobTitle, setJobTitle] = useState<string>(
     location.state?.jobPostTitle ?? ''
   );
@@ -134,8 +138,8 @@ export default function ApplicationDetailPage() {
       <Topbar />
       <div className="flex flex-col items-center w-full max-w-[320px] self-center px-4 pt-10">
         <PageHeader title="받은 신청서" />
-        {jobTitle ? (
-          <PageHeader title={jobTitle} />
+        {jobAddress ? (
+          <PageHeader title={jobAddress} />
         ) : (
           <PageHeader title={jobPostId ? `공고 ID ${jobPostId}` : ''} />
         )}

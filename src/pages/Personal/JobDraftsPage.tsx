@@ -255,13 +255,13 @@ function JobDraftLayout({
                       />
                     )}
                   </div>
-
+                  {/* 시니어 성함 */}
                   {memberType === 'PROTECTOR' && application.seniorName && (
                     <div className="w-[100px] h-[33px] mt-[15px] text-[20px] font-semibold text-[#747474] border-[#08D485] border-[1px] rounded-[13px] flex items-center justify-center">
                       <p>{application.seniorName}님</p>
                     </div>
                   )}
-
+                  {/* 카드 */}
                   <div
                     className={`w-[291px] h-[362px] mt-[7px] rounded-[10px] overflow-hidden border-[1.3px] flex flex-col items-center ${
                       isSelected
@@ -275,47 +275,38 @@ function JobDraftLayout({
                     }
                   >
                     <div className="flex items-center gap-[6px]">
-                      <div
-                        className="w-[27px] h-[27px] rounded-full border-2 border-[#08D485] bg-white flex items-center justify-center cursor-pointer"
-                        onClick={() =>
-                          setSelectedAppId(
-                            isSelected ? null : application.applicationId
-                          )
-                        }
-                      >
-                        {isSelected && (
-                          <div className="w-[15px] h-[15px] rounded-full bg-[#08D485]" />
-                        )}
+                      <div className="w-[248px] h-[140px] mt-[30px] border-[1.1px] border-[#A4A4A4] rounded-[10px] overflow-hidden">
+                        <img
+                          src={job.images?.[0]?.imageUrl}
+                          alt={job.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <div
-                        className="w-[56px] h-[19px] flex items-center justify-center text-[16px] text-[#747474] font-medium cursor-pointer"
-                        onClick={() =>
-                          setSelectedAppId(
-                            isSelected ? null : application.applicationId
-                          )
-                        }
-                      >
-                        선택하기
-                      </div>
-                      <img
-                        src={
-                          job.images?.[0]?.imageUrl ?? '/images/placeholder.png'
-                        }
-                        alt={job.title}
-                        className="w-full h-full object-cover"
-                      />
                     </div>
-
                     <div className="w-[248px] h-[143px] mt-[18px] border-[1.1px] border-[#08D485] rounded-[13px] bg-white p-[10px]">
                       <p className="text-[13px] font-semibold text-[#414141] mb-[6px]">
-                        {job.title}
+                        {job.roadAddress}
                       </p>
-                      <p className="text-[11px] font-normal text-[#414141]">
-                        거리: {job.travelTime}, 시급:{' '}
-                        {job.hourlyWage?.toLocaleString()}원, 근무시간:{' '}
-                        {job.workingTime}, 월급:{' '}
-                        {job.monthlySalary?.toLocaleString()}원
-                      </p>
+                      <div className="flex justify-between text-[11px] text-[#414141] mb-[2px]">
+                        <span>거리</span>
+                        <span>{job.travelTime}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-[#414141] mb-[2px]">
+                        <span>시급</span>
+                        <span>{job.hourlyWage?.toLocaleString()}원</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-[#414141] mb-[2px]">
+                        <span>근무시간</span>
+                        <span>{job.workingTime}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-[#414141]">
+                        <span>월급</span>
+                        <span>
+                          {job.monthlySalary
+                            ? `${job.monthlySalary.toLocaleString()}원`
+                            : '-'}
+                        </span>
+                      </div>
                       {application.seniorName && (
                         <p className="text-[11px] mt-1 font-semibold text-[#747474]">
                           신청자: {application.seniorName}

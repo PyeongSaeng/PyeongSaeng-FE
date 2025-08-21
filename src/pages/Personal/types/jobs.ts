@@ -5,7 +5,7 @@ export type ApiEnvelope<T> = {
   message: string;
   result: T;
 };
-//일자리 추천 관련 타입 정의
+//일자리 맞춤 채용공고 추천 타입 정의
 export type JobRecommendation = {
   jobPostId: number;
   workplaceName: string;
@@ -13,6 +13,7 @@ export type JobRecommendation = {
   imageUrl: string;
   distanceKm: number;
 };
+export type JobRecommendationResponse = JobRecommendation[];
 // 일자리 상세조회 타입 정의
 export type JobImage = {
   jobPostId: number;
@@ -114,4 +115,27 @@ export type JobTrendResponse = {
   totalElements: number;
   isFirst: boolean;
   isLast: boolean;
+};
+//// 일자리 검색
+// 검색 요청 바디
+export type SearchJobRequest = {
+  keyword: string;
+  sort?: 'DISTANCE_ASC' | 'POPULARITY_DESC';
+  searchAfter?: number[] | null;
+  size?: number;
+};
+// 검색 응답 아이템
+export type SearchJobItem = {
+  id: number;
+  title: string;
+  address: string;
+  imageUrl: string;
+  displayApplicationCount: number;
+};
+// 검색 응답 전체 타입
+export type SearchJobResponse = {
+  results: SearchJobItem[];
+  searchAfter: number[];
+  totalCount: number;
+  hasNext: boolean;
 };
