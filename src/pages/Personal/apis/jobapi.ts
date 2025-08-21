@@ -131,3 +131,16 @@ export const apiSearchJobs = (body: SearchJobRequest) => {
     body
   );
 };
+//신청서 폼 필드 타입 정의
+export async function getResult<T>(
+  url: string,
+  params?: Record<string, any>
+): Promise<T> {
+  const res = await axiosInstance.get<ApiEnvelope<T>>(url, {
+    params,
+  });
+  if (!res.data.isSuccess || !res.data.result) {
+    throw new Error(res.data.message ?? 'API 요청 실패');
+  }
+  return res.data.result;
+}

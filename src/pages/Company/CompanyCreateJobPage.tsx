@@ -173,7 +173,7 @@ export default function CompanyCreateJobPage({
           type="date"
           value={draft.deadline ?? ''}
           onChange={(e) => onChangeDraft({ deadline: e.target.value })}
-          className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000]"
+          className="w-[231px] h-[45px] border border-[#E1E1E1] rounded-[8px] text-[16px] text-center text-[#000000] px-[10px]"
         />
       </div>
 

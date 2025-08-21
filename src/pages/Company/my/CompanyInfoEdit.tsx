@@ -143,7 +143,7 @@ const CompanyInfoEdit = () => {
 
             <button
               type="submit"
-              className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[45px]"
+              className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[10px]"
             >
               저장
             </button>

@@ -24,9 +24,7 @@ const ClosedJobRepostDetail = () => {
     <div>
       <Topbar>
         <div className="relative text-center font-[pretendard JP] font-[600] text-[20px] text-[#747474] py-[10px] font-[semibold] border-b-[1.3px] border-[#CCCCCC]">
-          {location.pathname === 'step1'
-            ? '마감된 공고 다시 올리기'
-            : '신청서 입력'}
+          마감된 공고 다시 올리기
         </div>
         {loading ? (
           <Loading />

@@ -130,7 +130,7 @@ export default function ApplicationResultsPage() {
       : '';
 
   return (
-    <div className="h-[740px] flex flex-col bg-white font-pretendard">
+    <div className="h-[740px] flex flex-col bg-white font-pretendard mb-[6.8rem]">
       <Topbar />
 
       {/* 고정 헤더 */}
@@ -142,14 +142,15 @@ export default function ApplicationResultsPage() {
       {/* 스크롤 영역 */}
       <div className="flex-1 overflow-y-auto px-10 pb-6 flex justify-center">
         <div className="w-full max-w-[320px] flex flex-col items-center gap-[13px] pt-4">
-          <Field label="연세" value={asTextFields['연세'] ?? ''} />
-          <Field label="성별" value={asTextFields['성별'] ?? ''} />
-          <Field label="전화번호" value={asTextFields['전화번호'] ?? ''} />
-          <Field label="거주지" value={asTextFields['거주지'] ?? ''} />
-          <Field label="경력" value={asTextFields['경력'] ?? ''} />
+          {Object.entries(asTextFields)
+            .filter(([, value]) => value && value?.trim()) // 빈 값 제외
+            .map(([fieldName, value]) => (
+              <Field key={fieldName} label={fieldName} value={value} />
+            ))}
+
+          {/* 상태, 합 불 입력 -> 항상 표시 */}
           <Field label="상태" value={detail?.applicationState ?? ''} />
 
-          {/* 합불 입력(미공시 상태에서만 의미 있음) */}
           <Field
             label="합불"
             value={result}
