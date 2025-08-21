@@ -96,15 +96,6 @@ const MainMenu = ({ handleMenu }: MainMenuProps) => {
         >
           일자리 신청함
         </MenuNavButton>
-        {accessToken && (
-          <MenuNavButton
-            url={
-              accessToken ? '/personal/senior-my/info/extra' : '/personal/login'
-            }
-          >
-            질문답변
-          </MenuNavButton>
-        )}
         <MenuNavButton
           handleMenu={() => {
             accessToken ? handleMenu(myMenu) : navigate('/personal/login');
