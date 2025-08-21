@@ -5,6 +5,8 @@ import MotivationChoiceSection from '../../shared/components/MotivationChoiceSec
 import { FormField } from './types/jobs';
 import { useSubmitApplication } from './hooks/useSubmitApplication';
 import { QAOption } from './apis/ai';
+import { useSeniorInfo } from './hooks/useSeniorInfo'; // 공통 훅 사용
+import { JobTypeLabel, ExperiencePeriodLabel } from './types/userInfo';
 
 type Step = 'motivation' | 'text' | 'image' | 'done';
 
@@ -31,12 +33,77 @@ const JobApplyExtendedForm = ({
   // 지원동기 관련 상태
   const [selectedMotivation, setSelectedMotivation] = useState<string>('');
 
+  // 공통 훅으로 시니어 정보 조회
+  const {
+    seniorInfo,
+    seniorQuestions,
+    isLoading: isLoadingSeniorData,
+  } = useSeniorInfo();
+
   // AI 키워드 생성을 위한 기본 QA 옵션들
-  const baseQAOptions: QAOption[] = [
-    { question: '근무 환경에 대한 선호도는?', option: '실내' },
-    { question: '일하는 시간대 선호도는?', option: '오전' },
-    { question: '업무 성격 선호도는?', option: '도움' },
-  ];
+  const baseQAOptions: QAOption[] = useMemo(() => {
+    const options: QAOption[] = [];
+
+    // 1. 시니어 기본 정보 활용
+    if (seniorInfo) {
+      // 나이 정보
+      if (seniorInfo.age) {
+        options.push({
+          question: '연령대는 어떻게 되시나요?',
+          option: `${seniorInfo.age}세`,
+        });
+      }
+
+      // 거주지 정보 (도/시 단위로 축약)
+      if (seniorInfo.roadAddress) {
+        const region =
+          seniorInfo.roadAddress.split(' ')[0] || seniorInfo.roadAddress;
+        options.push({
+          question: '거주 지역은 어디인가요?',
+          option: region,
+        });
+      }
+
+      // 직무 경험
+      if (seniorInfo.job) {
+        options.push({
+          question: '어떤 직무 경험이 있으신가요?',
+          option: JobTypeLabel[seniorInfo.job] || '기타',
+        });
+      }
+
+      // 경력 기간
+      if (seniorInfo.experiencePeriod) {
+        options.push({
+          question: '근무 경험 기간은 얼마나 되시나요?',
+          option: ExperiencePeriodLabel[seniorInfo.experiencePeriod] || '신입',
+        });
+      }
+    }
+
+    // 2. 시니어의 추가 질문 답변들 활용
+    seniorQuestions.forEach((q) => {
+      if (q.selectedOptionId && q.seletedOption) {
+        options.push({
+          question: q.question,
+          option: q.seletedOption,
+        });
+      }
+    });
+
+    // 3. 현재 지원서의 기본 정보들도 추가로 활용
+    // formFields의 처음 4개는 기본 정보 (이름, 연락처 등)
+    formFields.slice(0, 4).forEach((field) => {
+      if (field.answer) {
+        options.push({
+          question: field.fieldName,
+          option: field.answer,
+        });
+      }
+    });
+
+    return options;
+  }, [seniorInfo, seniorQuestions, formFields]);
 
   const typeToStep = (
     t: FormField['fieldType']
@@ -130,7 +197,7 @@ const JobApplyExtendedForm = ({
     });
   };
 
-  // 지원동기 선택 화면
+  // 지원동기 선택 화면에서 공통 훅의 로딩 상태 사용
   if (step === 'motivation') {
     return (
       <Topbar>
@@ -152,12 +219,13 @@ const JobApplyExtendedForm = ({
               selected={selectedMotivation}
               onSelect={setSelectedMotivation}
               baseQAOptions={baseQAOptions}
+              isLoadingData={isLoadingSeniorData}
             />
           </div>
 
           <button
             onClick={handleMotivationNext}
-            disabled={!selectedMotivation.trim()}
+            disabled={!selectedMotivation.trim() || isLoadingSeniorData}
             className="w-full h-[45px] mt-[32px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             제출하기
