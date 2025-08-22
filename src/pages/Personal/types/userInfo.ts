@@ -128,7 +128,7 @@ export type ImageObject = {
 
 export type questionAndAnswer = {
   fieldName: string;
-  answerContent: string | ImageObject;
+  answerContent: string | ImageObject[];
   fieldType: 'TEXT' | 'IMAGE';
 };
 

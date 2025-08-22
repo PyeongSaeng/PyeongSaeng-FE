@@ -162,7 +162,7 @@ const SeniorApplyDetail = () => {
                       <ImageField
                         key={idx}
                         fieldName={answer.fieldName}
-                        answerContent={answer.answerContent as ImageObject}
+                        answerContent={answer.answerContent as ImageObject[]}
                       />
                     );
                   } else if (answer.fieldType === 'TEXT') {
