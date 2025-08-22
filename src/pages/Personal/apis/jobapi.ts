@@ -82,13 +82,18 @@ export async function apiGetJobTrends(
   pageNumber: number = 1,
   token?: string
 ): Promise<JobTrendResponse> {
-  const { data } = await axios.get<ApiEnvelope<JobTrendResponse>>(
+  const { data } = await axiosInstance.get<ApiEnvelope<JobTrendResponse>>(
     '/api/job/trend',
     {
       params: { pageNumber },
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     }
   );
+
+  if (!data?.isSuccess || !data?.result) {
+    throw new Error(data?.message ?? 'Failed to load job trends');
+  }
+
   return data.result;
 }
 
