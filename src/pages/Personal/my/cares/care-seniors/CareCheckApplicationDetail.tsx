@@ -120,7 +120,10 @@ const CareCheckApplicationDetail = () => {
                     return (
                       <div key={idx} className="flex justify-between">
                         <div className="min-w-[40px]">{data.label}</div>
-                        <div className="text-right">{data.value}</div>
+                        <div className="text-right">
+                          {data.value}
+                          {data.unit && <span>{data.unit}</span>}
+                        </div>
                       </div>
                     );
                   }
