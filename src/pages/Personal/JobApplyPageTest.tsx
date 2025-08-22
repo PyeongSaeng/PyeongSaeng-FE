@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useJobDetail } from './hooks/useDetail';
 import { useFormFields } from './hooks/useFormField';
@@ -19,7 +20,18 @@ const JobApplyPageTest = () => {
     isError: isErrorDetail,
   } = useJobDetail(id);
 
+  useEffect(() => {
+    console.log('✅ jobId:', jobId, 'parsed:', id);
+    console.log('📦 formData raw:', formData);
+    console.log('📦 jobDetail raw:', jobDetail);
+    console.error('❌ formError:', isErrorForm);
+    console.error('❌ detailError:', isErrorDetail);
+  }, [jobId, id, formData, jobDetail, isErrorForm, isErrorDetail]);
+
   if (isLoadingForm || isLoadingDetail) return <div>로딩 중...</div>;
+
+  console.log('formData:', formData);
+  console.log('jobDetail:', jobDetail);
   if (!formData || !jobDetail || isErrorForm || isErrorDetail)
     return <div>에러 발생</div>;
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useApplication } from './hooks/useApplication';
@@ -128,8 +128,22 @@ function ProtectorDraftsView() {
       (app: ProtectorApplicationUI) => app.applicationId === selectedAppId
     );
     if (!selected) return;
-    navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`);
+    navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`, {
+      state: { seniorId: applications },
+    });
   };
+
+  useEffect(() => {
+    console.log('Protector Applications:', applications);
+    // selectedApps.forEach((app) => {
+    //   console.log(
+    //     'applicationId:',
+    //     app.applicationId,
+    //     'seniorId:',
+    //     app.seniorId
+    //   );
+    // });
+  }, [applications, selectedApps]);
 
   return (
     <JobDraftLayout
@@ -168,6 +182,9 @@ function JobDraftLayout({
 }: JobDraftLayoutProps) {
   const memberType = localStorage.getItem('userRole');
 
+  useEffect(() => {
+    console.log('선택: ', selectedAppId);
+  }, [selectedAppId]);
   return (
     <div className="w-full h-full flex flex-col">
       <div className="mt-[17px] flex flex-col items-center">
