@@ -1,10 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { PostApplicationDirectRequest } from '../types/jobapplication';
-import { apiPostApplicationDirect } from '../apis/jobapplicationapi';
+import { postApplicationDirect } from '../apis/applications';
 
 export function useSubmitApplication() {
   return useMutation({
-    mutationFn: (body: PostApplicationDirectRequest) =>
-      apiPostApplicationDirect(body),
+    mutationFn: (body: any) => postApplicationDirect(body),
   });
 }

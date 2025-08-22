@@ -1,25 +1,28 @@
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { apiGetJobDetail } from '../apis/jobapi';
-import { JobDetail } from '../types/jobs';
+import { apiGetJobDetail, apiGetProtectorJobDetail } from '../apis/jobapi';
 
 export const jobDetailKey = (jobPostId: number) =>
   ['job', 'detail', jobPostId] as const;
 
-export function useJobDetail(jobPostId: number) {
-  const isValid = Number.isFinite(jobPostId) && jobPostId > 0;
+// useDetail 훅에서 사용자 역할에 따라 다른 API 사용
+export function useJobDetail(jobPostId: number, seniorId?: number) {
+  const userRole = localStorage.getItem('userRole');
 
-  return useQuery<JobDetail>({
-    queryKey: jobDetailKey(jobPostId),
-    queryFn: () => apiGetJobDetail(jobPostId),
-    enabled: isValid,
-    staleTime: 60_000,
-    retry: (count, err) => {
-      if (axios.isAxiosError(err)) {
-        const s = err.response?.status;
-        if (s && [400, 401, 403, 404, 405].includes(s)) return false;
+  return useQuery({
+    queryKey: ['jobDetail', jobPostId, seniorId, userRole],
+    queryFn: async () => {
+      if (userRole === 'PROTECTOR' && seniorId) {
+        // 보호자인 경우 보호자용 API 사용
+        return apiGetProtectorJobDetail(seniorId, jobPostId);
+      } else if (userRole === 'SENIOR') {
+        // 시니어인 경우 기존 API 사용
+        return apiGetJobDetail(jobPostId);
+      } else {
+        throw new Error('권한이 없습니다');
       }
-      return count < 1;
     },
+    enabled:
+      !!jobPostId &&
+      (userRole === 'SENIOR' || (userRole === 'PROTECTOR' && !!seniorId)),
   });
 }

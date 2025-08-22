@@ -626,14 +626,10 @@ export default function JobApplyPage() {
             <div className="w-full flex flex-col gap-4">
               <MotivationChoiceSection
                 question={`Q1. ${MAIN_QUESTION}`}
-                choices={[
-                  '경제적으로 도움을 얻으려고',
-                  '사람들과 만나려고',
-                  '사회에 도움이 되려고',
-                  '직접 입력',
-                ]}
                 selected={selected}
                 onSelect={setSelected}
+                baseQAOptions={[]}
+                isLoadingData={false}
               />
               <NextButton
                 onClick={handleChoiceSubmit}
