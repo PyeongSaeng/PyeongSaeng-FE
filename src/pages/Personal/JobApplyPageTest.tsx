@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom'; // useLocation 추가
-import { useQueryClient } from '@tanstack/react-query';
+// import { useQueryClient } from '@tanstack/react-query';
 import { useJobDetail } from './hooks/useDetail';
 import { useFormFields } from './hooks/useFormField';
 import JobApplyExtendedForm from './JobApplyExtendedForm';
@@ -17,12 +17,12 @@ const JobApplyPageTest = () => {
   // 보호자인 경우 연결된 시니어 목록 조회
   const [selectedSeniorId, setSelectedSeniorId] = useState<number | null>(null);
   const [connectedSeniors, setConnectedSeniors] = useState<any[]>([]);
-  const [isLoadingSeniors, setIsLoadingSeniors] = useState(false);
+  // const [isLoadingSeniors, setIsLoadingSeniors] = useState(false);
 
   // 연결된 시니어 목록 조회
   useEffect(() => {
     if (userRole === 'PROTECTOR' && accessToken) {
-      setIsLoadingSeniors(true);
+      // setIsLoadingSeniors(true);
 
       fetch('/api/user/seniors', {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -39,7 +39,7 @@ const JobApplyPageTest = () => {
         })
         .catch((err) => console.error('시니어 목록 조회 실패:', err))
         .finally(() => {
-          setIsLoadingSeniors(false);
+          //setIsLoadingSeniors(false);
         });
     }
   }, [userRole, accessToken]);
@@ -49,8 +49,8 @@ const JobApplyPageTest = () => {
     isLoading: isLoadingForm,
     isError: isErrorForm,
     error: formError,
-    isFetching: isFetchingForm,
-    status: formStatus,
+    // isFetching: isFetchingForm,
+    //status: formStatus,
   } = useFormFields(id, selectedSeniorId || undefined);
 
   const {
@@ -58,8 +58,8 @@ const JobApplyPageTest = () => {
     isLoading: isLoadingDetail,
     isError: isErrorDetail,
     error: detailError,
-    isFetching: isFetchingDetail,
-    status: detailStatus,
+    // isFetching: isFetchingDetail,
+    // status: detailStatus,
   } = useJobDetail(id, selectedSeniorId || undefined);
 
   if (isLoadingForm || isLoadingDetail) return <div>로딩 중...</div>;
