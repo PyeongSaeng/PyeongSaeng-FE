@@ -4,9 +4,8 @@ import { useTrendJobs } from '../hooks/useTrendJob';
 
 const HomeAfterLogin = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken') ?? undefined;
 
-  const { data, isLoading, isError } = useTrendJobs(1, token);
+  const { data, isLoading, isError } = useTrendJobs(1);
 
   return (
     <div className="flex justify-center text-[16px]">
