@@ -5,10 +5,10 @@ import { apiGetJobTrends } from '../apis/jobapi';
 export const trendJobsKey = (page = 1, token?: string) =>
   ['jobs', 'trend', page, token] as const;
 
-export function useTrendJobs(page = 1, token?: string) {
+export function useTrendJobs(page = 1) {
   return useQuery<JobTrendResponse>({
-    queryKey: trendJobsKey(page, token),
-    queryFn: () => apiGetJobTrends(page, token),
+    queryKey: trendJobsKey(page),
+    queryFn: () => apiGetJobTrends(page),
     staleTime: 60 * 1000,
   });
 }

@@ -79,14 +79,12 @@ export const apiDeleteBookmark = async (jobPostId: number) => {
 
 // 요즘 뜨는 일자리 목록조회
 export async function apiGetJobTrends(
-  pageNumber: number = 1,
-  token?: string
+  pageNumber: number = 1
 ): Promise<JobTrendResponse> {
   const { data } = await axiosInstance.get<ApiEnvelope<JobTrendResponse>>(
     '/api/job/trend',
     {
-      params: { pageNumber },
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      params: { pageNumber }
     }
   );
 
