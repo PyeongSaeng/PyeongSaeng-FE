@@ -114,14 +114,20 @@ const SeniorApplyResults = () => {
                       </span>
                     </div>
                     <div className="w-[292px] h-[165px] rounded-[10px] border-[1.3px] border-[#A4A4A4] overflow-hidden">
-                      <img
-                        className="w-[292px] h-[165px] object-cover"
-                        src={
-                          apply.images?.[0]?.imageUrl ||
-                          '/images/placeholder.png'
-                        }
-                        alt="기업 대표 이미지"
-                      />
+                      {apply.images.length > 0 ? (
+                        <img
+                          className="w-[292px] h-[165px] object-cover"
+                          src={
+                            apply.images?.[0]?.imageUrl ||
+                            '/images/placeholder.png'
+                          }
+                          alt="기업 대표 이미지"
+                        />
+                      ) : (
+                        <div className="text-[13px] text-gray-600">
+                          첨부된 파일이 없습니다.
+                        </div>
+                      )}
                     </div>
                     <div className="flex justify-center items-center gap-[6px] pt-[16px] pb-[6px]">
                       <button

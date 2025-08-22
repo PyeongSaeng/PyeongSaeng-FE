@@ -11,13 +11,20 @@ import {
 } from '../../../../../shared/utils/userInfoUtils';
 import Loading from '../../../../../shared/components/Loading';
 
-type OutletContext = { setChanges: (changes: Partial<Info>) => void };
-
 const BasicInfoEdit = () => {
   const navigate = useNavigate();
-  const { setChanges } = useOutletContext<OutletContext>();
+  const { setChanges, editedInfo, setEditedInfo, refs } = useOutletContext<{
+    setChanges: (changes: Partial<Info>) => void;
+    editedInfo: Info | null;
+    setEditedInfo: React.Dispatch<React.SetStateAction<Info | null>>;
+    refs: {
+      phoneRef: React.RefObject<HTMLInputElement>;
+      detailAddressRef: React.RefObject<HTMLInputElement>;
+      jobRef: React.RefObject<HTMLSelectElement>;
+      experiencePeriodRef: React.RefObject<HTMLSelectElement>;
+    };
+  }>();
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
-  const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
   const [isPostcodeOpen, setIsPostCodeOpen] = useState<boolean>(false);
 
@@ -34,14 +41,14 @@ const BasicInfoEdit = () => {
         setEditedInfo(me);
       })
       .catch((err) => console.error('시니어 정보 조회 실패: ', err));
-  }, []);
+  }, [setEditedInfo]);
 
   // 뷰전용 데이터 로드
   const infoData = useMemo(() => {
     if (!editedInfo) return [];
     return [
       { label: '이름', value: editedInfo.name },
-      { label: 'id', value: editedInfo.username },
+      { label: '아이디', value: editedInfo.username },
       { label: '비밀번호', value: '' },
       { label: '나이', value: String(editedInfo.age) },
       { label: '연락처', value: formatPhone(editedInfo.phone) },
@@ -110,6 +117,7 @@ const BasicInfoEdit = () => {
                   </div>
                 ) : label === '연락처' ? (
                   <input
+                    ref={refs.phoneRef}
                     className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                     value={
                       isPhoneEditing
@@ -129,6 +137,7 @@ const BasicInfoEdit = () => {
                   />
                 ) : label === '상세주소' ? (
                   <input
+                    ref={refs.detailAddressRef}
                     className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                     value={editedInfo?.detailAddress ?? ''}
                     onChange={(e) =>
@@ -138,6 +147,7 @@ const BasicInfoEdit = () => {
                 ) : // 드롭다운메뉴 사용파트
                 label === '직무' ? (
                   <select
+                    ref={refs.jobRef}
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black focus:outline-black"
                     value={editedInfo?.job ?? ''}
                     onChange={(e) =>
@@ -154,6 +164,7 @@ const BasicInfoEdit = () => {
                   </select>
                 ) : label === '기간' ? (
                   <select
+                    ref={refs.experiencePeriodRef}
                     className="w-[200px] h-[45px] border-[1.3px] border-[#E1E1E1] rounded-[8px] pl-[10px] focus:text-black focus:outline-black"
                     value={editedInfo?.experiencePeriod}
                     onChange={(e) =>

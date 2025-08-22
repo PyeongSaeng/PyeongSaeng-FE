@@ -18,9 +18,14 @@ const sanitizeInfo = (info: Info): Info => ({
 
 const CompanyInfoEdit = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
+
+  // ref
+  const ownerNameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const companyNameRef = useRef<HTMLInputElement>(null);
+  const businessRef = useRef<HTMLInputElement>(null);
 
   // 정보 조회
   useEffect(() => {
@@ -30,7 +35,7 @@ const CompanyInfoEdit = () => {
         setOriginalInfo(me);
         setEditedInfo(me);
       })
-      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+      .catch((err) => console.error('기업 정보 조회 에러: ', err));
   }, []);
 
   const handleChange = <K extends keyof Info>(key: K, value: Info[K]) => {
@@ -45,22 +50,25 @@ const CompanyInfoEdit = () => {
         label: '사업자명',
         key: 'ownerName' as const,
         value: editedInfo.ownerName,
+        ref: ownerNameRef,
       },
-      // ✅ 포맷 제거: 숫자 그대로 내려보내기
       {
         label: '사업자 전화번호',
         key: 'phone' as const,
         value: editedInfo.phone,
+        ref: phoneRef,
       },
       {
         label: '기업명',
         key: 'companyName' as const,
         value: editedInfo.companyName,
+        ref: companyNameRef,
       },
       {
         label: '사업자 등록 번호',
         key: 'businessNo' as const,
         value: editedInfo.businessNo,
+        ref: businessRef,
       },
       {
         label: '사업자 아이디',
@@ -74,6 +82,28 @@ const CompanyInfoEdit = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!originalInfo || !editedInfo) return;
+
+    // 유효성 검사
+    if (!editedInfo.ownerName) {
+      toast.warning('사업자명을 입력해주세요.');
+      ownerNameRef.current?.focus();
+      return;
+    }
+    if (!editedInfo.phone) {
+      toast.warning('전화번호를 입력해주세요.');
+      phoneRef.current?.focus();
+      return;
+    }
+    if (!editedInfo.companyName) {
+      toast.warning('기업명을 입력해주세요.');
+      companyNameRef.current?.focus();
+      return;
+    }
+    if (!editedInfo.businessNo) {
+      toast.warning('사업자등록번호를 입력해주세요.');
+      businessRef.current?.focus();
+      return;
+    }
 
     try {
       const changes: Partial<Info> = {};
@@ -111,7 +141,7 @@ const CompanyInfoEdit = () => {
             <div className="h-[466px]">
               <div className="h-full flex flex-col justify-start items-center text-[16px] font-[Pretendard] font-[500] font-semibold">
                 <div className="py-[6px]">
-                  {infoData.map(({ label, key, value }) => (
+                  {infoData.map(({ label, key, value, ref }) => (
                     <div
                       key={label}
                       className="w-full flex justify-center text-black leading-[4.4]"
@@ -126,6 +156,7 @@ const CompanyInfoEdit = () => {
                               onlyDigits(next) as Info['businessNo']
                             )
                           }
+                          inputRef={ref as React.RefObject<HTMLInputElement>}
                         />
                       ) : (
                         <EditInfoCol
@@ -133,6 +164,7 @@ const CompanyInfoEdit = () => {
                           value={value}
                           name={key ?? undefined}
                           onChange={handleChange}
+                          inputRef={ref as React.RefObject<HTMLInputElement>}
                         />
                       )}
                     </div>
@@ -143,12 +175,10 @@ const CompanyInfoEdit = () => {
 
             <button
               type="submit"
-              className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[45px]"
+              className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[10px]"
             >
               저장
             </button>
-
-            {error && <div className="text-red-500 mt-3">{error}</div>}
           </form>
         </div>
       </Topbar>
@@ -163,6 +193,7 @@ type FieldKey = keyof Info;
 interface EditInfoProps<T> {
   label: string;
   value: T;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
 type EditInfoColProps = EditInfoProps<number | string> & {
@@ -170,7 +201,13 @@ type EditInfoColProps = EditInfoProps<number | string> & {
   onChange?: <K extends FieldKey>(key: K, value: Info[K]) => void;
 };
 
-const EditInfoCol = ({ label, value, name, onChange }: EditInfoColProps) => {
+const EditInfoCol = ({
+  label,
+  value,
+  name,
+  onChange,
+  inputRef,
+}: EditInfoColProps) => {
   const navigate = useNavigate();
   const labelSplit = label.split(' ');
 
@@ -223,6 +260,7 @@ const EditInfoCol = ({ label, value, name, onChange }: EditInfoColProps) => {
           <span className="text-black">{String(value ?? '')}</span>
         ) : (
           <input
+            ref={inputRef}
             className="w-[228px] h-[45px] text-center border-[1px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
             value={isPhone ? phoneDisplay : String(value ?? '')}
             onChange={handleInput}
@@ -243,13 +281,20 @@ const EditInfoCol = ({ label, value, name, onChange }: EditInfoColProps) => {
     </div>
   );
 };
+
 interface EditInfoRowProps {
   label: string;
   value: string;
   onChange: (next: string) => void;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
-const EditInfoRow = ({ label, value, onChange }: EditInfoRowProps) => {
+const EditInfoRow = ({
+  label,
+  value,
+  onChange,
+  inputRef,
+}: EditInfoRowProps) => {
   const [a, setA] = useState('');
   const [b, setB] = useState('');
   const [c, setC] = useState('');
@@ -285,6 +330,7 @@ const EditInfoRow = ({ label, value, onChange }: EditInfoRowProps) => {
       <div className="text-[16px] text-[#747474] leading-[1.4]">{label}</div>
       <div className="text-[#C2C2C2] flex justify-between items-center h-[58px]">
         <input
+          ref={inputRef}
           className="w-[66px] h-[45px] text-center border-[1px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
           value={a}
           onChange={(e) => onA(e.target.value)}

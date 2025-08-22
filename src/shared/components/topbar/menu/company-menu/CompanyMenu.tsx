@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 import { IoClose, IoMenu, IoChevronBackOutline } from 'react-icons/io5';
 import CompanyMyMenu from './CompanyMyMenu';
 import AfterLoginMainMenu from './AfterLoginMainMenu';
@@ -9,6 +11,9 @@ type MenuType = 'my' | 'main';
 const CompanyMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [menu, setMenu] = useState<MenuType>('main');
+
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -36,7 +41,12 @@ const CompanyMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-[-25px] left-[-9px] z-40 w-[330px] h-[700px] bg-white">
+        <div
+          className={clsx(
+            currentPath !== '/company' ? 'h-[684px]' : 'h-[731px]',
+            'absolute top-[-10px] left-[-9px] z-40 w-[330px] bg-white'
+          )}
+        >
           <div className="pb-[10px] border-b-[1px] border-[#707070]">
             {menu === 'main' ? (
               <IoClose size={27} onClick={closeMenu} />

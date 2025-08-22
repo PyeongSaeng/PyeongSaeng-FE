@@ -36,6 +36,19 @@ export const getDayOfWeek = (dateString: string) => {
 export const formatDate = (dateString: string) => {
   const splitDate = dateString.split('-');
   const date = '~ ' + splitDate[1] + '/' + splitDate[2];
-
   return date;
+};
+
+// 날짜 형식 바꾸기 (기업)
+export const formatDateForCom = (dateString: string) => {
+  const [, month, day] = dateString.split('-');
+  const formattedMonth = month.startsWith('0') ? month.substring(1) : month;
+  const formattedDay = day.startsWith('0') ? day.substring(1) : day;
+
+  return `${formattedMonth}/${formattedDay}`;
+};
+
+// 원 단위 형식으로 만들기
+export const formatMoney = (money: number) => {
+  return money.toLocaleString('ko-KR');
 };

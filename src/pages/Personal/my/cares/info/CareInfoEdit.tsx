@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Topbar from '../../../../../shared/components/topbar/Topbar';
@@ -14,12 +14,13 @@ import Loading from '../../../../../shared/components/Loading';
 
 const CareInfoEdit = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
-  console.log(error); // error 상태 미사용 -> 추가
 
   const [originalInfo, setOriginalInfo] = useState<Info | null>(null);
   const [editedInfo, setEditedInfo] = useState<Info | null>(null);
   const [isPhoneEditing, setIsPhoneEditing] = useState<boolean>(false);
+
+  // ref
+  const phoneRef = useRef<HTMLInputElement>(null);
 
   // 정보 조회
   useEffect(() => {
@@ -29,12 +30,8 @@ const CareInfoEdit = () => {
         setOriginalInfo(me);
         setEditedInfo(me);
       })
-      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+      .catch((err) => console.log('보호자 정보 조회 에러: ', err));
   }, []);
-
-  useEffect(() => {
-    console.log(originalInfo);
-  }, [originalInfo]);
 
   // 뷰 전용
   const infoData = useMemo(() => {
@@ -62,6 +59,12 @@ const CareInfoEdit = () => {
     if (!originalInfo || !editedInfo) return;
 
     try {
+      if (!editedInfo?.phone) {
+        toast.warning('연락처를 입력해주세요.');
+        phoneRef.current?.focus();
+        return;
+      }
+
       const changes = diff(originalInfo, editedInfo);
       await axiosInstance.patch('/api/user/protector/me', changes);
       navigate('/personal/care-my/info');
@@ -70,11 +73,6 @@ const CareInfoEdit = () => {
       toast.error('정보 수정에 실패했습니다.');
     }
   };
-
-  // 디테일 필요
-  // if (error) {
-  //   return <div>{error}</div>;
-  // }
 
   if (!originalInfo) {
     return <Loading />;
@@ -117,6 +115,7 @@ const CareInfoEdit = () => {
                           </button>
                         ) : label === '연락처' ? (
                           <input
+                            ref={phoneRef}
                             className="w-[200px] h-[45px] px-[10px] py-[4px] text-center border-[1.3px] border-[#E1E1E1] rounded-[8px] focus:text-black focus:outline-black"
                             value={
                               isPhoneEditing

@@ -9,6 +9,7 @@ const ExtraInfo = () => {
   const [questionList, setQuestionList] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // 시니어 데이터 조회
   useEffect(() => {
     setLoading(true);
     getSeniorData('/api/user/senior/me')
@@ -17,7 +18,10 @@ const ExtraInfo = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  // 시니어 추가질문 정보 조회
   useEffect(() => {
+    if (!info?.id) return;
+
     setLoading(true);
     getSeniorData(`/api/seniors/${info?.id}/questions`)
       .then((data) => {

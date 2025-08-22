@@ -8,20 +8,13 @@ import Loading from '../../../shared/components/Loading';
 const CompanyInfo = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState<Info | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  console.log(error); // error 상태 미사용 -> 추가
 
   // 정보 조회
   useEffect(() => {
     getCompanyData('/api/companies/profile')
       .then((data) => setInfo(data.result as Info))
-      .catch((err) => setError(err?.message ?? '정보를 불러오지 못했습니다'));
+      .catch((err) => console.error('기업 정보 조회 에러: ', err));
   }, []);
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   // 뷰 전용
   const infoData = useMemo(() => {
@@ -85,7 +78,7 @@ const CompanyInfo = () => {
           </div>
           <button
             type="button"
-            className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[45px]"
+            className="w-[294px] h-[45px] rounded-[8px] bg-[#0D29B7] text-white text-[16px] font-[pretendard] font-[400] mt-[10px]"
             onClick={() => navigate('/company/my/info/edit')}
           >
             수정
