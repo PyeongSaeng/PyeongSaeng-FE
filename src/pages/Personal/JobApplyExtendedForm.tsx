@@ -19,6 +19,8 @@ type Props = {
   jobPostId: number;
   isDraft?: boolean; // 임시저장 상태인지 여부
   draftData?: any;
+  seniorInfo?: any; // 시니어 정보 (보호자용)
+  userRole?: string; // 사용자 역할
 };
 
 const JobApplyExtendedForm = ({
@@ -27,6 +29,8 @@ const JobApplyExtendedForm = ({
   jobPostId,
   isDraft = false,
   draftData,
+  seniorInfo,
+  userRole,
 }: Props) => {
   const navigate = useNavigate();
   // useSubmitApplication 제거
@@ -44,63 +48,86 @@ const JobApplyExtendedForm = ({
   // AI 작성 관련 상태 추가
   const [selectedKeywordForAI, setSelectedKeywordForAI] = useState<string>('');
 
-  // 보호자 모드 관련 상태 제거하고 간단하게 처리
+  // useSeniorInfo 훅을 항상 호출
   const {
-    seniorInfo,
+    seniorInfo: seniorInfoFromHook,
     seniorQuestions,
-    isLoading: isLoadingSeniorData,
+    isLoading: isLoadingSeniorInfo,
+    // error: seniorInfoError,
   } = useSeniorInfo();
+
+  // 실제 사용할 시니어 정보 - 보호자인 경우 props로 받은 정보 사용
+  const finalSeniorInfo =
+    userRole === 'PROTECTOR' ? seniorInfo : seniorInfoFromHook;
+
+  // 보호자인 경우 빈 배열로 초기화
+  // const finalSeniorQuestions = userRole === 'PROTECTOR' ? [] : seniorQuestions;
+  const finalIsLoadingSeniorInfo =
+    userRole === 'PROTECTOR' ? false : isLoadingSeniorInfo;
 
   // AI 키워드 생성을 위한 기본 QA 옵션들
   const baseQAOptions: QAOption[] = useMemo(() => {
     const options: QAOption[] = [];
 
     // 1. 시니어 기본 정보 활용
-    if (seniorInfo) {
+    if (finalSeniorInfo) {
       // 나이 정보
-      if (seniorInfo.age) {
+      if (finalSeniorInfo.age) {
         options.push({
           question: '연령대는 어떻게 되시나요?',
-          option: `${seniorInfo.age}세`,
+          option: `${finalSeniorInfo.age}세`,
         });
       }
 
       // 거주지 정보 (도/시 단위로 축약)
-      if (seniorInfo.roadAddress) {
+      if (finalSeniorInfo.roadAddress) {
         const region =
-          seniorInfo.roadAddress.split(' ')[0] || seniorInfo.roadAddress;
+          finalSeniorInfo.roadAddress.split(' ')[0] ||
+          finalSeniorInfo.roadAddress;
         options.push({
           question: '거주 지역은 어디인가요?',
           option: region,
         });
       }
 
-      // 직무 경험
-      if (seniorInfo.job) {
-        options.push({
-          question: '어떤 직무 경험이 있으신가요?',
-          option: JobTypeLabel[seniorInfo.job] || '기타',
-        });
+      // 직무 경험 - 타입 안전성 개선
+      if (finalSeniorInfo.job && typeof finalSeniorInfo.job === 'string') {
+        const jobType = finalSeniorInfo.job as keyof typeof JobTypeLabel;
+        if (JobTypeLabel[jobType]) {
+          options.push({
+            question: '어떤 직무 경험이 있으신가요?',
+            option: JobTypeLabel[jobType],
+          });
+        }
       }
 
-      // 경력 기간
-      if (seniorInfo.experiencePeriod) {
-        options.push({
-          question: '근무 경험 기간은 얼마나 되시나요?',
-          option: ExperiencePeriodLabel[seniorInfo.experiencePeriod] || '신입',
-        });
+      // 경력 기간 - 타입 안전성 개선
+      if (
+        finalSeniorInfo.experiencePeriod &&
+        typeof finalSeniorInfo.experiencePeriod === 'string'
+      ) {
+        const expPeriod =
+          finalSeniorInfo.experiencePeriod as keyof typeof ExperiencePeriodLabel;
+        if (ExperiencePeriodLabel[expPeriod]) {
+          options.push({
+            question: '근무 경험 기간은 얼마나 되시나요?',
+            option: ExperiencePeriodLabel[expPeriod],
+          });
+        }
       }
     }
 
-    // 2. 시니어의 추가 질문 답변들 활용
-    seniorQuestions.forEach((q) => {
-      if (q.selectedOptionId && q.seletedOption) {
-        options.push({
-          question: q.question,
-          option: q.seletedOption,
-        });
-      }
-    });
+    // 2. 시니어의 추가 질문 답변들 활용 (보호자인 경우 제외)
+    if (userRole !== 'PROTECTOR') {
+      seniorQuestions.forEach((q) => {
+        if (q.selectedOptionId && q.seletedOption) {
+          options.push({
+            question: q.question,
+            option: q.seletedOption,
+          });
+        }
+      });
+    }
 
     // 3. 현재 지원서의 기본 정보들도 추가로 활용
     // formFields의 처음 4개는 기본 정보 (이름, 연락처 등)
@@ -114,7 +141,7 @@ const JobApplyExtendedForm = ({
     });
 
     return options;
-  }, [seniorInfo, seniorQuestions, formFields]);
+  }, [finalSeniorInfo, seniorQuestions, formFields, userRole]);
 
   const typeToStep = (
     t: FormField['fieldType']
@@ -139,8 +166,6 @@ const JobApplyExtendedForm = ({
   // 임시저장된 데이터가 있으면 answers 상태에 로드
   useEffect(() => {
     if (isDraft && draftData) {
-      console.log('📋 임시저장 데이터 로드:', draftData);
-
       // draftData에서 answers 정보를 추출하여 설정
       const draftAnswers: Record<number, string> = {};
       draftData.fieldAndAnswer?.forEach((item: any) => {
@@ -154,7 +179,6 @@ const JobApplyExtendedForm = ({
         }
       });
 
-      console.log('📝 로드된 answers:', draftAnswers);
       setAnswers(draftAnswers);
     }
   }, [isDraft, draftData]);
@@ -243,8 +267,6 @@ const JobApplyExtendedForm = ({
         fieldAndAnswer: fieldAndAnswer,
       };
 
-      console.log('최종 제출 데이터:', payload);
-
       await apiPostApplicationDirect(payload);
 
       setSubmitted(true);
@@ -322,8 +344,6 @@ const JobApplyExtendedForm = ({
         }),
       };
 
-      console.log('임시저장 요청 데이터:', payload);
-
       // 일단 개인 모드로만 처리
       await apiPostApplicationDirect(payload);
 
@@ -371,13 +391,13 @@ const JobApplyExtendedForm = ({
               onSelect={setSelectedMotivation}
               onAISelect={handleAIWriteSelection} // AI 선택 핸들러 추가
               baseQAOptions={baseQAOptions}
-              isLoadingData={isLoadingSeniorData}
+              isLoadingData={finalIsLoadingSeniorInfo} // 수정된 값 사용
             />
           </div>
 
           <button
             onClick={handleMotivationNext}
-            disabled={!selectedMotivation.trim() || isLoadingSeniorData}
+            disabled={!selectedMotivation.trim() || finalIsLoadingSeniorInfo} // 수정된 값 사용
             className="w-full h-[45px] mt-[32px] text-[16px] border-[1.3px] border-[#08D485] rounded-[8px] bg-[#08D485] text-[#000000] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             제출하기

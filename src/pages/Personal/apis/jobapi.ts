@@ -105,13 +105,23 @@ export async function getResult<T>(
   url: string,
   params?: Record<string, any>
 ): Promise<T> {
-  const res = await axiosInstance.get<ApiEnvelope<T>>(url, {
-    params,
-  });
-  if (!res.data.isSuccess || !res.data.result) {
-    throw new Error(res.data.message ?? 'API 요청 실패');
+  
+  try {
+    const res = await axiosInstance.get<ApiEnvelope<T>>(url, {
+      params,
+    });
+    
+    if (!res.data.isSuccess || !res.data.result) {
+      console.error('getResult 실패:', res.data);
+      throw new Error(res.data.message ?? 'API 요청 실패');
+    }
+    
+    console.log('getResult 성공, result:', res.data.result);
+    return res.data.result;
+  } catch (error) {
+    console.error('getResult 에러:', error);
+    throw error;
   }
-  return res.data.result;
 }
 
 // jobapplicationapi.tsx에서 가져온 함수들 (호환성 유지)

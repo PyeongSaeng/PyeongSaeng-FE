@@ -20,6 +20,13 @@ export const useSeniorInfo = () => {
         setIsLoading(true);
         setError(null);
 
+        // 보호자인 경우 API 호출하지 않음
+        const userRole = localStorage.getItem('userRole');
+        if (userRole === 'PROTECTOR') {
+          setIsLoading(false);
+          return;
+        }
+
         // 1. 시니어 기본 정보 조회
         const basicInfoResponse = await getSeniorData('/api/user/senior/me');
 
