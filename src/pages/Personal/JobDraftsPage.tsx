@@ -133,17 +133,21 @@ function ProtectorDraftsView() {
     });
   };
 
-  useEffect(() => {
-    console.log('Protector Applications:', applications);
-    // selectedApps.forEach((app) => {
-    //   console.log(
-    //     'applicationId:',
-    //     app.applicationId,
-    //     'seniorId:',
-    //     app.seniorId
-    //   );
-    // });
-  }, [applications, selectedApps]);
+  // 신청서 이어서 작성하기 버튼 클릭 시
+  const handleContinueWriting = () => {
+    if (selectedAppId) {
+      const selectedApp = selectedApps.find(
+        (app) => app.applicationId === selectedAppId
+      );
+      navigate(`/personal/jobs/recommend/${selectedApp?.jobPostId}/apply`, {
+        state: {
+          isDraft: true,
+          draftData: selectedApp, // 선택된 임시저장 데이터
+          startStep: 'done' as const,
+        },
+      });
+    }
+  };
 
   return (
     <JobDraftLayout
@@ -154,6 +158,7 @@ function ProtectorDraftsView() {
       setSelectedAppId={setSelectedAppId}
       isLoading={isLoading}
       onApply={handleGoApply}
+      onContinueWriting={handleContinueWriting}
     />
   );
 }
@@ -168,6 +173,7 @@ type JobDraftLayoutProps = {
   isLoading: boolean;
   onDelete?: (applicationId: number) => void;
   onApply: () => void;
+  onContinueWriting?: () => void;
 };
 
 function JobDraftLayout({
@@ -179,6 +185,7 @@ function JobDraftLayout({
   isLoading,
   onDelete,
   onApply,
+  onContinueWriting,
 }: JobDraftLayoutProps) {
   const memberType = localStorage.getItem('userRole');
 
@@ -343,7 +350,7 @@ function JobDraftLayout({
         <button
           className="w-[294px] h-[45px] rounded-[8px] text-[16px] font-semibold bg-[#08D485] text-black disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={selectedAppId === null}
-          onClick={onApply}
+          onClick={selectedTab === 0 ? onApply : onContinueWriting || onApply}
         >
           {selectedTab === 0 ? '신청서 작성하기' : '신청서 이어서 작성하기'}
         </button>

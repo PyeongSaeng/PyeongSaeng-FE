@@ -26,3 +26,20 @@ export type PostApplicationDirectRequest = {
     | 'REJECTED';
   fieldAndAnswer: FieldAndAnswer[];
 };
+
+// 질문 목록 조회 응답 타입 추가
+export interface QuestionResponse {
+  isSuccess: boolean;
+  message: string;
+  result: {
+    formFieldList: FormField[];
+  };
+}
+
+export interface FormField {
+  id: number;
+  fieldName: string;
+  fieldType: 'TEXT' | 'IMAGE';
+  required: boolean;
+  answer?: string;
+}
