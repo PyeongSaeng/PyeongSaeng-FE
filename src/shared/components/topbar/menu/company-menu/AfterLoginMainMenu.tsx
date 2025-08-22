@@ -30,7 +30,7 @@ const AfterLoginMainMenu = ({ goNext }: AfterLoginMainMenuProps) => {
       <button
         className="flex items-center gap-[12px] text-[24px] pt-[33px] pb-[25px]"
         onClick={() => {
-          navigate('/company/login');
+          navigate('/company/my/info');
         }}
       >
         <span className="font-bold flex items-center gap-2">

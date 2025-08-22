@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../../shared/components/topbar/Topbar';
 import { useApplication } from './hooks/useApplication';
@@ -128,7 +128,9 @@ function ProtectorDraftsView() {
       (app: ProtectorApplicationUI) => app.applicationId === selectedAppId
     );
     if (!selected) return;
-    navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`);
+    navigate(`/personal/jobs/recommend/${selected.jobPostId}/apply`, {
+      state: { seniorId: applications },
+    });
   };
 
   // 신청서 이어서 작성하기 버튼 클릭 시
@@ -187,6 +189,9 @@ function JobDraftLayout({
 }: JobDraftLayoutProps) {
   const memberType = localStorage.getItem('userRole');
 
+  useEffect(() => {
+    console.log('선택: ', selectedAppId);
+  }, [selectedAppId]);
   return (
     <div className="w-full h-full flex flex-col">
       <div className="mt-[17px] flex flex-col items-center">

@@ -81,12 +81,17 @@ const CareCheckApplicationDetail = () => {
     )
       .then((data) => {
         const res = data.result;
+        console.log('결과:', res);
         setApplicationData(res);
         setAnswerData(res.questionAndAnswerList);
       })
       .catch((err) => console.error('지원서 상세 조회 에러: ', err))
       .finally(() => setLoading(false));
   }, [seniorId, applicationId]);
+
+  useEffect(() => {
+    console.log(applicationData);
+  }, [applicationData]);
 
   return (
     <div className="flex flex-col">
@@ -164,7 +169,7 @@ const CareCheckApplicationDetail = () => {
                       <ImageField
                         key={idx}
                         fieldName={answer.fieldName}
-                        answerContent={answer.answerContent as ImageObject}
+                        answerContent={answer.answerContent as ImageObject[]}
                       />
                     );
                   } else if (answer.fieldType === 'TEXT') {
