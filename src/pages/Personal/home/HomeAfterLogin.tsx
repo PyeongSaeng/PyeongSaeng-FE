@@ -50,7 +50,7 @@ const HomeAfterLogin = () => {
           </div>
           <button
             className="w-[270px] h-[45px] rounded-[8px] border-[1.3px] border-[#08D485]"
-            onClick={() => navigate('/personal/senior-my/info/extra')}
+            onClick={() => navigate('/personal/care-my/info')}
           >
             내 정보 입력하러 가기
           </button>
